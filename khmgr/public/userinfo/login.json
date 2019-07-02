@@ -1,0 +1,30 @@
+{
+  "body": {
+    "password": "admin",
+    "username": "admin"
+  },
+  "messqge": "",
+  "result": {
+    "avatar": "https://gw.alipayobjects.com/zos/rmsportal/jZUIxmJycoymBprLOUbT.png",
+    "createTime": 1497160610259,
+    "creatorId": "admin",
+    "deleted": 73872582.78349194,
+    "id": "dDAd5CbE-cC6E-2326-f41d-fdAB9baC9cD3",
+    "lang": "zh-CN",
+    "lastLoginIp": "122.224.128.194",
+    "lastLoginTime": 1534837621348,
+    "name": "强啊强",
+    "password": "admin",
+    "roleId": "admin",
+    "status": 0,
+    "telephone": "",
+    "token": "4291d7da9005377ec9aec4a71ea837f",
+    "username": "admin"
+  },
+  "status": 200,
+  "timestamp": 1555662572288,
+  "code": "200",
+  "_headers": {
+    "Custom-Header": "44D2DB73-8d35-FA3A-Ff4c-20D743F7e51c"
+  }
+}
