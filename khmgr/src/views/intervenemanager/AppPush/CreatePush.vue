@@ -120,7 +120,10 @@ export default {
   },
   methods: {
     handleBack () {
+      // 清空表单内容
       this.form.resetFields()
+      this.value = ''
+      this.fileList = []
       // 返回PushList页面
       this.$router.push({
         path: '/intervenemanager/Healthpush/list'
@@ -143,13 +146,28 @@ export default {
           this.$set(values, 'isTop', false)
           console.log('追加 values of form: ', values)
           // post form
-          Axios({
-            url: '/api/admin/news',
-            method: 'post',
-            data: values,
-            headers: { 'Content-Type': 'application/json' }
-          }).then(res => {
-            console.log('表单post', res)
+          this.formSubmit()
+        }
+      })
+    },
+    formSubmit (formData) {
+      Axios({
+        url: '/api/admin/news',
+        method: 'post',
+        data: formData,
+        headers: { 'Content-Type': 'application/json' }
+      }).then(res => {
+        console.log('表单post', res.data)
+        if (res.data.successed === true) {
+          // 跳转到新闻详情页面
+          this.$router.push({
+            path: '/intervenemanager/TopPush/edit',
+            query: { newsId: res.data.value }
+          })
+        } else {
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '发表新闻失败.'
           })
         }
       })
@@ -197,9 +215,10 @@ export default {
 <style lang="less" scoped>
 .create-container {
   .create-top {
+    height: 60px;
     display: flex;
+    align-items: center;
     justify-content: flex-end;
-    margin-bottom: 16px;
   }
   .create-main {
     .main-basic {

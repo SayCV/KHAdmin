@@ -255,7 +255,7 @@ export const asyncRouterMap = [
             path: '/intervenemanager/TopPush',
             name: 'TopPush',
             component: () => import('@/views/intervenemanager/TopPush/Index'),
-            meta: { title: 'APP头条', keepAlive: true, permission: ['profile'] },
+            meta: { title: 'APP头条消息', keepAlive: true, permission: ['profile'] },
             redirect: '/intervenemanager/TopPush/list',
             hideChildrenInMenu: true,
             children: [

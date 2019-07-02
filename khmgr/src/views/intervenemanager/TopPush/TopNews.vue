@@ -54,7 +54,7 @@
             <div class="opertion-btn">
               <a-button-group>
                 <a-button @click="() => handleEdit(topList.newsId)">编辑</a-button>
-                <a-button type="danger">删除</a-button>
+                <a-button type="danger" @click="() => showConfirm(topList.newsId)">删除</a-button>
               </a-button-group>
             </div>
           </div>
@@ -122,6 +122,18 @@ export default {
     handleRefresh () {
       // news列表刷新
       this.fetch()
+    },
+    showConfirm (newsId) {
+      this.$confirm({
+        title: `Do you want to delete ${newsId} items?`,
+        content: 'When clicked the OK button, this dialog will be closed after 1 second',
+        onOk () {
+          return new Promise((resolve, reject) => {
+            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
+          }).catch(() => console.log('Oops errors!'))
+        },
+        onCancel () {}
+      })
     }
   }
 }
