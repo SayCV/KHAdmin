@@ -1,9 +1,6 @@
 <template>
   <a-card :bordered="false">
-    <div
-      class="no-pushLists"
-      v-if="NoPushLists"
-    >
+    <div class="no-pushLists" v-if="NoPushLists">
       <div class="null-svg"></div>
       <div class="null-txt">
         <h2>还没有上传过视频yo</h2>
@@ -20,7 +17,10 @@
         <div class="app-list" v-for="pushList in pushLists" :key="pushList.newsId">
           <div class="app-list-img">
             <div class="list-img-hidden">
-              <div class="list-info-img" :style="{ backgroundImage: 'url(' + pushList.cover + ')' }"></div>
+              <div
+                class="list-info-img"
+                :style="{ backgroundImage: 'url(' + pushList.cover + ')' }"
+              ></div>
             </div>
           </div>
           <div class="app-list-content">
@@ -45,16 +45,23 @@
                 <a-badge :status="pushList.status" :text="pushList.statusTxt" />
               </div>
               <div class="operation-desc-txt">
-                <div>消息类型 : <span>{{ pushList.msgcategory }}</span> </div>
-                <div>发送人群 : <span>{{ pushList.msgRq }}</span> </div>
-                <div>发送成功 : <span>{{ pushList.msgSuccess }}</span> </div>
-                <div>发送失败 : <span>{{ pushList.msgFalse }}</span> </div>
+                <div>
+                  消息类型 :
+                  <span>{{ pushList.msgcategory }}</span>
+                </div>
+                <div>
+                  发送人群 :
+                  <span>{{ pushList.msgRq }}</span>
+                </div>
               </div>
             </div>
             <div class="opertion-btn">
               <a-button-group>
                 <a-button @click="() => handleEdit(pushList.newsId)">编辑</a-button>
-                <a-button type="danger" @click="() => showConfirm(topList.newsId)">删除</a-button>
+                <a-button
+                  type="danger"
+                  @click="() => showConfirm(pushList.newsId)"
+                >删除{{ pushList.newsId }}</a-button>
               </a-button-group>
             </div>
           </div>
@@ -124,16 +131,28 @@ export default {
       // news列表刷新
       this.fetch()
     },
+    handleDelete (newsId) {
+      return Axios({
+        url: `/api/admin/news/${newsId}`,
+        method: 'delete'
+      })
+    },
     showConfirm (newsId) {
+      const that = this
       this.$confirm({
-        title: `Do you want to delete ${newsId} items?`,
-        content: 'When clicked the OK button, this dialog will be closed after 1 second',
+        title: `你确定想要删除这条新闻吗? NewsID:${newsId}`,
+        content: '当你点击确定按钮时，就会删除选中的这条新闻',
         onOk () {
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-          }).catch(() => console.log('Oops errors!'))
+          // 异步请求
+          that.handleDelete(newsId)
+            .then(res => {
+              // refresh data
+              that.fetch()
+            })
         },
-        onCancel () {}
+        onCancel () {
+          console.log('this', this)
+        }
       })
     }
   }
@@ -141,7 +160,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .app-top {
   height: 60px;
   display: flex;
@@ -202,7 +220,7 @@ export default {
   }
   .list-info-img {
     width: 200px;
-    min-height: 200px;
+    min-height: 180px;
     height: 100%;
     border: 1px solid #d9d9d9;
     border-radius: 2px;
@@ -253,11 +271,11 @@ export default {
     width: 220px;
     padding: 10px 0;
     .desc-views {
-      margin-left:8px;
+      margin-left: 8px;
     }
   }
   .content-desc > div > .anticon {
-    font-size:18px;
+    font-size: 18px;
     vertical-align: middle;
   }
   .content-desc > div > span {

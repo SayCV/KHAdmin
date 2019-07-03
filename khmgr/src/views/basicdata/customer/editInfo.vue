@@ -1,22 +1,19 @@
 <template>
-
   <a-card>
     <div class="back">
       <div class="edit-table-title">
-        <h1>个人信息 <span>{{ accountId }}</span></h1>
+        <h1>
+          个人信息
+          <span>{{ accountId }}</span>
+        </h1>
       </div>
-      <a-button
-        type="primary"
-        @click="handleBtnBack"
-      >返回
+      <a-button type="primary" @click="handleBtnBack">
+        返回
         <a-icon type="rollback" />
       </a-button>
     </div>
     <div class="customer-container">
-      <a-form
-        @submit="handleSubmit"
-        :form="form"
-      >
+      <a-form @submit="handleSubmit" :form="form">
         <div class="basic-info">
           <a-form-item
             label="账号ID"
@@ -130,7 +127,6 @@
           </a-form-item>
         </div>
         <div class="other-info">
-
           <a-form-item
             label="民族"
             :labelCol="{lg: {span: 6}, sm: {span: 6}}"
@@ -240,14 +236,8 @@
             />
           </a-form-item>
         </div>
-        <div
-          class="from-option"
-          style="text-align: center"
-        >
-          <a-button
-            htmlType="submit"
-            type="primary"
-          >提交</a-button>
+        <div class="from-option" style="text-align: center">
+          <a-button htmlType="submit" type="primary">提交</a-button>
           <a-button style="margin-left: 8px">保存</a-button>
         </div>
       </a-form>
@@ -271,6 +261,15 @@ export default {
       data: {},
       // form
       form: this.$form.createForm(this)
+    }
+  },
+  watch: {
+    '$route.path' (to, from) {
+      if (to === '/basicdata/Customermanage/edit') {
+        console.log('再次进入客户管理编辑页', to)
+        this.accountId = this.$route.query.accountId
+        this.fetch()
+      }
     }
   },
   mounted () {

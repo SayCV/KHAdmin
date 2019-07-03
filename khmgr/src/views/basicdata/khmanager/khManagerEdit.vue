@@ -1,22 +1,19 @@
 <template>
-
   <a-card>
     <div class="back">
       <div class="edit-table-title">
-        <h1>健管师信息 <span>{{ accountId }}</span></h1>
+        <h1>
+          健管师信息
+          <span>{{ accountId }}</span>
+        </h1>
       </div>
-      <a-button
-        type="primary"
-        @click="handleBtnBack"
-      >返回
+      <a-button type="primary" @click="handleBtnBack">
+        返回
         <a-icon type="rollback" />
       </a-button>
     </div>
     <div class="customer-container">
-      <a-form
-        @submit="handleSubmit"
-        :form="form"
-      >
+      <a-form @submit="handleSubmit" :form="form">
         <div class="basic-info">
           <a-form-item
             label="机构"
@@ -100,7 +97,7 @@
               v-decorator="[
                 'createdTime',
                 {rules: [{ required: true, message: '请选择创建时间' }],
-                 initialValue: moment(data.createdTime, createdTime)
+                 initialValue: moment(data.createdTime)
                 }
               ]"
             />
@@ -149,14 +146,8 @@
             />
           </a-form-item>
         </div>
-        <div
-          class="from-option"
-          style="text-align: center"
-        >
-          <a-button
-            htmlType="submit"
-            type="primary"
-          >提交</a-button>
+        <div class="from-option" style="text-align: center">
+          <a-button htmlType="submit" type="primary">提交</a-button>
           <a-button style="margin-left: 8px">保存</a-button>
         </div>
       </a-form>
@@ -180,6 +171,15 @@ export default {
       data: {},
       // form
       form: this.$form.createForm(this)
+    }
+  },
+  watch: {
+    '$route.path' (to, from) {
+      if (to === '/basicdata/Healthmanager/edit') {
+        console.log('再次进入健管师编辑页', to)
+        this.accountId = this.$route.query.accountId
+        this.fetch()
+      }
     }
   },
   mounted () {
@@ -217,7 +217,7 @@ export default {
       })
     },
     handleBtnBack () {
-      this.$router.push({ name: 'CustomerTable' })
+      this.$router.push({ name: 'HealthmanagerTable' })
     }
   }
 }

@@ -1,8 +1,11 @@
 <template>
-  <div>
-    编辑健康推送
-    {{ newsId }}
-  </div>
+  <a-card>
+    <div>
+      编辑健康推送
+      {{ newsId }}
+    </div>
+  </a-card>
+
 </template>
 
 <script>
@@ -17,5 +20,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

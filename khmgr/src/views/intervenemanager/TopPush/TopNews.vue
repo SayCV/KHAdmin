@@ -9,18 +9,43 @@
         <h2>还没有上传过视频yo</h2>
       </div>
     </div>
-    <div class="app-container" v-else>
+    <div
+      class="app-container"
+      v-else
+    >
       <div class="app-top">
-        <a-button class="refresh" @click="() => handleRefresh()">刷新</a-button>
-        <a-button type="primary" @click="() => handleAdd()">
+        <a-button
+          class="refresh"
+          @click="() => handleRefresh()"
+        >刷新</a-button>
+        <a-button
+          type="primary"
+          @click="() => handleAdd()"
+        >
           <a-icon type="plus" />新建头条
         </a-button>
       </div>
       <div class="app-main">
-        <div class="app-list" v-for="topList in topLists" :key="topList.newsId">
+        <div
+          v-for="Item in topLists"
+          :key="Item.newsId"
+        >
+          <NewsItem
+            :newsItem="Item"
+            @update-newsList="handleRefresh()"
+          ></NewsItem>
+        </div>
+        <!-- <div
+          class="app-list"
+          v-for="topList in topLists"
+          :key="topList.newsId"
+        >
           <div class="app-list-img">
             <div class="list-img-hidden">
-              <div class="list-info-img" :style="{ backgroundImage: 'url(' + topList.cover + ')' }"></div>
+              <div
+                class="list-info-img"
+                :style="{ backgroundImage: 'url(' + topList.cover + ')' }"
+              ></div>
             </div>
           </div>
           <div class="app-list-content">
@@ -33,7 +58,10 @@
                 <a-tag color="geekblue">{{ topList.dateTime.substring(0, 16) }}</a-tag>
               </div>
               <div class="desc-views">
-                <a-icon type="eye" theme="twoTone" />
+                <a-icon
+                  type="eye"
+                  theme="twoTone"
+                />
                 <span>{{ topList.views }}</span>
               </div>
             </div>
@@ -42,32 +70,39 @@
             <div class="operation-desc">
               <div class="operation-status">
                 <span>状态 :</span>
-                <a-badge :status="topList.status" :text="topList.statusTxt" />
+                <a-badge
+                  :status="topList.status"
+                  :text="topList.statusTxt"
+                />
               </div>
               <div class="operation-desc-txt">
                 <div>消息类型 : <span>{{ topList.msgcategory }}</span> </div>
                 <div>发送人群 : <span>{{ topList.msgRq }}</span> </div>
-                <div>发送成功 : <span>{{ topList.msgSuccess }}</span> </div>
-                <div>发送失败 : <span>{{ topList.msgFalse }}</span> </div>
               </div>
             </div>
             <div class="opertion-btn">
               <a-button-group>
                 <a-button @click="() => handleEdit(topList.newsId)">编辑</a-button>
-                <a-button type="danger" @click="() => showConfirm(topList.newsId)">删除</a-button>
+                <a-button
+                  type="danger"
+                  @click="() => showConfirm(topList.newsId)"
+                >删除</a-button>
               </a-button-group>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </a-card>
 </template>
 
 <script>
+import NewsItem from '@/components/News/NewsItem'
+
 import Axios from 'axios'
 export default {
   name: 'TopNews',
+  components: { NewsItem },
   data () {
     return {
       NotopLists: false,
@@ -79,6 +114,15 @@ export default {
   },
   mounted () {
     this.fetch()
+  },
+  watch: {
+    '$route.path': function (to, from) {
+      if (to === '/intervenemanager/TopPush/list') {
+        console.log('再次进入列表页面')
+        console.log('that', this)
+        this.fetch()
+      }
+    }
   },
   methods: {
     // 获取数据
@@ -123,16 +167,28 @@ export default {
       // news列表刷新
       this.fetch()
     },
+    handleDelete (newsId) {
+      return Axios({
+        url: `/api/admin/news/${newsId}`,
+        method: 'delete'
+      })
+    },
     showConfirm (newsId) {
+      const that = this
       this.$confirm({
-        title: `Do you want to delete ${newsId} items?`,
-        content: 'When clicked the OK button, this dialog will be closed after 1 second',
+        title: `你确定想要删除这条新闻吗? NewsID:${newsId}`,
+        content: '当你点击确定按钮时，就会删除选中的这条新闻',
         onOk () {
-          return new Promise((resolve, reject) => {
-            setTimeout(Math.random() > 0.5 ? resolve : reject, 1000)
-          }).catch(() => console.log('Oops errors!'))
+          // 异步请求
+          that.handleDelete(newsId)
+            .then(res => {
+              // refresh data
+              that.fetch()
+            })
         },
-        onCancel () {}
+        onCancel () {
+          console.log('this', this)
+        }
       })
     }
   }
@@ -140,7 +196,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .app-top {
   height: 60px;
   display: flex;
@@ -201,7 +256,7 @@ export default {
   }
   .list-info-img {
     width: 200px;
-    min-height: 200px;
+    min-height: 180px;
     height: 100%;
     border: 1px solid #d9d9d9;
     border-radius: 2px;
@@ -252,11 +307,11 @@ export default {
     width: 220px;
     padding: 10px 0;
     .desc-views {
-      margin-left:8px;
+      margin-left: 8px;
     }
   }
   .content-desc > div > .anticon {
-    font-size:18px;
+    font-size: 18px;
     vertical-align: middle;
   }
   .content-desc > div > span {

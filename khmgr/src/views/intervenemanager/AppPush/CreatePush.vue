@@ -146,7 +146,7 @@ export default {
           this.$set(values, 'isTop', false)
           console.log('追加 values of form: ', values)
           // post form
-          this.formSubmit()
+          this.formSubmit(values)
         }
       })
     },
@@ -161,8 +161,8 @@ export default {
         if (res.data.successed === true) {
           // 跳转到新闻详情页面
           this.$router.push({
-            path: '/intervenemanager/TopPush/edit',
-            query: { newsId: res.data.value }
+            path: '/intervenemanager/Healthpush/list'
+            // query: { newsId: res.data.value }
           })
         } else {
           this.$notification['error']({

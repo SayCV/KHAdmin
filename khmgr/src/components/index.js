@@ -25,6 +25,9 @@ import Result from '@/components/Result'
 import IconSelector from '@/components/IconSelector'
 import ExceptionPage from '@/components/Exception'
 
+// self components
+import NewsItem from '@/components/News/NewsItem'
+
 export {
   AvatarList,
   Bar,
@@ -50,5 +53,6 @@ export {
   MultiTab,
   Result,
   ExceptionPage,
-  IconSelector
+  IconSelector,
+  NewsItem
 }

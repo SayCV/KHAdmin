@@ -1,7 +1,6 @@
 <template>
   <div>
-    编辑头条
-    {{ newsId }}
+    编辑头条:{{ newsId }}
   </div>
 </template>
 
@@ -12,10 +11,17 @@ export default {
     return {
       newsId: this.$route.query.newsId
     }
+  },
+  watch: {
+    '$route.path' (to, from) {
+      if (to === '/intervenemanager/TopPush/edit') {
+        console.log('进入新闻编辑页面', to)
+        this.newsId = this.$route.query.newsId
+      }
+    }
   }
 }
 </script>
 
 <style scoped>
-
 </style>

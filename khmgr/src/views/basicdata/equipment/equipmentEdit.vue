@@ -3,21 +3,19 @@
     <a-card :bordered="true">
       <div class="back">
         <div class="equipment-table-title">
-          <h1>设备编辑页 <span>{{ equipmentId }}</span></h1>
+          <h1>
+            设备编辑页
+            <span>{{ equipmentId }}</span>
+          </h1>
         </div>
-        <a-button
-          type="primary"
-          @click="handleBtnBack"
-        >返回
+        <a-button type="primary" @click="handleBtnBack">
+          返回
           <a-icon type="rollback" />
         </a-button>
       </div>
       <div class="equipment-edit-table">
         <div class="equipment-table-body">
-          <a-form
-            @submit="handleSubmit"
-            :form="form"
-          >
+          <a-form @submit="handleSubmit" :form="form">
             <div class="basic-info">
               <a-form-item
                 label="设备类型"
@@ -178,14 +176,8 @@
                 />
               </a-form-item>
             </div>
-            <div
-              class="from-option"
-              style="text-align: center"
-            >
-              <a-button
-                htmlType="submit"
-                type="primary"
-              >提交</a-button>
+            <div class="from-option" style="text-align: center">
+              <a-button htmlType="submit" type="primary">提交</a-button>
               <a-button style="margin-left: 8px">保存</a-button>
             </div>
           </a-form>
@@ -210,6 +202,15 @@ export default {
       // form
       // form
       form: this.$form.createForm(this)
+    }
+  },
+  watch: {
+    '$route.path' (to, from) {
+      if (to === '/basicdata/Equipmentmanager/edit') {
+        console.log('再次进入设备管理编辑页', to)
+        this.equipmentId = this.$route.query.equipmentId
+        this.fetch()
+      }
     }
   },
   mounted () {

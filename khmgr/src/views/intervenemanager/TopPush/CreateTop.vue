@@ -2,53 +2,36 @@
   <a-card :bordered="false">
     <div class="create-container">
       <div class="create-top">
-        <a-button
-          type="primary"
-          @click="() => handleBack()"
-        >
+        <a-button type="primary" @click="() => handleBack()">
           <a-icon type="left" />返回
         </a-button>
       </div>
       <div class="create-main">
-        <a-form
-          :form="form"
-          @submit="handleSubmit"
-        >
+        <a-form :form="form" @submit="handleSubmit">
           <div class="main-basic">
-            <a-form-item
-              label="标题"
-              :label-col="{ span: 5 }"
-              :wrapper-col="{ span: 12 }"
-            >
-              <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]" />
+            <a-form-item label="标题" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
+              <a-input
+                v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]"
+              />
             </a-form-item>
-            <a-form-item
-              label="摘要"
-              :label-col="{ span: 5 }"
-              :wrapper-col="{ span: 12 }"
-            >
+            <a-form-item label="摘要" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
               <a-textarea
                 rows="4"
                 v-decorator="[
                   'summary',
                   {rules: [{ required: true, message: '请填写安装地址' }]}
-                ]" />
+                ]"
+              />
             </a-form-item>
-            <a-form-item
-              label="作者"
-              :label-col="{ span: 5 }"
-              :wrapper-col="{ span: 12 }"
-            >
+            <a-form-item label="作者" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
               <a-input
                 v-decorator="[
                   'author',
                   {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
-                ]" />
+                ]"
+              />
             </a-form-item>
-            <a-form-item
-              label="封面"
-              :label-col="{ span: 5 }"
-              :wrapper-col="{ span: 12 }">
+            <a-form-item label="封面" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
               <div class="clearfix">
                 <a-upload
                   action="http://172.31.214.104/khmsrv/api/resources"
@@ -62,16 +45,8 @@
                     <div class="ant-upload-text">上传视频封面</div>
                   </div>
                 </a-upload>
-                <a-modal
-                  :visible="previewVisible"
-                  :footer="null"
-                  @cancel="handleCancel"
-                >
-                  <img
-                    alt="example"
-                    style="width: 100%"
-                    :src="previewImage"
-                  />
+                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                  <img alt="example" style="width: 100%" :src="previewImage" />
                 </a-modal>
               </div>
             </a-form-item>
@@ -83,19 +58,9 @@
               </div>
             </a-form-item>
           </div>
-          <div
-            ref="mybtn"
-            class="form-submit"
-          >
-            <a-button>
-              保存
-            </a-button>
-            <a-button
-              type="primary"
-              html-type="submit"
-            >
-              Submit
-            </a-button>
+          <div ref="mybtn" class="form-submit">
+            <a-button>保存</a-button>
+            <a-button type="primary" html-type="submit">Submit</a-button>
           </div>
         </a-form>
       </div>
@@ -114,16 +79,26 @@ export default {
       form: this.$form.createForm(this),
       previewVisible: false,
       previewImage: '',
-      fileList: [],
+      fileList: [], // 上传组件的图片
       isLoadedCover: ''
     }
   },
+  watch: {
+    '$route.path': function (to, from) {
+      if (to === '/intervenemanager/TopPush/add') {
+        console.log('再次进入新建新闻页且清空表单')
+        this.clearFormData()
+      }
+    }
+  },
   methods: {
-    handleBack () {
+    clearFormData () {
       // 清空表单内容
       this.form.resetFields()
       this.value = ''
       this.fileList = []
+    },
+    handleBack () {
       // 返回PushList页面
       this.$router.push({
         path: '/intervenemanager/TopPush/list'
@@ -151,26 +126,32 @@ export default {
       })
     },
     formSubmit (formData) {
-      Axios({
-        url: '/api/admin/news',
-        method: 'post',
-        data: formData,
-        headers: { 'Content-Type': 'application/json' }
-      }).then(res => {
-        console.log('表单post', res.data)
-        if (res.data.successed === true) {
-          // 跳转到新闻详情页面
-          this.$router.push({
-            path: '/intervenemanager/TopPush/edit',
-            query: { newsId: res.data.value }
-          })
-        } else {
-          this.$notification['error']({
-            message: '注意！注意！',
-            description: '发表新闻失败.'
-          })
-        }
-      })
+      const mdText = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
+      console.log('MarkDown文本编辑器内容', mdText)
+      if (mdText === ' ') {
+        this.$message.warning('MarkDown文本编辑器内容不能为空！')
+      } else {
+        Axios({
+          url: '/api/admin/news',
+          method: 'post',
+          data: formData,
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          console.log('表单post', res.data)
+          if (res.data.successed === true) {
+            // 跳转到新闻详情页面
+            this.$router.push({
+              path: '/intervenemanager/TopPush/list'
+              // query: { newsId: res.data.value }
+            })
+          } else {
+            this.$notification['error']({
+              message: '注意！注意！',
+              description: '发表新闻失败.'
+            })
+          }
+        })
+      }
     },
     // 绑定@imgAdd event
     $imgAdd (pos, $file) {
@@ -182,13 +163,13 @@ export default {
         method: 'post',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
-      }).then((url) => {
+      }).then(url => {
         // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
         /**
-        * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-        * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-        * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-        */
+         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+         */
         const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url.data}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
         console.log('Md-imgUrl', mdImgUrl)
