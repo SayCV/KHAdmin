@@ -3,7 +3,7 @@
     <div style="float: left">
       <slot name="extra">{{ extra }}</slot>
     </div>
-    <div style="float: right">
+    <div class="footer-bar">
       <slot></slot>
     </div>
   </div>
@@ -26,5 +26,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
+.footer-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

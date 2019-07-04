@@ -1,86 +1,104 @@
 <template>
-  <a-card :bordered="false">
-    <div class="create-container">
-      <div class="create-top">
-        <a-button type="primary" @click="() => handleBack()">
-          <a-icon type="left" />返回
-        </a-button>
-      </div>
-      <div class="create-main">
-        <a-form :form="form" @submit="handleSubmit">
-          <div class="main-basic">
-            <a-form-item label="标题" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-              <a-input
-                v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]"
-              />
-            </a-form-item>
-            <a-form-item label="摘要" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-              <a-textarea
-                rows="4"
-                v-decorator="[
-                  'summary',
-                  {rules: [{ required: true, message: '请填写安装地址' }]}
-                ]"
-              />
-            </a-form-item>
-            <a-form-item label="作者" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-              <a-input
-                v-decorator="[
-                  'author',
-                  {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
-                ]"
-              />
-            </a-form-item>
-            <a-form-item label="封面" :label-col="{ span: 5 }" :wrapper-col="{ span: 12 }">
-              <div class="clearfix">
-                <a-upload
-                  action="http://172.31.214.104/khmsrv/api/resources"
-                  listType="picture-card"
-                  :fileList="fileList"
-                  @preview="handlePreview"
-                  @change="imgHandleChange"
-                >
-                  <div v-if="fileList.length < 1">
-                    <a-icon type="plus" />
-                    <div class="ant-upload-text">上传视频封面</div>
-                  </div>
-                </a-upload>
-                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                  <img alt="example" style="width: 100%" :src="previewImage" />
+  <div>
+    <a-card :bordered="true">
+      <div class="create-container">
+        <div class="create-top">
+          <a-button type="primary" @click="() => handleBack()">
+            <a-icon type="left" />返回
+          </a-button>
+        </div>
+        <div class="create-main">
+          <a-form :form="form" @submit="handleSubmit">
+            <div class="main-basic">
+              <a-form-item label="标题" :label-col="{ span: 3 }" :wrapper-col="{ span: 16 }">
+                <a-input
+                  v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]"
+                />
+              </a-form-item>
+              <a-form-item label="摘要" :label-col="{ span: 3 }" :wrapper-col="{ span: 16 }">
+                <a-textarea
+                  rows="4"
+                  v-decorator="[
+                    'summary',
+                    {rules: [{ required: true, message: '请填写安装地址' }]}
+                  ]"
+                />
+              </a-form-item>
+              <a-form-item label="作者" :label-col="{ span: 3 }" :wrapper-col="{ span: 16 }">
+                <a-input
+                  v-decorator="[
+                    'author',
+                    {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
+                  ]"
+                />
+              </a-form-item>
+              <a-form-item label="封面" :label-col="{ span: 3 }" :wrapper-col="{ span: 16 }">
+                <div class="clearfix">
+                  <a-upload
+                    action="http://172.31.214.104/khmsrv/api/resources"
+                    listType="picture-card"
+                    :fileList="fileList"
+                    @preview="handlePreview"
+                    @change="imgHandleChange"
+                  >
+                    <div v-if="fileList.length < 1">
+                      <a-icon type="plus" />
+                      <div class="ant-upload-text">上传视频封面</div>
+                    </div>
+                  </a-upload>
+                  <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                    <img alt="example" style="width: 100%" :src="previewImage" />
+                  </a-modal>
+                </div>
+              </a-form-item>
+            </div>
+            <div class="main-content">
+              <a-form-item>
+                <div id="main" ref="myEditor">
+                  <mavon-editor ref="md" v-model="value" @imgAdd="$imgAdd" />
+                </div>
+              </a-form-item>
+            </div>
+            <!-- <div ref="mybtn" class="form-submit">
+              <a-button>保存</a-button>
+              <a-button type="primary" html-type="submit">提交</a-button>
+            </div>-->
+            <!-- fixed footer toolbar -->
+            <footer-tool-bar>
+              <div>
+                <a-button type="primary" :loading="loading" html-type="submit">提交</a-button>
+                <a-modal title="Basic Modal" v-model="visible" @ok="handleOk">
+                  <p>Some contents...</p>
+                  <p>Some contents...</p>
+                  <p>Some contents...</p>
+                  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae fugiat maxime, repellat ullam iusto repellendus commodi optio a voluptatibus, saepe accusamus voluptatem fuga omnis illum mollitia neque quisquam atque facere.</p>
                 </a-modal>
               </div>
-            </a-form-item>
-          </div>
-          <div class="main-content">
-            <a-form-item>
-              <div id="main" ref="myEditor">
-                <mavon-editor ref="md" v-model="value" @imgAdd="$imgAdd" />
-              </div>
-            </a-form-item>
-          </div>
-          <div ref="mybtn" class="form-submit">
-            <a-button>保存</a-button>
-            <a-button type="primary" html-type="submit">Submit</a-button>
-          </div>
-        </a-form>
+            </footer-tool-bar>
+          </a-form>
+        </div>
       </div>
-    </div>
-  </a-card>
+    </a-card>
+  </div>
 </template>
 
 <script>
 import Axios from 'axios'
+import FooterToolBar from '@/components/FooterToolbar'
 export default {
   name: 'CreateTop',
+  components: { FooterToolBar },
   data () {
     return {
+      visible: false,
       author: this.$store.getters.nickname,
       value: '',
       form: this.$form.createForm(this),
       previewVisible: false,
       previewImage: '',
       fileList: [], // 上传组件的图片
-      isLoadedCover: ''
+      isLoadedCover: '',
+      loading: false
     }
   },
   watch: {
@@ -91,7 +109,16 @@ export default {
       }
     }
   },
+  mounted () {
+  },
   methods: {
+    showModal () {
+      this.visible = true
+    },
+    handleOk (e) {
+      console.log(e)
+      this.visible = false
+    },
     clearFormData () {
       // 清空表单内容
       this.form.resetFields()
@@ -131,27 +158,31 @@ export default {
       if (mdText === ' ') {
         this.$message.warning('MarkDown文本编辑器内容不能为空！')
       } else {
-        Axios({
-          url: '/api/admin/news',
-          method: 'post',
-          data: formData,
-          headers: { 'Content-Type': 'application/json' }
-        }).then(res => {
-          console.log('表单post', res.data)
-          if (res.data.successed === true) {
-            // 跳转到新闻详情页面
-            this.$router.push({
-              path: '/intervenemanager/TopPush/list'
-              // query: { newsId: res.data.value }
-            })
-          } else {
-            this.$notification['error']({
-              message: '注意！注意！',
-              description: '发表新闻失败.'
-            })
-          }
-        })
+        this.showModal()
+        this.formPost(formData)
       }
+    },
+    formPost (formData) {
+      Axios({
+        url: '/api/admin/news',
+        method: 'post',
+        data: formData,
+        headers: { 'Content-Type': 'application/json' }
+      }).then(res => {
+        console.log('表单post', res.data)
+        if (res.data.successed === true) {
+          // 跳转到新闻详情页面
+          this.$router.push({
+            path: '/intervenemanager/TopPush/list'
+            // query: { newsId: res.data.value }
+          })
+        } else {
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '发表新闻失败.'
+          })
+        }
+      })
     },
     // 绑定@imgAdd event
     $imgAdd (pos, $file) {
@@ -194,9 +225,16 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.self-card {
+  padding: 0px !important;
+  background-color: #fff;
+}
+
 .create-container {
+  // height: calc(100vh - 325px);
+  // overflow: auto;
   .create-top {
-    height: 60px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -216,11 +254,11 @@ export default {
       position: absolute;
       left: -1px;
       top: -36px;
-      font-size: 16px;
+      font-size: 15px;
       height: 36px;
       text-align: center;
       line-height: 36px;
-      padding: 0 16px;
+      padding: 0 24px;
       border: 1px solid #d9d9d9;
       border-top-right-radius: 4px;
       border-top-left-radius: 4px;
@@ -236,23 +274,25 @@ export default {
       position: relative;
       // padding: 10px;
       background-color: #d9d9d9a6;
+      z-index: 0;
     }
     .main-content::before {
       content: '详细内容';
       position: absolute;
       left: -1px;
       top: -36px;
-      font-size: 16px;
+      font-size: 15px;
       height: 36px;
       text-align: center;
       line-height: 36px;
-      padding: 0 16px;
+      padding: 0 24px;
       border: 1px solid #d9d9d9;
       border-top-right-radius: 4px;
       border-top-left-radius: 4px;
       color: #2f54eb;
       background: #f0f5ff;
       border-color: #adc6ff;
+      z-index: 0;
     }
     .form-submit {
       display: flex;

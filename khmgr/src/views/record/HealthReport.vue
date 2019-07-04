@@ -1,86 +1,43 @@
 <template>
   <!-- 客户管理 -->
-  <div style="margin-right: 1rem;">
-    <a-card
-      :bordered="false"
-      v-if="is_toggle === this.$route.path"
-    >
+  <div>
+    <a-card :bordered="false" v-if="is_toggle === this.$route.path">
       <a-row>
         <div class="table-operator">
-          <a-button
-            type="primary"
-            icon="plus"
-          >新建</a-button>
-          <a-button
-            type="primary"
-            icon="export"
-          >导出</a-button>
-          <a-button
-            type="danger"
-            icon="edit"
-          >删除</a-button>
+          <a-button type="primary" icon="plus">新建</a-button>
+          <a-button type="primary" icon="export">导出</a-button>
+          <a-button type="danger" icon="edit">删除</a-button>
           <!-- <a-button type="dashed" @click="tableOption">{{ optionAlertShow && '关闭' || '开启' }} alert</a-button> -->
         </div>
       </a-row>
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <a-col
-              :md="8"
-              :sm="24"
-            >
+            <a-col :md="8" :sm="24">
               <a-form-item label="账号ID">
-                <a-input
-                  v-model="queryParam.id"
-                  placeholder
-                  style="width: 100%"
-                />
+                <a-input v-model="queryParam.id" placeholder style="width: 100%" />
               </a-form-item>
             </a-col>
-            <a-col
-              :md="8"
-              :sm="24"
-            >
+            <a-col :md="8" :sm="24">
               <a-form-item label="姓名">
-                <a-input
-                  v-model="queryParam.name"
-                  style="width: 100%"
-                />
+                <a-input v-model="queryParam.name" style="width: 100%" />
               </a-form-item>
             </a-col>
             <template v-if="advanced">
-              <a-col
-                :md="8"
-                :sm="24"
-              >
+              <a-col :md="8" :sm="24">
                 <a-form-item label="用户组">
-                  <a-input
-                    v-model="queryParam.group"
-                    style="width: 100%"
-                  />
+                  <a-input v-model="queryParam.group" style="width: 100%" />
                 </a-form-item>
               </a-col>
             </template>
-            <a-col
-              :md="!advanced && 8 || 24"
-              :sm="24"
-            >
+            <a-col :md="!advanced && 8 || 24" :sm="24">
               <span
                 class="table-page-search-submitButtons"
                 :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
               >
-                <a-button
-                  type="primary"
-                  @click="$refs.table.refresh(true)"
-                >查询</a-button>
-                <a-button
-                  style="margin-left: 8px"
-                  @click="() => queryParam = {}"
-                >重置</a-button>
-                <a
-                  @click="toggleAdvanced"
-                  style="margin-left: 8px"
-                >
+                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+                <a @click="toggleAdvanced" style="margin-left: 8px">
                   {{ advanced ? '收起' : '展开' }}
                   <a-icon :type="advanced ? 'up' : 'down'" />
                 </a>
@@ -91,14 +48,9 @@
       </div>
       <!-- 全选 -->
       <div style="margin-bottom: 16px">
-        <a-button
-          type="primary"
-          @click="start"
-          :disabled="!hasSelected"
-          :loading="loading"
-        >重置</a-button>
+        <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
         <span style="margin-left: 8px;margin-right: 8px;">
-          <template v-if="hasSelected">{{`已选择 ${selectedRowKeys.length} 项`}}</template>
+          <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
         </span>
       </div>
 
@@ -116,24 +68,18 @@
         bordered
         :customRow="handleTableRow"
       >
-        <span
-          slot="serial"
-          slot-scope="text, record, index"
-        >{{ index + 1 }}</span>
+        <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
         <a
           slot="accountId"
           slot-scope="text, record"
           @click="() => handleView(record.accountId)"
-        >{{text}}</a>
+        >{{ text }}</a>
         <a
           slot="name"
           slot-scope="text, record"
           @click="() => handleView(record.accountId)"
-        >{{text}}</a>
-        <template
-          slot="operation"
-          slot-scope="text, record"
-        >
+        >{{ text }}</a>
+        <template slot="operation" slot-scope="text, record">
           <div class="editable-row-operations">
             <span slot="operation">
               <a @click="() => handleEdit(record.accountId)">编辑</a>
@@ -146,12 +92,11 @@
     </a-card>
     <router-view v-else></router-view>
   </div>
-
 </template>
 
 <script>
 import { STable } from '@/components'
-import { getBaseDataUserList } from '@/api/manage'
+// import { getBaseDataUserList } from '@/api/manage'
 import axios from 'axios'
 
 const columns = [
@@ -201,7 +146,7 @@ const columns = [
     dataIndex: 'healthRate',
     sorter: true
   },
- {
+  {
     title: '健康档案',
     align: 'center',
     dataIndex: 'record',
@@ -222,7 +167,7 @@ const data = []
 export default {
   name: 'HealthReport',
   components: {
-    STable,
+    STable
   },
 
   data () {
@@ -235,10 +180,10 @@ export default {
       queryParam: {},
       selectedRowKeys: [], // Check here to configure the default column
       count: 33,
-      data, //表格数据
+      data, // 表格数据
       pagination: {},
       loading: false,
-      //表头
+      // 表头
       columns
     }
   },
@@ -272,15 +217,15 @@ export default {
       console.log('clikcTbale')
       return {
         props: {
-          //属性
+          // 属性
         },
         on: {
           // 事件
-          dblclick: () => {}
+          dblclick: () => { }
         }
       }
     },
-    //获取数据
+    // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
       this.loading = true

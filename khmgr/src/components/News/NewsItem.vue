@@ -43,7 +43,7 @@
         </div>
         <div class="opertion-btn">
           <a-button-group>
-            <a-button @click="() => handleEdit(newsItem.newsId)">编辑</a-button>
+            <a-button @click="() => handleEdit(newsItem.newsId)">查看</a-button>
             <a-button
               type="danger"
               @click="() => showConfirm(newsItem.newsId)"

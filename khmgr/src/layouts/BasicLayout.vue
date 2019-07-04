@@ -28,35 +28,46 @@
       :collapsible="true"
     ></side-menu>
 
-    <a-layout :class="[layoutMode, `content-width-${contentWidth}`]" :style="{ paddingLeft: contentPaddingLeft, minHeight: '100vh' }">
+    <a-layout
+      :class="[layoutMode, `content-width-${contentWidth}`]"
+      :style="{ paddingLeft: contentPaddingLeft, minHeight: '100vh' }"
+    >
       <!-- layout header -->
-      <global-header
-        :mode="layoutMode"
-        :menus="menus"
-        :theme="navTheme"
-        :collapsed="collapsed"
-        :device="device"
-        @toggle="toggle"
-      />
+      <div class="g-header" :style="{position: '-webkit-sticky',position:' sticky',top: '0', zIndex:'9'}">
+        <global-header
+          :mode="layoutMode"
+          :menus="menus"
+          :theme="navTheme"
+          :collapsed="collapsed"
+          :device="device"
+          @toggle="toggle"
+        />
+        <!-- pageHeader , route meta :true on hide -->
+        <page-header v-if="!$route.meta.hiddenHeaderContent" :title="pageTitle"></page-header>
+      </div>
 
       <!-- layout content -->
-      <a-layout-content :style="{ height: '100%', margin: multiTab ? '24px 24px 0' : '24px 24px 0', paddingTop: fixedHeader ? '64px' : '0' }">
-        <multi-tab v-if="multiTab"></multi-tab>
-        <transition name="page-transition">
-          <route-view />
-        </transition>
-      </a-layout-content>
 
-      <!-- layout footer -->
-      <a-layout-footer>
-        <global-footer />
-      </a-layout-footer>
+      <!-- :style="{ height: '100%' , margin: multiTab ? '24px 24px 0' : '24px 24px 0', paddingTop: fixedHeader ? '64px' : '0' }" -->
+      <div class="g-content" :style="{height:'calc(100vh - 180px)',paddingTop: '24px' }">
+        <a-layout-content
+          :style="{ height: '100%' , padding: multiTab ? '0 24px' : '0 24px', paddingTop: fixedHeader ? '64px' : '0' }"
+        >
+          <multi-tab v-if="multiTab"></multi-tab>
+          <transition name="page-transition">
+            <route-view />
+          </transition>
+          <!-- layout footer -->
+          <a-layout-footer>
+            <global-footer />
+          </a-layout-footer>
+        </a-layout-content>
+      </div>
 
       <!-- Setting Drawer (show in development mode) -->
       <setting-drawer v-if="!production"></setting-drawer>
     </a-layout>
   </a-layout>
-
 </template>
 
 <script>
@@ -66,6 +77,7 @@ import { mixin, mixinDevice } from '@/utils/mixin'
 import config from '@/config/defaultSettings'
 import { asyncRouterMap } from '@/config/router.config.js'
 
+import PageHeader from '@/components/PageHeader'
 import RouteView from './RouteView'
 import MultiTab from '@/components/MultiTab'
 import SideMenu from '@/components/Menu/SideMenu'
@@ -82,13 +94,15 @@ export default {
     SideMenu,
     GlobalHeader,
     GlobalFooter,
-    SettingDrawer
+    SettingDrawer,
+    PageHeader
   },
   data () {
     return {
       production: config.production,
       collapsed: false,
-      menus: []
+      menus: [],
+      pageTitle: null
     }
   },
   computed: {
@@ -117,6 +131,7 @@ export default {
     this.collapsed = !this.sidebarOpened
   },
   mounted () {
+    this.getPageMeta()
     const userAgent = navigator.userAgent
     if (userAgent.indexOf('Edge') > -1) {
       this.$nextTick(() => {
@@ -127,7 +142,14 @@ export default {
       })
     }
   },
+  updated () {
+    this.getPageMeta()
+  },
   methods: {
+    getPageMeta () {
+      // this.pageTitle = (typeof (this.title) === 'string' || !this.title) ? this.title : this.$route.meta.title
+      this.pageTitle = this.$route.meta.title
+    },
     ...mapActions(['setSidebar']),
     toggle () {
       this.collapsed = !this.collapsed
