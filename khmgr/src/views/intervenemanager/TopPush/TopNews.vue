@@ -119,7 +119,6 @@ export default {
     '$route.path': function (to, from) {
       if (to === '/intervenemanager/TopPush/list') {
         console.log('再次进入列表页面')
-        console.log('that', this)
         this.fetch()
       }
     }
@@ -127,7 +126,6 @@ export default {
   methods: {
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
       Axios({
         // url: `/api/intervene/topLists/?pageSize=${this.pageSize}&currentPage=${this.current}`,
         url: '/api/admin/news/top', // 后台数据
@@ -187,7 +185,6 @@ export default {
             })
         },
         onCancel () {
-          console.log('this', this)
         }
       })
     }

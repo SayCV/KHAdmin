@@ -79,7 +79,8 @@ export default {
       this.$router.push({
         path: '/intervenemanager/TopPush/edit',
         query: {
-          newsId: newsId
+          newsId: newsId,
+          data: this.newsItem
         }
       })
     },
@@ -98,6 +99,7 @@ export default {
       this.$confirm({
         title: `你确定想要删除这条新闻吗? NewsID:${newsId}`,
         content: '当你点击确定按钮时，就会删除选中的这条新闻',
+        okType: 'danger',
         onOk () {
           // 异步请求
           that.handleDelete(newsId)
@@ -109,7 +111,6 @@ export default {
             })
         },
         onCancel () {
-          console.log('this', this)
         }
       })
     }

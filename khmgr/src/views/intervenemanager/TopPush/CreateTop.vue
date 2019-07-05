@@ -20,7 +20,7 @@
                   rows="4"
                   v-decorator="[
                     'summary',
-                    {rules: [{ required: true, message: '请填写安装地址' }]}
+                    {rules: [{ required: true, message: '请填写摘要' }]}
                   ]"
                 />
               </a-form-item>
@@ -55,23 +55,31 @@
             <div class="main-content">
               <a-form-item>
                 <div id="main" ref="myEditor">
-                  <mavon-editor ref="md" v-model="value" @imgAdd="$imgAdd" />
+                  <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
                 </div>
               </a-form-item>
             </div>
-            <!-- <div ref="mybtn" class="form-submit">
-              <a-button>保存</a-button>
-              <a-button type="primary" html-type="submit">提交</a-button>
-            </div>-->
             <!-- fixed footer toolbar -->
             <footer-tool-bar>
               <div>
-                <a-button type="primary" :loading="loading" html-type="submit">提交</a-button>
-                <a-modal title="Basic Modal" v-model="visible" @ok="handleOk">
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                  <p>Some contents...</p>
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vitae fugiat maxime, repellat ullam iusto repellendus commodi optio a voluptatibus, saepe accusamus voluptatem fuga omnis illum mollitia neque quisquam atque facere.</p>
+                <a-button type="primary" html-type="submit">提交</a-button>
+                <a-modal
+                  :title="ModalTitle"
+                  :visible="visible"
+                  @ok="handleOk"
+                  :confirmLoading="confirmLoading"
+                  @cancel="handleCancel"
+                >
+                  <div class="model-content">
+                    <div class="title">{{ ModalText.title }}</div>
+                    <div class="desc">
+                      <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
+                      <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
+                    </div>
+                    <div class="content">
+                      <div v-html="previewMdHtml"></div>
+                    </div>
+                  </div>
                 </a-modal>
               </div>
             </footer-tool-bar>
@@ -84,21 +92,27 @@
 
 <script>
 import Axios from 'axios'
+import moment from 'moment'
+import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
+
 export default {
   name: 'CreateTop',
   components: { FooterToolBar },
   data () {
     return {
+      previewMdHtml: null,
+      ModalTitle: null,
+      ModalText: {},
       visible: false,
+      confirmLoading: false,
       author: this.$store.getters.nickname,
-      value: '',
+      editorContent: '',
       form: this.$form.createForm(this),
       previewVisible: false,
       previewImage: '',
       fileList: [], // 上传组件的图片
-      isLoadedCover: '',
-      loading: false
+      toPostForm: {}
     }
   },
   watch: {
@@ -110,19 +124,14 @@ export default {
     }
   },
   mounted () {
+
   },
   methods: {
-    showModal () {
-      this.visible = true
-    },
-    handleOk (e) {
-      console.log(e)
-      this.visible = false
-    },
+    moment,
     clearFormData () {
       // 清空表单内容
       this.form.resetFields()
-      this.value = ''
+      this.editorContent = ''
       this.fileList = []
     },
     handleBack () {
@@ -135,34 +144,29 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values)
           // this.$refs.目标标签ref的属性值就能找到dom对象
           // const md = this.$refs.md
           const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
-          const cover = `http://172.31.214.104/khmsrv/api/resources/${this.isLoadedCover}`
-
+          const cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
           // $set给post的表单json数据追加字段
           this.$set(values, 'content', md)
           this.$set(values, 'cover', cover)
           // 点滴内容恒为isTop===false
           this.$set(values, 'isTop', true)
-          console.log('追加 values of form: ', values)
-          // post form
-          this.formSubmit(values)
+          this.toPostForm = values
+          console.log('追加 values of form: ', this.toPostForm)
+          if (md === ' ') {
+            this.$message.warning('MarkDown文本编辑器内容不能为空！')
+          } else {
+            // post form
+            // this.formSubmit(this.toPostForm)
+            this.showModal()
+          }
         }
       })
     },
-    formSubmit (formData) {
-      const mdText = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
-      console.log('MarkDown文本编辑器内容', mdText)
-      if (mdText === ' ') {
-        this.$message.warning('MarkDown文本编辑器内容不能为空！')
-      } else {
-        this.showModal()
-        this.formPost(formData)
-      }
-    },
     formPost (formData) {
+      // Post且跳转
       Axios({
         url: '/api/admin/news',
         method: 'post',
@@ -184,6 +188,24 @@ export default {
         }
       })
     },
+    showModal () {
+      this.visible = true
+      this.ModalTitle = '头条预览'
+      this.ModalText = this.toPostForm
+      this.previewMdHtml = Mdjs.md2html(this.ModalText.content)
+    },
+    handleOk () {
+      this.confirmLoading = true
+      setTimeout(() => {
+        this.formPost(this.toPostForm)
+        this.visible = false
+        this.confirmLoading = false
+      }, 500)
+    },
+    handleCancel (e) {
+      this.visible = false
+      this.previewVisible = false
+    },
     // 绑定@imgAdd event
     $imgAdd (pos, $file) {
       // 将图片上传到服务器
@@ -203,105 +225,19 @@ export default {
          */
         const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url.data}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
-        console.log('Md-imgUrl', mdImgUrl)
       })
-    },
-    handleCancel () {
-      this.previewVisible = false
     },
     handlePreview (file) {
       this.previewImage = file.url || file.thumbUrl
       this.previewVisible = true
-      this.showVideoFrom = false
     },
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
-      this.isLoadedCover = fileList[0].response
-      console.log('isLoadedCover', `http://172.31.214.104/khmsrv/api/resources/${this.isLoadedCover}`)
-      console.log('file', fileList)
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.self-card {
-  padding: 0px !important;
-  background-color: #fff;
-}
-
-.create-container {
-  // height: calc(100vh - 325px);
-  // overflow: auto;
-  .create-top {
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-  }
-  .create-main {
-    .main-basic {
-      padding-top: 24px;
-      border: 1px solid #d9d9d9;
-      border-radius: 4px;
-      border-top-left-radius: 0;
-      display: block;
-      position: relative;
-      margin-bottom: 56px;
-    }
-    .main-basic::before {
-      content: '基本内容';
-      position: absolute;
-      left: -1px;
-      top: -36px;
-      font-size: 15px;
-      height: 36px;
-      text-align: center;
-      line-height: 36px;
-      padding: 0 24px;
-      border: 1px solid #d9d9d9;
-      border-top-right-radius: 4px;
-      border-top-left-radius: 4px;
-      color: #2f54eb;
-      background: #f0f5ff;
-      border-color: #adc6ff;
-    }
-    .main-content {
-      // border: 1px solid #d9d9d9;
-      border-radius: 4px;
-      border-top-left-radius: 0;
-      display: block;
-      position: relative;
-      // padding: 10px;
-      background-color: #d9d9d9a6;
-      z-index: 0;
-    }
-    .main-content::before {
-      content: '详细内容';
-      position: absolute;
-      left: -1px;
-      top: -36px;
-      font-size: 15px;
-      height: 36px;
-      text-align: center;
-      line-height: 36px;
-      padding: 0 24px;
-      border: 1px solid #d9d9d9;
-      border-top-right-radius: 4px;
-      border-top-left-radius: 4px;
-      color: #2f54eb;
-      background: #f0f5ff;
-      border-color: #adc6ff;
-      z-index: 0;
-    }
-    .form-submit {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      & > .ant-btn {
-        margin: 5px;
-      }
-    }
-  }
-}
+@import './createedit';
 </style>
