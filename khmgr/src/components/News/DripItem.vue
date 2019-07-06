@@ -3,27 +3,21 @@
     <div class="app-list">
       <div class="app-list-img">
         <div class="list-img-hidden">
-          <div
-            class="list-info-img"
-            :style="{ backgroundImage: 'url(' + newsItem.cover + ')' }"
-          ></div>
+          <div class="list-info-img" :style="{ backgroundImage: 'url(' + dripItem.cover + ')' }"></div>
         </div>
       </div>
       <div class="app-list-content">
         <div class="content-top">
-          <div class="content-name">{{ newsItem.title }}</div>
-          <div class="content-txt">{{ newsItem.summary }}</div>
+          <div class="content-name">{{ dripItem.title }}</div>
+          <div class="content-txt">{{ dripItem.summary }}</div>
         </div>
         <div class="content-desc">
           <div class="tag-time">
-            <a-tag color="geekblue">{{ newsItem.dateTime.substring(0, 16) }}</a-tag>
+            <a-tag color="geekblue">{{ dripItem.dateTime.substring(0, 16) }}</a-tag>
           </div>
           <div class="desc-views">
-            <a-icon
-              type="eye"
-              theme="twoTone"
-            />
-            <span>{{ newsItem.views }}</span>
+            <a-icon type="eye" theme="twoTone" />
+            <span>{{ dripItem.views }}</span>
           </div>
         </div>
       </div>
@@ -31,23 +25,26 @@
         <div class="operation-desc">
           <div class="operation-status">
             <span>状态 :</span>
-            <a-badge
-              :status="newsItem.status"
-              :text="newsItem.statusTxt"
-            />
+            <a-badge :status="dripItem.status" :text="dripItem.statusTxt" />
           </div>
           <div class="operation-desc-txt">
-            <div>消息类型 : <span>{{ newsItem.msgcategory }}</span> </div>
-            <div>发送人群 : <span>{{ newsItem.msgRq }}</span> </div>
+            <div>
+              消息类型 :
+              <span>{{ dripItem.msgcategory }}</span>
+            </div>
+            <div>
+              发送人群 :
+              <span>{{ dripItem.msgRq }}</span>
+            </div>
           </div>
         </div>
         <div class="opertion-btn">
           <a-button-group>
-            <a-button @click="() => handleEdit(newsItem.newsId)">查看</a-button>
+            <a-button @click="() => handleEdit(dripItem.newsId)">查看</a-button>
             <a-button
               type="danger"
-              @click="() => showConfirm(newsItem.newsId)"
-            >删除{{ newsItem.newsId }}</a-button>
+              @click="() => showConfirm(dripItem.newsId)"
+            >删除{{ dripItem.newsId }}</a-button>
           </a-button-group>
         </div>
       </div>
@@ -58,11 +55,11 @@
 <script>
 import Axios from 'axios'
 export default {
-  name: 'NewsItem',
+  name: 'DripItem',
   // eslint-disable-next-line vue/require-prop-types
-  props: ['newsItem'],
+  props: ['dripItem'],
   // props: {
-  //   newsItem: {
+  //   dripItem: {
   //     type: JSON,
   //     default: () => {}
   //     // require: true // 必填
@@ -70,23 +67,19 @@ export default {
   // },
   data () {
     return {
-      newsData: this.newsItem
+      newsData: this.dripItem
     }
   },
   methods: {
     handleEdit (newsId) {
       // 点击行进入edit页
       this.$router.push({
-        path: '/intervenemanager/TopPush/edit',
+        path: '/intervenemanager/AppPush/edit',
         query: {
           newsId: newsId,
-          data: this.newsItem
+          data: this.dripItem
         }
       })
-    },
-    handleRefresh () {
-      // news列表刷新
-      this.fetch()
     },
     handleDelete (newsId) {
       return Axios({
@@ -106,7 +99,7 @@ export default {
             .then(res => {
               // refresh data
               // that.fetch()
-              that.$emit('update-newsList', res)
+              that.$emit('update-dripList', res)
               console.log('子组件更新父组件数据', res)
             })
         },

@@ -97,7 +97,7 @@ import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
 
 export default {
-  name: 'CreateTop',
+  name: 'CreateDrip',
   components: { FooterToolBar },
   data () {
     return {
@@ -118,8 +118,8 @@ export default {
   },
   watch: {
     '$route.path': function (to, from) {
-      if (to === '/intervenemanager/TopPush/add') {
-        console.log('再次进入新建新闻页且清空表单')
+      if (to === '/intervenemanager/AppPush/add') {
+        console.log('再次进入新建点滴页且清空表单')
         this.clearFormData()
       }
     }
@@ -138,15 +138,28 @@ export default {
     handleBack () {
       // 返回PushList页面
       this.$router.push({
-        path: '/intervenemanager/TopPush/list'
+        path: '/intervenemanager/AppPush/list'
       })
     },
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
+          // this.$refs.目标标签ref的属性值就能找到dom对象
+          // const md = this.$refs.md
           const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
-          this.createOtherForm(values)
+          if (this.fileList[0]) {
+            this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+          } else {
+            this.cover = ''
+          }
+          // $set给post的表单json数据追加字段
+          this.$set(values, 'content', md)
+          this.$set(values, 'cover', this.cover)
+          // 点滴内容恒为isTop===false
+          this.$set(values, 'isTop', false)
+          this.toPostForm = values
+          console.log('追加 values of form: ', this.toPostForm)
           if (md === ' ') {
             this.$message.warning('MarkDown文本编辑器内容不能为空！')
           } else {
@@ -156,23 +169,6 @@ export default {
           }
         }
       })
-    },
-    createOtherForm (values) {
-      // this.$refs.目标标签ref的属性值就能找到dom对象
-      // const md = this.$refs.md
-      const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
-      if (this.fileList[0]) {
-        this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
-      } else {
-        this.cover = ''
-      }
-      // $set给post的表单json数据追加字段
-      this.$set(values, 'content', md)
-      this.$set(values, 'cover', this.cover)
-      // 点滴内容恒为isTop===false
-      this.$set(values, 'isTop', true)
-      this.toPostForm = values
-      console.log('追加 values of form: ', this.toPostForm)
     },
     formPost (formData) {
       // Post且跳转
@@ -186,20 +182,20 @@ export default {
         if (res.data.successed === true) {
           // 跳转到新闻详情页面
           this.$router.push({
-            path: '/intervenemanager/TopPush/list'
+            path: '/intervenemanager/AppPush/list'
             // query: { newsId: res.data.value }
           })
         } else {
           this.$notification['error']({
             message: '注意！注意！',
-            description: '发表新闻失败.'
+            description: '发表点滴失败.'
           })
         }
       })
     },
     showModal () {
       this.visible = true
-      this.ModalTitle = '头条预览'
+      this.ModalTitle = '点滴预览'
       this.ModalText = this.toPostForm
       this.previewMdHtml = Mdjs.md2html(this.ModalText.content)
     },

@@ -26,7 +26,8 @@ import IconSelector from '@/components/IconSelector'
 import ExceptionPage from '@/components/Exception'
 
 // self components
-import NewsItem from '@/components/News/NewsItem'
+import TopItem from '@/components/News/TopItem'
+import DripItem from '@/components/News/DripItem'
 
 export {
   AvatarList,
@@ -54,5 +55,6 @@ export {
   Result,
   ExceptionPage,
   IconSelector,
-  NewsItem
+  DripItem,
+  TopItem
 }

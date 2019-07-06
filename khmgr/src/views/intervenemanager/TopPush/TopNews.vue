@@ -1,39 +1,21 @@
 <template>
   <a-card :bordered="false">
-    <div
-      class="no-topLists"
-      v-if="NotopLists"
-    >
+    <div class="no-topLists" v-if="NotopLists">
       <div class="null-svg"></div>
       <div class="null-txt">
         <h2>还没有上传过视频yo</h2>
       </div>
     </div>
-    <div
-      class="app-container"
-      v-else
-    >
+    <div class="app-container" v-else>
       <div class="app-top">
-        <a-button
-          class="refresh"
-          @click="() => handleRefresh()"
-        >刷新</a-button>
-        <a-button
-          type="primary"
-          @click="() => handleAdd()"
-        >
+        <a-button class="refresh" @click="() => handleRefresh()">刷新</a-button>
+        <a-button type="primary" @click="() => handleAdd()">
           <a-icon type="plus" />新建头条
         </a-button>
       </div>
       <div class="app-main">
-        <div
-          v-for="Item in topLists"
-          :key="Item.newsId"
-        >
-          <NewsItem
-            :newsItem="Item"
-            @update-newsList="handleRefresh()"
-          ></NewsItem>
+        <div v-for="Item in topLists" :key="Item.newsId">
+          <TopItem :topItem="Item" @update-topList="handleRefresh()"></TopItem>
         </div>
         <!-- <div
           class="app-list"
@@ -90,19 +72,19 @@
               </a-button-group>
             </div>
           </div>
-        </div> -->
+        </div>-->
       </div>
     </div>
   </a-card>
 </template>
 
 <script>
-import NewsItem from '@/components/News/NewsItem'
+import TopItem from '@/components/News/TopItem'
 
 import Axios from 'axios'
 export default {
   name: 'TopNews',
-  components: { NewsItem },
+  components: { TopItem },
   data () {
     return {
       NotopLists: false,
@@ -112,6 +94,11 @@ export default {
       pageSize: 8
     }
   },
+  updated () {
+    // 切换页面时滚动条自动滚动到顶部
+    console.log('置顶')
+    window.scrollTo(0, 0)
+  },
   mounted () {
     this.fetch()
   },
@@ -119,6 +106,9 @@ export default {
     '$route.path': function (to, from) {
       if (to === '/intervenemanager/TopPush/list') {
         console.log('再次进入列表页面')
+        // 切换页面时滚动条自动滚动到顶部
+        console.log('置顶')
+        window.scrollTo(0, 0)
         this.fetch()
       }
     }
@@ -215,15 +205,15 @@ export default {
   margin-bottom: 0;
 }
 .app-main::before {
-  content: '点滴内容';
+  content: '头条内容';
   position: absolute;
   left: -1px;
   top: -36px;
-  font-size: 16px;
+  font-size: 15px;
   height: 36px;
   text-align: center;
   line-height: 36px;
-  padding: 0 16px;
+  padding: 0 24px;
   border: 1px solid #d9d9d9;
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;

@@ -21,11 +21,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-@media screen and (max-width: 900px) {
-  .page-header-index-wide {
-    margin: 1rem;
-  }
-}
-</style>

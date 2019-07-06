@@ -1,6 +1,6 @@
 <template>
   <a-card :bordered="false">
-    <div class="no-pushLists" v-if="NoPushLists">
+    <div class="no-topLists" v-if="NotopLists">
       <div class="null-svg"></div>
       <div class="null-txt">
         <h2>还没有上传过视频yo</h2>
@@ -14,27 +14,37 @@
         </a-button>
       </div>
       <div class="app-main">
-        <div class="app-list" v-for="pushList in pushLists" :key="pushList.newsId">
+        <div v-for="Item in topLists" :key="Item.newsId">
+          <DripItem :dripItem="Item" @update-dripList="handleRefresh()"></DripItem>
+        </div>
+        <!-- <div
+          class="app-list"
+          v-for="topList in topLists"
+          :key="topList.newsId"
+        >
           <div class="app-list-img">
             <div class="list-img-hidden">
               <div
                 class="list-info-img"
-                :style="{ backgroundImage: 'url(' + pushList.cover + ')' }"
+                :style="{ backgroundImage: 'url(' + topList.cover + ')' }"
               ></div>
             </div>
           </div>
           <div class="app-list-content">
             <div class="content-top">
-              <div class="content-name">{{ pushList.title }}</div>
-              <div class="content-txt">{{ pushList.summary }}</div>
+              <div class="content-name">{{ topList.title }}</div>
+              <div class="content-txt">{{ topList.summary }}</div>
             </div>
             <div class="content-desc">
               <div class="tag-time">
-                <a-tag color="geekblue">{{ pushList.dateTime.substring(0, 16) }}</a-tag>
+                <a-tag color="geekblue">{{ topList.dateTime.substring(0, 16) }}</a-tag>
               </div>
               <div class="desc-views">
-                <a-icon type="eye" theme="twoTone" />
-                <span>{{ pushList.views }}</span>
+                <a-icon
+                  type="eye"
+                  theme="twoTone"
+                />
+                <span>{{ topList.views }}</span>
               </div>
             </div>
           </div>
@@ -42,43 +52,43 @@
             <div class="operation-desc">
               <div class="operation-status">
                 <span>状态 :</span>
-                <a-badge :status="pushList.status" :text="pushList.statusTxt" />
+                <a-badge
+                  :status="topList.status"
+                  :text="topList.statusTxt"
+                />
               </div>
               <div class="operation-desc-txt">
-                <div>
-                  消息类型 :
-                  <span>{{ pushList.msgcategory }}</span>
-                </div>
-                <div>
-                  发送人群 :
-                  <span>{{ pushList.msgRq }}</span>
-                </div>
+                <div>消息类型 : <span>{{ topList.msgcategory }}</span> </div>
+                <div>发送人群 : <span>{{ topList.msgRq }}</span> </div>
               </div>
             </div>
             <div class="opertion-btn">
               <a-button-group>
-                <a-button @click="() => handleEdit(pushList.newsId)">编辑</a-button>
+                <a-button @click="() => handleEdit(topList.newsId)">编辑</a-button>
                 <a-button
                   type="danger"
-                  @click="() => showConfirm(pushList.newsId)"
-                >删除{{ pushList.newsId }}</a-button>
+                  @click="() => showConfirm(topList.newsId)"
+                >删除</a-button>
               </a-button-group>
             </div>
           </div>
-        </div>
+        </div>-->
       </div>
     </div>
   </a-card>
 </template>
 
 <script>
+import DripItem from '@/components/News/DripItem'
+
 import Axios from 'axios'
 export default {
-  name: 'Healthpush',
+  name: 'DripNews',
+  components: { DripItem },
   data () {
     return {
-      NoPushLists: false,
-      pushLists: [],
+      NotopLists: false,
+      topLists: [],
       totalCount: null,
       current: 1,
       pageSize: 8
@@ -87,35 +97,41 @@ export default {
   mounted () {
     this.fetch()
   },
+  watch: {
+    '$route.path': function (to, from) {
+      if (to === '/intervenemanager/AppPush/list') {
+        console.log('再次进入列表页面')
+        this.fetch()
+      }
+    }
+  },
   methods: {
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
       Axios({
-        // url: `/api/intervene/pushLists/?pageSize=${this.pageSize}&currentPage=${this.current}`,
-        // url: '/api/intervene/pushLists/', // 本地mock数据
+        // url: `/api/intervene/topLists/?pageSize=${this.pageSize}&currentPage=${this.current}`,
         url: '/api/admin/news', // 后台数据
         method: 'get',
         params: {
           ...params
         }
       }).then(res => {
-        console.log('获取健康点滴列表', res)
+        console.log('获取点滴列表', res)
         // 后台数据
         // this.totalCount = res.data.result.totalCount
         if (res.data.length === 0) {
-          this.NoPushLists = true
-          this.pushLists = []
+          this.NotopLists = true
+          this.topLists = []
         } else {
-          this.NoPushLists = false
-          this.pushLists = res.data
+          this.NotopLists = false
+          this.topLists = res.data
         }
       })
     },
     handleEdit (newsId) {
       // 点击行进入edit页
       this.$router.push({
-        path: '/intervenemanager/Healthpush/edit',
+        path: '/intervenemanager/AppPush/edit',
         query: {
           newsId: newsId
         }
@@ -124,7 +140,7 @@ export default {
     handleAdd () {
       // 点击行进入add页
       this.$router.push({
-        path: '/intervenemanager/Healthpush/add'
+        path: '/intervenemanager/AppPush/add'
       })
     },
     handleRefresh () {
@@ -151,7 +167,6 @@ export default {
             })
         },
         onCancel () {
-          console.log('this', this)
         }
       })
     }
@@ -186,11 +201,11 @@ export default {
   position: absolute;
   left: -1px;
   top: -36px;
-  font-size: 16px;
+  font-size: 15px;
   height: 36px;
   text-align: center;
   line-height: 36px;
-  padding: 0 16px;
+  padding: 0 24px;
   border: 1px solid #d9d9d9;
   border-top-right-radius: 4px;
   border-top-left-radius: 4px;

@@ -1,7 +1,7 @@
 <template>
   <a-locale-provider :locale="locale">
     <div id="app">
-      <router-view/>
+      <router-view />
     </div>
   </a-locale-provider>
 </template>
@@ -35,11 +35,14 @@ export default {
           break
       }
     })
+  },
+  updated () {
+    window.scroll(0, 0)
   }
 }
 </script>
 <style>
-  #app {
-    height: 100%;
-  }
+#app {
+  height: 100%;
+}
 </style>

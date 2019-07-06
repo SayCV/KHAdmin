@@ -224,29 +224,29 @@ export const asyncRouterMap = [
             meta: { title: '干预计划与课程', keepAlive: true, permission: ['profile'] }
           },
           {
-            path: '/intervenemanager/Healthpush',
-            name: 'Healthpush',
+            path: '/intervenemanager/AppPush',
+            name: 'AppPush',
             component: () => import('@/views/intervenemanager/AppPush/Index'),
             meta: { title: 'APP健康点滴', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/Healthpush/list',
+            redirect: '/intervenemanager/AppPush/list',
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/intervenemanager/Healthpush/list',
-                name: 'HealthpushList',
-                component: () => import('@/views/intervenemanager/AppPush/Healthpush'),
+                path: '/intervenemanager/AppPush/list',
+                name: 'DripNews',
+                component: () => import('@/views/intervenemanager/AppPush/DripNews'),
                 meta: { title: '点滴内容', keepAlive: true, hidden: true, permission: ['profile'] }
               },
               {
-                path: '/intervenemanager/Healthpush/add',
-                name: 'HealthpushAdd',
-                component: () => import('@/views/intervenemanager/AppPush/CreatePush'),
+                path: '/intervenemanager/AppPush/add',
+                name: 'CreateDrip',
+                component: () => import('@/views/intervenemanager/AppPush/CreateDrip'),
                 meta: { title: '新建点滴', keepAlive: true, hidden: true, permission: ['profile'] }
               },
               {
-                path: '/intervenemanager/Healthpush/edit',
-                name: 'EditPush',
-                component: () => import('@/views/intervenemanager/AppPush/EditPush'),
+                path: '/intervenemanager/AppPush/edit',
+                name: 'EditDrip',
+                component: () => import('@/views/intervenemanager/AppPush/EditDrip'),
                 meta: { title: '编辑点滴', keepAlive: true, hidden: true, permission: ['profile'] }
               }
             ]
