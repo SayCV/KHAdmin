@@ -16,8 +16,8 @@
             <a-tag color="geekblue">{{ topItem.dateTime.substring(0, 16) }}</a-tag>
           </div>
           <div class="desc-views">
-            <a-icon type="eye" theme="twoTone" />
-            <span>{{ topItem.views }}</span>
+            <a-icon class="view-icon" type="eye" theme="twoTone" />
+            <span class="view-num">{{ topItem.views }}</span>
           </div>
         </div>
       </div>
@@ -98,7 +98,6 @@ export default {
           that.handleDelete(newsId)
             .then(res => {
               // refresh data
-              // that.fetch()
               that.$emit('update-topList', res)
               console.log('子组件更新父组件数据', res)
             })
@@ -179,24 +178,22 @@ export default {
   }
   .content-desc {
     display: flex;
-    flex-direction: row;
-    // justify-content: space-around;
     align-items: center;
     width: 220px;
     padding: 10px 0;
     .desc-views {
       margin-left: 8px;
+      .view-icon {
+        font-size: 18px;
+        vertical-align: middle;
+      }
+      .view-num {
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 14px;
+        vertical-align: middle;
+        margin-left: 5px;
+      }
     }
-  }
-  .content-desc > div > .anticon {
-    font-size: 18px;
-    vertical-align: middle;
-  }
-  .content-desc > div > span {
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 14px;
-    vertical-align: middle;
-    margin-left: 5px;
   }
 }
 .app-list .app-list-operation {

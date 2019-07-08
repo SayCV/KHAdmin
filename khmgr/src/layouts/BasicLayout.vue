@@ -33,7 +33,10 @@
       :style="{ paddingLeft: contentPaddingLeft, minHeight: '100vh' }"
     >
       <!-- layout header -->
-      <div class="g-header" :style="{position: '-webkit-sticky',position:' sticky',top: '0', zIndex:'9'}">
+      <div
+        class="g-header"
+        :style="{position: '-webkit-sticky',position:' sticky',top: '0', zIndex:'9'}"
+      >
         <global-header
           :mode="layoutMode"
           :menus="menus"

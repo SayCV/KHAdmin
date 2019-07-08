@@ -145,40 +145,42 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          // this.$refs.目标标签ref的属性值就能找到dom对象
-          // const md = this.$refs.md
-          const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
-          if (this.fileList[0]) {
-            this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
-          } else {
-            this.cover = ''
-          }
-          // $set给post的表单json数据追加字段
-          this.$set(values, 'content', md)
-          this.$set(values, 'cover', this.cover)
-          // 点滴内容恒为isTop===false
-          this.$set(values, 'isTop', false)
-          this.toPostForm = values
-          console.log('追加 values of form: ', this.toPostForm)
-          if (md === ' ') {
+          if (this.editorContent === '') {
             this.$message.warning('MarkDown文本编辑器内容不能为空！')
           } else {
-            // post form
-            // this.formSubmit(this.toPostForm)
+            // 追加表单字段
+            this.appendForm(values)
+            // 弹出model层，等待进一步操作
             this.showModal()
           }
         }
       })
     },
+    appendForm (values) {
+      // const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
+      if (this.fileList[0]) {
+        this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+      } else {
+        this.cover = ''
+      }
+      // $set给post的表单json数据追加字段
+      this.$set(values, 'content', this.editorContent)
+      this.$set(values, 'cover', this.cover)
+      // 点滴内容恒为isTop===false
+      this.$set(values, 'isTop', false)
+      this.toPostForm = values
+      console.log('函数：追加表单字段: ', this.toPostForm)
+    },
     formPost (formData) {
       // Post且跳转
+      console.log('要提交的表单', formData)
       Axios({
         url: '/api/admin/news',
         method: 'post',
         data: formData,
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
-        console.log('表单post', res.data)
+        console.log('表单提交了', res.data)
         if (res.data.successed === true) {
           // 跳转到新闻详情页面
           this.$router.push({
@@ -205,7 +207,7 @@ export default {
         this.formPost(this.toPostForm)
         this.visible = false
         this.confirmLoading = false
-      }, 500)
+      }, 1000)
     },
     handleCancel (e) {
       this.visible = false

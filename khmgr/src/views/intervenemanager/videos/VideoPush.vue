@@ -1,78 +1,92 @@
 <template>
-  <div>
-    <div id="video-push">
-      <div class="video-upload">
-        <a-upload-dragger
-          name="file"
-          :multiple="true"
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          @change="handleChange"
-          listType="picture"
-          :VideoList="VideoList">
-          <p class="ant-upload-drag-icon">
-            <a-icon type="inbox" />
-          </p>
-          <p class="ant-upload-text">点击或拖拽视频到此处也可上传</p>
-          <p class="ant-upload-hint">上传视频，请勿上传色情，反动等违法视频。</p>
-        </a-upload-dragger>
-      </div>
+  <div class="video-container">
+    <div class="video-push">
       <div class="video-info">
-        <a-form
-          :layout="formLayout"
-          :form="form"
-          @submit="handleSubmit">
-          <a-form-item>
+        <a-form :layout="formLayout" :form="form" @submit="handleSubmit">
+          <a-form-item
+            label="标题"
+            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
+          >
+            <a-input
+              v-decorator="[
+                'title',
+                {rules: [{ required: true, message: '请输入标题' }] }
+              ]"
+            />
+          </a-form-item>
+          <a-form-item
+            label="简介"
+            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
+          >
+            <a-textarea
+              rows="3"
+              v-decorator="[
+                'description',
+                {rules: [{ required: true, message: '请输入简介' }] }
+              ]"
+            />
+          </a-form-item>
+          <a-form-item
+            label="视频"
+            :required="true"
+            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
+          >
+            <a-upload-dragger
+              name="file"
+              :multiple="true"
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              @change="handleChange"
+            >
+              <p class="ant-upload-drag-icon">
+                <a-icon type="inbox" />
+              </p>
+              <p class="ant-upload-text">点击上传视频</p>
+              <p class="ant-upload-hint">Support for a single or bulk upload.</p>
+            </a-upload-dragger>
+          </a-form-item>
+          <a-form-item
+            label="封面"
+            :required="true"
+            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
+          >
             <div class="clearfix">
               <div class="clearfix-txt">
                 <a-tag color="blue">请上传视频封面</a-tag>
               </div>
               <a-upload
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action="http://172.31.214.104/khmsrv/api/resources"
                 listType="picture-card"
                 :fileList="fileList"
                 @preview="handlePreview"
-                @change="imgHandleChange">
+                @change="imgHandleChange"
+              >
                 <div v-if="fileList.length < 1">
                   <a-icon type="plus" />
                   <div class="ant-upload-text">上传视频封面</div>
                 </div>
               </a-upload>
-              <a-modal
-                :visible="previewVisible"
-                :footer="null"
-                @cancel="handleCancel">
-                <img
-                  alt="example"
-                  style="width: 100%"
-                  :src="previewImage" />
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
               </a-modal>
             </div>
           </a-form-item>
           <a-form-item
-            label="标题"
-            :label-col="{ span: 2 }"
-            :wrapper-col="{ span: 18 }">
-            <a-input
-              v-decorator="[
-                'title',
-                {rules: [{ required: true, message: '请输入标题' }] }
-              ]" />
-          </a-form-item>
-          <a-form-item
-            label="简介"
-            :labelCol="{lg: {span: 2}, sm: {span: 2}}"
-            :wrapperCol="{lg: {span: 18}, sm: {span: 18} }">
-            <a-textarea
-              rows="4"
-              v-decorator="[
-                'description',
-                {rules: [{ required: true, message: '请输入简介' }] }
-              ]" />
+            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
+            label="发送人群"
+            has-feedback
+          >
+            <a-select default-value="1">
+              <a-select-option value="1">全部推送</a-select-option>
+              <a-select-option value="2">按条件推送</a-select-option>
+            </a-select>
           </a-form-item>
           <div class="from-option">
-            <a-button
-              type="primary"
-              html-type="submit">提交</a-button>
+            <a-button type="primary" html-type="submit">提交</a-button>
           </div>
         </a-form>
       </div>
@@ -137,7 +151,7 @@ export default {
 }
 </script>
 
-<style  scoped>
+<style lang="less" scoped>
 /* you can make up upload button and sample style by using stylesheets */
 .ant-upload-select-picture-card i {
   font-size: 32px;
@@ -148,28 +162,41 @@ export default {
   margin-top: 8px;
   color: #666;
 }
-#video-push {
-  height: calc(100vh - 300px);
-}
-.video-upload {
-  width: 100%;
-  padding: 0px 0px;
-}
-.video-info {
-  margin-top: 1.6rem;
+.video-container {
   display: flex;
-  justify-content: center;
-}
-.ant-form {
-  width: 100%;
-  /* padding: 20px; */
-}
-.ant-form-item {
-  width: 100%;
-}
-.from-option {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  // justify-content: center;
+
+  .video-push {
+    width: 80%;
+    display: block;
+    padding: 20px;
+    /* height: calc(100vh - 350px); */
+  }
+
+  .video-upload {
+    width: 100%;
+    padding: 0px 0px;
+    display: flex;
+    .clearfix {
+      flex: 1;
+    }
+  }
+  .video-info {
+    margin-top: 1.6rem;
+    display: flex;
+    justify-content: center;
+  }
+  .ant-form {
+    width: 100%;
+    /* padding: 20px; */
+  }
+  .ant-form-item {
+    width: 100%;
+  }
+  .from-option {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

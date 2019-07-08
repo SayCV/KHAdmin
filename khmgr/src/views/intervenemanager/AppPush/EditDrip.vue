@@ -11,7 +11,7 @@
           <div class="main-basic">
             <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
               <a-input
-                v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]"
+                v-decorator="[ 'title', {rules: [{ required: true, message: '请填写点滴标题!' }],initialValue: data.title} ]"
               />
             </a-form-item>
             <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
@@ -19,7 +19,7 @@
                 rows="4"
                 v-decorator="[
                   'summary',
-                  {rules: [{ required: true, message: '请填写安装地址' }],initialValue: data.summary}
+                  {rules: [{ required: true, message: '请填写点滴摘要!' }],initialValue: data.summary}
                 ]"
               />
             </a-form-item>
@@ -139,21 +139,18 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
-          this.createOtherForm(values)
-          if (md === ' ') {
+          if (this.editorContent === '') {
             this.$message.warning('MarkDown文本编辑器内容不能为空！')
           } else {
-            // post form
+            // 追加表单字段
+            this.appendForm(values)
+            // 弹出model层，等待进一步操作
             this.showModal()
           }
         }
       })
     },
-    createOtherForm (values) {
-      // this.$refs.目标标签ref的属性值就能找到dom对象
-      // const md = this.$refs.md
-      const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
+    appendForm (values) {
       if (this.fileList[0].name === 'default') {
         // 判断是否修改了默认填充的封面
         this.cover = null
@@ -163,12 +160,12 @@ export default {
         this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
       }
       // $set给post的表单json数据追加字段
-      this.$set(values, 'content', md)
+      this.$set(values, 'content', this.editorContent)
       this.$set(values, 'cover', this.cover)
       // 点滴内容恒为isTop===false
       this.$set(values, 'isTop', false)
       this.toPostForm = values
-      console.log('追加 values of form: ', this.toPostForm)
+      console.log('函数：追加表单字段: ', this.toPostForm)
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
@@ -188,7 +185,7 @@ export default {
         uid: '-1',
         name: 'default',
         status: 'done',
-        url: 'http://172.31.214.104/khmsrv/api/resources/282967f73b0f40e19808ef6644b38eb0'
+        url: data.cover
       }]
     },
     formPost (formData, newsId) {

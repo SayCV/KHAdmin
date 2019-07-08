@@ -80,6 +80,7 @@
 
 <script>
 import DripItem from '@/components/News/DripItem'
+import { pageScrollTop } from '@/utils/scrolltop'
 
 import Axios from 'axios'
 export default {
@@ -100,7 +101,9 @@ export default {
   watch: {
     '$route.path': function (to, from) {
       if (to === '/intervenemanager/AppPush/list') {
-        console.log('再次进入列表页面')
+        console.log('监听点滴列表页面且页面置顶')
+        pageScrollTop()
+        window.scroll(0, 0)
         this.fetch()
       }
     }

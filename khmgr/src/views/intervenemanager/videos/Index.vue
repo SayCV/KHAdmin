@@ -5,10 +5,7 @@
       :bodyStyle="{ padding: '16px 0', height: '100%' }"
       :style="{ height: '100%' }"
     >
-      <div
-        class="video-settings-info-main"
-        :class="device"
-      >
+      <div class="video-settings-info-main" :class="device">
         <div class="video-settings-info-left">
           <a-menu
             :mode="device == 'mobile' ? 'horizontal' : 'inline'"
@@ -18,19 +15,13 @@
             @openChange="onOpenChange"
           >
             <a-menu-item key="/intervenemanager/videos/videopush">
-              <router-link :to="{ name: 'VideoPush' }">
-                上传视频
-              </router-link>
+              <router-link :to="{ name: 'VideoPush' }">上传视频</router-link>
             </a-menu-item>
             <a-menu-item key="/intervenemanager/videos/videoused">
-              <router-link :to="{ name: 'HDVideoOnPaid' }">
-                已用视频
-              </router-link>
+              <router-link :to="{ name: 'HDVideoOnPaid' }">已用视频</router-link>
             </a-menu-item>
             <a-menu-item key="/intervenemanager/videos/allvideos">
-              <router-link :to="{ name: 'AllVideos' }">
-                全部视频
-              </router-link>
+              <router-link :to="{ name: 'AllVideos' }">全部视频</router-link>
             </a-menu-item>
           </a-menu>
         </div>
@@ -38,7 +29,9 @@
           <div class="video-settings-info-title">
             <span>{{ $route.meta.title }}</span>
           </div>
-          <route-view></route-view>
+          <div class="video-settings-info-view">
+            <router-view></router-view>
+          </div>
         </div>
       </div>
     </a-card>
@@ -104,7 +97,7 @@ export default {
   width: 100%;
   display: flex;
   height: 100%;
-  overflow: auto;
+  // overflow: auto;
 
   &.mobile {
     display: block;
@@ -132,15 +125,19 @@ export default {
 
     padding: 8px 40px;
 
-    .video-settings-info-title {
-      color: rgba(0, 0, 0, 0.85);
-      font-size: 20px;
+    .video-settings-info-title > span {
+      font-size: 16px;
       font-weight: 500;
-      line-height: 28px;
-      margin-bottom: 12px;
+      line-height: 24px;
+      padding: 6px 24px;
+      border: 1px solid #d9d9d9;
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
+      color: #2f54eb;
+      background: #f0f5ff;
+      border-color: #adc6ff;
     }
     .video-settings-info-view {
-      padding-top: 12px;
     }
   }
 }
