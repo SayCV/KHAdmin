@@ -17,9 +17,6 @@
             <a-menu-item key="/intervenemanager/videos/videopush">
               <router-link :to="{ name: 'VideoPush' }">上传视频</router-link>
             </a-menu-item>
-            <a-menu-item key="/intervenemanager/videos/videoused">
-              <router-link :to="{ name: 'HDVideoOnPaid' }">已用视频</router-link>
-            </a-menu-item>
             <a-menu-item key="/intervenemanager/videos/allvideos">
               <router-link :to="{ name: 'AllVideos' }">全部视频</router-link>
             </a-menu-item>
@@ -122,8 +119,7 @@ export default {
 
   .video-settings-info-right {
     flex: 1 1;
-
-    padding: 8px 40px;
+    padding: 8px 24px;
 
     .video-settings-info-title > span {
       font-size: 16px;

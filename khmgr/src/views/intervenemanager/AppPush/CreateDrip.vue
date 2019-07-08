@@ -32,6 +32,20 @@
                   ]"
                 />
               </a-form-item>
+              <a-form-item
+                :labelCol="{md: {span: 4}, sm: {span: 4}}"
+                :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
+                label="发送人群"
+                has-feedback
+              >
+                <a-select v-model="selected">
+                  <a-select-option
+                    v-for="option in options"
+                    :value="option.value"
+                    :key="option.value"
+                  >{{ option.text }}</a-select-option>
+                </a-select>
+              </a-form-item>
               <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
                 <div class="clearfix">
                   <a-upload
@@ -101,6 +115,11 @@ export default {
   components: { FooterToolBar },
   data () {
     return {
+      selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
+      options: [
+        { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '条件推送', value: 1 }
+      ],
       previewMdHtml: null,
       ModalTitle: null,
       ModalText: {},
@@ -166,6 +185,8 @@ export default {
       // $set给post的表单json数据追加字段
       this.$set(values, 'content', this.editorContent)
       this.$set(values, 'cover', this.cover)
+      // 推送类型
+      this.$set(values, 'pubType', this.selected)
       // 点滴内容恒为isTop===false
       this.$set(values, 'isTop', false)
       this.toPostForm = values
@@ -180,7 +201,7 @@ export default {
         data: formData,
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
-        console.log('表单提交了', res.data)
+        console.log('表单提交了', res)
         if (res.data.successed === true) {
           // 跳转到新闻详情页面
           this.$router.push({

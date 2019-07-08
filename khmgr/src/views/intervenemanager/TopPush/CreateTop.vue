@@ -180,7 +180,7 @@ export default {
         data: formData,
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
-        console.log('表单post', res.data)
+        console.log('表单post', res)
         if (res.data.successed === true) {
           // 跳转到新闻详情页面
           this.$router.push({

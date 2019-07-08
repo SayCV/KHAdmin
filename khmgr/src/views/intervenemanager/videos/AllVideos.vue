@@ -1,44 +1,32 @@
 <template>
   <div>
-    <div
-      class="no-videdos"
-      v-if="NoVideoList"
-    >
+    <div class="no-videdos" v-if="NoVideoList">
       <div class="null-svg"></div>
       <div class="null-txt">
         <h2>还没有上传过视频yo</h2>
       </div>
     </div>
-    <div
-      id="all-videos"
-      v-else
-    >
+    <div id="all-videos" v-else>
       <div class="video-container">
-        <div
-          class="video-item"
-          v-for="video in videoList"
-          :key="video.key"
-        >
+        <div class="video-item" v-for="video in videoList" :key="video.videoId">
           <div class="video-inner">
             <div class="video-item-v">
-              <div
-                class="video-cover"
-                :style="{ backgroundImage:'url(' + video.cover + ')' }"
-              >
-                <div class="duration">{{ video.totalTime }}</div>
+              <div class="video-cover" :style="{ backgroundImage:'url(' + video.imageUrl + ')' }">
+                <div class="duration">{{ "02:23" }}</div>
               </div>
             </div>
             <div class="video-item-txt">
               <div class="item-txt-header">
-                <div class="item-txt-title">
-                  <p>{{ video.title }}</p>
-                </div>
-                <div class="item-txt-date">
-                  <a-tag color="blue">{{ video.createdTime }}</a-tag>
-                </div>
+                <div class="item-txt-title">{{ video.title }}</div>
               </div>
-              <div class="item-txt-content">
-                <p>{{ video.content }}</p>
+              <div class="item-txt-content">{{ video.summary }}</div>
+              <div class="item-operation">
+                <div>
+                  <a-button-group>
+                    <a-button size="small">查看</a-button>
+                    <a-button size="small" type="primary">删除</a-button>
+                  </a-button-group>
+                </div>
               </div>
             </div>
           </div>
@@ -57,11 +45,13 @@
 </template>
 
 <script>
-import axios from 'axios'
+import Axios from 'axios'
 export default {
   name: 'AllVideos',
   data () {
     return {
+      showText: false,
+      hideText: true,
       NoVideoList: false,
       videoList: [],
       totalCount: null,
@@ -76,25 +66,19 @@ export default {
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
-      axios({
+      Axios({
         // url: `/api/intervene/videos/?pageSize=${this.pageSize}&currentPage=${this.current}`,
-        url: '/api/intervene/videos/',
-        method: 'get',
-        params: {
-          results: 8,
-          ...params
-        }
+        url: '/api/admin/videos',
+        method: 'get'
       }).then(res => {
         console.log('video', res)
-        // 总页数
-        this.totalCount = res.data.result.totalCount
 
-        if (res.data.result.videos.length === 0) {
+        if (res.data.length === 0) {
           this.NoVideoList = true
           this.videoList = []
         } else {
           this.NoVideoList = false
-          this.videoList = res.data.result.videos
+          this.videoList = res.data
         }
       })
     },
@@ -110,12 +94,20 @@ export default {
         results: this.pageSize,
         page: pagination
       })
+    },
+    overShow () {
+      this.showText = !this.showText
+      this.hideText = !this.hideText
+    },
+    outHide () {
+      this.showText = !this.showText
+      this.hideText = !this.hideText
     }
   }
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
 .no-videdos {
   width: 100%;
   height: 600px;
@@ -140,65 +132,73 @@ export default {
 .video-container {
   display: flex;
   flex-wrap: wrap;
+  .video-item {
+    width: 25%;
+    padding: 5px;
+    .video-inner {
+      /* height: 300px; */
+      border: 1px solid #d9d9d9;
+      border-radius: 4px;
+      padding: 10px;
+      transition: all 0.3s;
+      .video-item-v {
+        width: 100%;
+        .video-cover {
+          width: 100%;
+          height: 180px;
+          background-size: cover;
+          background-position: center center;
+          position: relative;
+        }
+        .video-cover .duration {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.3);
+          padding: 3px 5px;
+          border-radius: 4px;
+        }
+      }
+      .video-item-txt {
+        .item-txt-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          overflow: hidden;
+          padding-top: 6px;
+        }
+        .item-txt-title {
+          color: rgba(0, 0, 0, 0.75);
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .ant-tag {
+          margin: 0;
+        }
+        .item-txt-content {
+          padding-bottom: 4px;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 3;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .item-operation {
+          display: flex;
+          justify-content: flex-end;
+        }
+      }
+    }
+    .video-inner:hover {
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+  }
 }
-.video-item {
-  width: 25%;
-  padding: 5px;
-}
-.video-item .video-inner {
-  /* height: 300px; */
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  transition: all 0.3s;
-}
-.video-item .video-inner:hover {
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s;
-}
-.video-item-v {
-  width: 100%;
-  padding: 10px;
-}
-.video-item-v .video-cover {
-  width: 100%;
-  height: 180px;
-  background-size: cover;
-  background-position: center center;
-  position: relative;
-}
-.video-cover .duration {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.3);
-  padding: 3px 5px;
-  border-radius: 4px;
-}
-.item-txt-header {
-  padding: 0px 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  overflow: hidden;
-}
-.item-txt-title {
-  width: 72.5%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.item-txt-title p {
-  color: rgba(0, 0, 0, 0.75);
-  margin: 0;
-}
-.ant-tag {
-  margin: 0;
-}
-.item-txt-content {
-  padding: 10px;
-}
+
 .videos-footer {
   display: flex;
   justify-content: flex-end;

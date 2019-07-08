@@ -5,7 +5,7 @@
         <a-form :layout="formLayout" :form="form" @submit="handleSubmit">
           <a-form-item
             label="标题"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-input
@@ -17,13 +17,13 @@
           </a-form-item>
           <a-form-item
             label="简介"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-textarea
               rows="3"
               v-decorator="[
-                'description',
+                'summary',
                 {rules: [{ required: true, message: '请输入简介' }] }
               ]"
             />
@@ -31,26 +31,28 @@
           <a-form-item
             label="视频"
             :required="true"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-upload-dragger
               name="file"
-              :multiple="true"
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              :multiple="false"
+              :disabled="isDisabled"
+              action="http://172.31.214.104/khmsrv/api/resources"
+              :videoList="videoList"
+              listType="picture"
               @change="handleChange"
             >
               <p class="ant-upload-drag-icon">
                 <a-icon type="inbox" />
               </p>
-              <p class="ant-upload-text">点击上传视频</p>
-              <p class="ant-upload-hint">Support for a single or bulk upload.</p>
+              <p class="ant-upload-text">点击上传视频（拖拽）</p>
             </a-upload-dragger>
           </a-form-item>
           <a-form-item
             label="封面"
             :required="true"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <div class="clearfix">
@@ -75,19 +77,23 @@
             </div>
           </a-form-item>
           <a-form-item
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
             label="发送人群"
             has-feedback
           >
-            <a-select default-value="1">
-              <a-select-option value="1">全部推送</a-select-option>
-              <a-select-option value="2">按条件推送</a-select-option>
+            <a-select v-model="selected">
+              <a-select-option
+                v-for="option in options"
+                :value="option.value"
+                :key="option.value"
+              >{{ option.text }}</a-select-option>
             </a-select>
           </a-form-item>
-          <div class="from-option">
-            <a-button type="primary" html-type="submit">提交</a-button>
-          </div>
+          <!-- fixed footer toolbar -->
+          <footer-tool-bar>
+            <a-button type="primary" html-type="submit">提 交</a-button>
+          </footer-tool-bar>
         </a-form>
       </div>
     </div>
@@ -95,13 +101,20 @@
 </template>
 
 <script>
+import Axios from 'axios'
+import FooterToolBar from '@/components/FooterToolbar'
 export default {
   name: 'VideoPush',
+  components: { FooterToolBar },
   data () {
     return {
-      isUsed: false,
-      showVideoFrom: false,
-      VideoList: [],
+      selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
+      options: [
+        { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '条件推送', value: 1 }
+      ],
+      isDisabled: false,
+      videoList: [],
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
       previewVisible: false,
@@ -110,20 +123,9 @@ export default {
     }
   },
   methods: {
-    handleChange (info) {
-      const status = info.file.status
-      if (status !== 'uploading') {
-        console.log('video', info.file, info.VideoList)
-      }
-      if (status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully.`)
-        this.showVideoFrom = !this.showVideoFrom
-        this.isUsed = !this.isUsed
-      } else if (status === 'error') {
-        this.$message.error(`${info.file.name} file upload failed.`)
-        this.showVideoFrom = !this.showVideoFrom
-        this.isUsed = !this.isUsed
-      }
+    handleChange (file) {
+      this.videoList = file.fileList
+      console.log('videoList', this.videoList)
     },
     handleCancel () {
       this.previewVisible = false
@@ -131,19 +133,50 @@ export default {
     handlePreview (file) {
       this.previewImage = file.url || file.thumbUrl
       this.previewVisible = true
-      this.showVideoFrom = false
     },
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
-      console.log('file', fileList)
+      console.log('cover', fileList)
     },
     // handler
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          // eslint-disable-next-line no-console
-          console.log('Received values of form: ', values)
+          if (this.videoList.length === 0) {
+            this.$message.warning('视频不能为空')
+          } else if (this.fileList.length === 0) {
+            this.$message.warning('封面不能为空')
+          } else {
+            // 追加表单字段
+            // this.appendForm(values)
+            // eslint-disable-next-line no-console
+            this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
+            this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
+            this.$set(values, 'pubType', this.selected)
+            console.log('Received values of form: ', values)
+            this.videoFormPost(values)
+          }
+        }
+      })
+    },
+    videoFormPost (formData) {
+      // Post且跳转
+      console.log('要提交的表单', formData)
+      Axios({
+        url: '/api/admin/videos',
+        method: 'post',
+        data: formData,
+        headers: { 'Content-Type': 'application/json' }
+      }).then(res => {
+        console.log('表单提交了', res)
+        if (res.data.successed === true) {
+
+        } else {
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '发表点滴失败.'
+          })
         }
       })
     }
@@ -169,7 +202,7 @@ export default {
   .video-push {
     width: 80%;
     display: block;
-    padding: 20px;
+    // padding: 20px;
     /* height: calc(100vh - 350px); */
   }
 
@@ -192,11 +225,6 @@ export default {
   }
   .ant-form-item {
     width: 100%;
-  }
-  .from-option {
-    display: flex;
-    justify-content: center;
-    align-items: center;
   }
 }
 </style>
