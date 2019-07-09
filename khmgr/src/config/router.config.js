@@ -4,7 +4,6 @@ import { bxAnaalyse } from '@/core/icons'
 
 // 去除按权限添加路由默认全局admin src/store/modules/permission
 export const asyncRouterMap = [
-
   {
     path: '/',
     name: 'index',
@@ -14,7 +13,8 @@ export const asyncRouterMap = [
       requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
     },
     redirect: '/dashboard/workplace',
-    children: [ // 右侧sidebar里的导航路由
+    children: [
+      // 右侧sidebar里的导航路由
       // dashboard
       {
         path: '/dashboard',
@@ -199,7 +199,6 @@ export const asyncRouterMap = [
             component: () => import('@/views/report/Weeklyummary'),
             meta: { title: '每周小结', keepAlive: true, permission: ['from'] }
           }
-
         ]
       },
 
@@ -284,7 +283,7 @@ export const asyncRouterMap = [
             name: 'Videopush',
             component: () => import('@/views/intervenemanager/videos/Index'),
             meta: { title: 'HD视频宣教', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/videos/videopush',
+            redirect: '/intervenemanager/videos/allvideos',
             hideChildrenInMenu: true,
             children: [
               {
@@ -304,6 +303,12 @@ export const asyncRouterMap = [
                 name: 'AllVideos',
                 component: () => import('@/views/intervenemanager/videos/AllVideos'),
                 meta: { title: '全部视频', hidden: true, keepAlive: true, permission: ['profile'] }
+              },
+              {
+                path: '/intervenemanager/videos/videoedit',
+                name: 'VideoEdit',
+                component: () => import('@/views/intervenemanager/videos/VideoEdit'),
+                meta: { title: '编辑视频', hidden: true, keepAlive: true, permission: ['profile'] }
               }
             ]
           }
@@ -431,9 +436,10 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '*', redirect: '/404', hidden: true
+    path: '*',
+    redirect: '/404',
+    hidden: true
   }
-
 ]
 
 /**
@@ -482,5 +488,4 @@ export const constantRouterMap = [
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
   }
-
 ]

@@ -97,4 +97,10 @@
   - [ ] video不能添加多个
   - [ ] video post接口get接口
   - [ ] video 上传逻辑为处理
+
+###2019-7-9
+  - [x] video和视频封面上传数量限制
+  - [x] video post接口get接口
+  - [x] video 上传逻辑为处理
+  - [x] 全部视频页的布局重新设计（抄B站）
  

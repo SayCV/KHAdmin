@@ -1,5 +1,13 @@
 <template>
   <div class="video-container">
+    <div class="video-page-top">
+      <div class="page-top">{{ $route.meta.title }}</div>
+      <div class="video-operation">
+        <a-button type="primary" @click="() => handleBack()">
+          <a-icon type="left" />返回
+        </a-button>
+      </div>
+    </div>
     <div class="video-push">
       <div class="video-info">
         <a-form :layout="formLayout" :form="form" @submit="handleSubmit">
@@ -37,11 +45,11 @@
             <a-upload-dragger
               name="file"
               :multiple="false"
-              :disabled="isDisabled"
+              :disabled="disabled"
               action="http://172.31.214.104/khmsrv/api/resources"
               :videoList="videoList"
               listType="picture"
-              @change="handleChange"
+              @change="handleVideoChange"
             >
               <p class="ant-upload-drag-icon">
                 <a-icon type="inbox" />
@@ -64,10 +72,11 @@
                 listType="picture-card"
                 :fileList="fileList"
                 @preview="handlePreview"
-                @change="imgHandleChange"
+                @change="handleCoverChange"
+                :beforeUpload="beforeUpload"
               >
                 <div v-if="fileList.length < 1">
-                  <a-icon type="plus" />
+                  <a-icon :type="imgLoading ? 'loading' : 'plus'" />
                   <div class="ant-upload-text">上传视频封面</div>
                 </div>
               </a-upload>
@@ -78,7 +87,7 @@
           </a-form-item>
           <a-form-item
             :labelCol="{md: {span: 3}, sm: {span: 3}}"
-            :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
+            :wrapperCol="{md: {span: 4}, sm: {span: 4} }"
             label="发送人群"
             has-feedback
           >
@@ -92,7 +101,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit">提 交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading">提 交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -103,6 +112,7 @@
 <script>
 import Axios from 'axios'
 import FooterToolBar from '@/components/FooterToolbar'
+
 export default {
   name: 'VideoPush',
   components: { FooterToolBar },
@@ -113,19 +123,43 @@ export default {
         { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
         { text: '条件推送', value: 1 }
       ],
-      isDisabled: false,
+      disabled: false,
       videoList: [],
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
       previewVisible: false,
       previewImage: '',
-      fileList: []
+      fileList: [],
+      loading: false,
+      imgLoading: false
     }
   },
   methods: {
-    handleChange (file) {
-      this.videoList = file.fileList
-      console.log('videoList', this.videoList)
+    handleCoverChange (info) {
+      console.log('cover', info)
+      if (info.file.type === 'image/jpeg' || info.file.type === 'image/png') {
+        this.fileList = info.fileList
+      }
+    },
+    beforeUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      if (!isJPG && !isPNG) {
+        this.$message.error('你上传的图片不是JPG或PNG格式!')
+      }
+      return isJPG || isPNG
+    },
+    handleVideoChange (info) {
+      this.videoList = info.fileList
+      console.log('videoList', info)
+      switch (this.videoList.length) {
+        case 0: this.disabled = false
+          console.log('启用', this.videoList.length)
+          break
+        case 1: this.disabled = true
+          console.log('禁用', this.videoList.length)
+          break
+      }
     },
     handleCancel () {
       this.previewVisible = false
@@ -133,10 +167,6 @@ export default {
     handlePreview (file) {
       this.previewImage = file.url || file.thumbUrl
       this.previewVisible = true
-    },
-    imgHandleChange ({ fileList }) {
-      this.fileList = fileList
-      console.log('cover', fileList)
     },
     // handler
     handleSubmit (e) {
@@ -150,7 +180,6 @@ export default {
           } else {
             // 追加表单字段
             // this.appendForm(values)
-            // eslint-disable-next-line no-console
             this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
             this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
             this.$set(values, 'pubType', this.selected)
@@ -163,23 +192,34 @@ export default {
     videoFormPost (formData) {
       // Post且跳转
       console.log('要提交的表单', formData)
-      Axios({
-        url: '/api/admin/videos',
-        method: 'post',
-        data: formData,
-        headers: { 'Content-Type': 'application/json' }
-      }).then(res => {
-        console.log('表单提交了', res)
-        if (res.data.successed === true) {
-
-        } else {
-          this.$notification['error']({
-            message: '注意！注意！',
-            description: '发表点滴失败.'
-          })
-        }
+      this.loading = true
+      setTimeout(() => {
+        Axios({
+          url: '/api/admin/videos',
+          method: 'post',
+          data: formData,
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          console.log('表单提交了', res)
+          if (res.data.successed === true) {
+            this.$router.push({ path: '/intervenemanager/videos/allvideos' })
+          } else {
+            this.$notification['error']({
+              message: '注意！注意！',
+              description: '上传视频失败.'
+            })
+          }
+        })
+        this.loading = false
+      }, 1000)
+    },
+    handleBack () {
+      // 返回PushList页面
+      this.$router.push({
+        path: '/intervenemanager/videos/allvideos'
       })
     }
+
   }
 }
 </script>
@@ -196,16 +236,30 @@ export default {
   color: #666;
 }
 .video-container {
-  display: flex;
+  // display: flex;
   // justify-content: center;
-
-  .video-push {
-    width: 80%;
-    display: block;
-    // padding: 20px;
-    /* height: calc(100vh - 350px); */
+  .video-page-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .page-top {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.85);
+      text-align: center;
+      line-height: 36px;
+      padding: 0 24px;
+      border: 1px solid #d9d9d9;
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
+      color: #2f54eb;
+      background: #f0f5ff;
+      border-color: #adc6ff;
+    }
   }
-
+  .video-push {
+    // width: 80%;
+    display: block;
+  }
   .video-upload {
     width: 100%;
     padding: 0px 0px;

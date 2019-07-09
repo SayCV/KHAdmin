@@ -15,8 +15,7 @@ export default {
 
   data () {
     return {
-      // horizontal  inline
-      mode: 'inline'
+
     }
   }
 }
