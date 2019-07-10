@@ -112,11 +112,12 @@ export default {
 
 <style lang="less" scoped>
 .app-list {
-  width: 100%;
+  width: 940px;
+  height: 172px;
   overflow: hidden;
-  // border: 1px solid #d9d9d9;
+  border: 1px solid #d9d9d9;
   border-radius: 4px;
-  padding: 10px;
+  padding: 20px;
   display: flex;
   transition: all 0.3s ease;
   margin-bottom: 10px;
@@ -129,22 +130,21 @@ export default {
 .app-list .app-list-img {
   padding-right: 20px;
   .list-img-hidden {
+    border-radius: 4px;
     overflow: hidden;
   }
   .list-info-img {
-    width: 200px;
-    min-height: 180px;
-    height: 100%;
+    width: 180px;
+    height: 130px;
+    min-height: 130px;
     border: 1px solid #d9d9d9;
-    border-radius: 2px;
+    border-radius: 4px;
     background-position: center center;
     background-size: cover;
     transition: all 0.3s ease-in-out;
   }
   .list-info-img:hover {
     cursor: pointer;
-    // transform: scale(1.075);
-    // transition: all 0.4s ease;
   }
 }
 .app-list .app-list-content {

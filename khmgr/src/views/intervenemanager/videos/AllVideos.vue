@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="videoPpage">
     <div class="video-page-top">
       <div class="page-top">{{ $route.meta.title }}</div>
       <div class="video-operation">
@@ -11,40 +11,24 @@
         </a-button-group>
       </div>
     </div>
-    <div id="all-videos">
+    <div class="videos-pagination">
+      <div class="pagination" v-if="showPagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
+      </div>
+    </div>
+    <div class="all-videos">
       <div class="no-videdos" v-if="NoVideoList">
-        <div class="null-svg"></div>
-        <div class="null-txt">
-          <h2>还没有上传过视频yo</h2>
+        <div class="null-icon">
+          <div class="null-svg"></div>
+          <div class="null-txt">还没有上传过视频&nbsp;yo&nbsp;！</div>
         </div>
       </div>
       <div class="video-container" v-else>
-        <!-- <div class="video-item" v-for="(video, index) in videoList" :key="video.videoId">
-          <div class="video-inner" @mouseover="showIndex = index" @mouseleave="showIndex = null">
-            <div class="video-item-v">
-              <div class="video-cover" :style="{ backgroundImage:'url(' + video.imageUrl + ')' }">
-                <div class="duration">{{ "02:23" }}</div>
-              </div>
-            </div>
-            <div class="video-item-txt">
-              <div class="item-txt-header">
-                <div class="item-txt-title">{{ video.title }}</div>
-              </div>
-              <div
-                class="item-txt-content"
-                :class="{'hoverColor':showIndex===index}"
-              >{{ video.summary }}</div>
-              <div class="item-operation" v-show="showIndex === index">
-                <div>
-                  <a-button-group>
-                    <a-button size="small">查看</a-button>
-                    <a-button size="small" type="primary">删除</a-button>
-                  </a-button-group>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>-->
         <div class="video-item" v-for="(video) in videoList" :key="video.videoId">
           <div class="video-inner">
             <div class="video-cover">
@@ -56,7 +40,7 @@
               </div>
               <div class="meta-summary">{{ video.summary }}</div>
               <div class="meta-view">
-                <a-tag color="red">{{ video.videoId }}</a-tag>
+                <a-tag color="red">{{ video.createOn }}</a-tag>
                 <div>{{ video.title }}</div>
               </div>
               <div class="meta-operation">
@@ -69,7 +53,9 @@
           </div>
         </div>
       </div>
-      <div class="videos-footer">
+    </div>
+    <div class="videos-pagination-bottom" v-if="showPagination">
+      <div class="pagination">
         <a-pagination
           @change="handlePageChange"
           v-model="current"
@@ -91,7 +77,7 @@ export default {
       active: false,
       NoVideoList: false,
       videoList: [],
-      totalCount: null,
+      totalCount: 9,
       current: 1,
       pageSize: 8
     }
@@ -110,6 +96,11 @@ export default {
       }
     }
   },
+  computed: {
+    showPagination () {
+      return this.pageSize < this.totalCount
+    }
+  },
   methods: {
     // 获取数据
     fetch (params = {}) {
@@ -120,13 +111,12 @@ export default {
         method: 'get'
       }).then(res => {
         console.log('video', res)
-
         if (res.data.length === 0) {
           this.NoVideoList = true
           this.videoList = []
         } else {
           this.NoVideoList = false
-          this.videoList = res.data
+          this.videoList = res.data.reverse()
         }
       })
     },
@@ -188,130 +178,146 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.video-page-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  .page-top {
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.85);
-    text-align: center;
-    line-height: 36px;
-    padding: 0 24px;
-    border: 1px solid #d9d9d9;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-    color: #2f54eb;
-    background: #f0f5ff;
-    border-color: #adc6ff;
-  }
-}
-
-.video-container {
+.videoPpage {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-top: 10px;
-  .video-item {
-    width: 940px;
-    margin: 0 auto;
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    transition: all 0.3s;
-    margin-bottom: 10px;
-  }
-  .video-item:hover {
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s;
-  }
-  .video-inner {
+  min-height: calc(100vh - 320px);
+  .videos-pagination {
+    // bottom: 0;
     display: flex;
-    padding: 20px;
-    .video-cover {
-      // flex: 1;
-      width: 160px;
-      height: 100px;
-      .cover {
-        width: 160px;
-        height: 100px;
-        background-size: cover;
-        background-position: center center;
-        border-radius: 4px;
-        overflow: hidden;
-      }
-      .cover:hover {
-        cursor: pointer;
-      }
-    }
-    .video-meta {
-      position: relative;
-      flex: 1;
-      padding-left: 20px;
-      .meta-title {
-        height: 24px;
-        line-height: 24px;
-
-        .title-text {
-          display: inline-block;
-          max-width: 420px;
-          font-size: 18px;
-          color: rgba(0, 0, 0, 0.85);
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          transition: all 0.23s;
-        }
-        .title-text:hover {
-          cursor: pointer;
-          color: #4facfe;
-          transition: all 0.23s ease;
-        }
-      }
-      .meta-summary {
-        max-width: 500px;
-        max-height: 53px;
-        padding: 12px 0 20px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-      .meta-view {
-        max-width: 460px;
-        display: flex;
-      }
-      .meta-operation {
-        position: absolute;
-        top: 50%;
-        right: 10px;
-        transform: translateY(-50%);
-      }
+    justify-content: flex-start;
+    margin-top: 0.6rem;
+    height: 32px;
+  }
+  .videos-pagination-bottom {
+    // bottom: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.6rem;
+  }
+  .video-page-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .page-top {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.85);
+      text-align: center;
+      line-height: 34px;
+      padding: 0 24px;
+      border: 1px solid #d9d9d9;
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
+      color: #2f54eb;
+      background: #f0f5ff;
+      border-color: #adc6ff;
     }
   }
-}
+  .all-videos {
+    .video-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 10px;
+      .video-item {
+        width: 940px;
+        margin: 0 auto;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        transition: all 0.3s;
+        margin-bottom: 10px;
+      }
+      .video-item:hover {
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+      }
+      .video-inner {
+        display: flex;
+        padding: 20px;
+        .video-cover {
+          // flex: 1;
+          width: 160px;
+          height: 100px;
+          .cover {
+            width: 160px;
+            height: 100px;
+            background-size: cover;
+            background-position: center center;
+            border-radius: 4px;
+            border: 1px solid #d9d9d9;
+            overflow: hidden;
+          }
+          .cover:hover {
+            cursor: pointer;
+          }
+        }
+        .video-meta {
+          position: relative;
+          flex: 1;
+          padding-left: 20px;
+          .meta-title {
+            height: 24px;
+            line-height: 24px;
 
-.videos-footer {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 1.6rem;
-}
-.no-videdos {
-  width: 100%;
-  height: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .null-svg {
-    width: 100%;
-    height: 360px;
-    margin-top: 5rem;
-    background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    background-size: contain;
-    .null-txt {
-      text-align: center;
-      margin-top: 2rem;
+            .title-text {
+              display: inline-block;
+              max-width: 420px;
+              font-size: 18px;
+              color: rgba(0, 0, 0, 0.85);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              transition: all 0.23s;
+            }
+            .title-text:hover {
+              cursor: pointer;
+              color: #4facfe;
+              transition: all 0.23s ease;
+            }
+          }
+          .meta-summary {
+            max-width: 500px;
+            max-height: 53px;
+            padding: 12px 0 20px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          .meta-view {
+            max-width: 460px;
+            display: flex;
+          }
+          .meta-operation {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+          }
+        }
+      }
+    }
+    .no-videdos {
+      width: 100%;
+      height: calc(100vh - 450px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .null-icon {
+        .null-svg {
+          width: 220px;
+          height: 260px;
+          background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
+          background-position: center center;
+          background-repeat: no-repeat;
+          background-position: 50% 50%;
+          background-size: contain;
+        }
+        .null-txt {
+          font-size: 20px;
+          color: rgba(0, 0, 0, 0.85);
+          text-align: center;
+          margin-top: 40px;
+        }
+      }
     }
   }
 }

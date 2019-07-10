@@ -314,7 +314,6 @@ export const asyncRouterMap = [
           }
         ]
       },
-
       // 商城业务business
       {
         path: '/business',
@@ -330,10 +329,32 @@ export const asyncRouterMap = [
             meta: { title: '健康积分管理', keepAlive: true, permission: ['profile'] }
           },
           {
-            path: '/business/BarAdvertising',
-            name: 'BarAdvertising',
-            component: () => import(/* webpackChunkName: "result" */ '@/views/business/BarAdvertising'),
-            meta: { title: 'Bar宣传广告', keepAlive: true, hiddenHeaderContent: false, permission: ['profile'] }
+            path: '/business/BarAD',
+            name: 'BarAD',
+            component: () => import('@/views/business/BarAD/Index'),
+            meta: { title: 'Bar宣传广告', keepAlive: true, permission: ['profile'] },
+            redirect: '/business/BarAD/allAD',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/business/BarAD/allAD',
+                name: 'allAD',
+                component: () => import('@/views/business/BarAD/AllAD'),
+                meta: { title: '全部广告', hidden: true, permission: ['profile'] }
+              },
+              {
+                path: '/intervenemanager/videos/videoused',
+                name: 'addAD',
+                component: () => import('@/views/business/BarAD/AddAD'),
+                meta: { title: '新建广告', hidden: true, keepAlive: true, permission: ['profile'] }
+              },
+              {
+                path: '/intervenemanager/videos/allvideos',
+                name: 'editAD',
+                component: () => import('@/views/business/BarAD/EditAD'),
+                meta: { title: '编辑广告', hidden: true, keepAlive: true, permission: ['profile'] }
+              }
+            ]
           }
         ]
       },

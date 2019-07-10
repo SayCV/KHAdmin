@@ -29,12 +29,8 @@
           </div>
           <div class="operation-desc-txt">
             <div>
-              消息类型 :
-              <span>{{ dripItem.msgcategory }}</span>
-            </div>
-            <div>
               发送人群 :
-              <span>{{ dripItem.msgRq }}</span>
+              <span>{{ dripItem.pubType ? '条件推送' : '全部推送' }}</span>
             </div>
           </div>
         </div>
@@ -67,6 +63,7 @@ export default {
   // },
   data () {
     return {
+      // pubType: 0 全部推送; 1 条件推送
       newsData: this.dripItem
     }
   },
@@ -113,11 +110,12 @@ export default {
 
 <style lang="less" scoped>
 .app-list {
-  width: 100%;
+  width: 940px;
+  height: 172px;
   overflow: hidden;
-  // border: 1px solid #d9d9d9;
+  border: 1px solid #d9d9d9;
   border-radius: 4px;
-  padding: 10px;
+  padding: 20px;
   display: flex;
   transition: all 0.3s ease;
   margin-bottom: 10px;
@@ -133,9 +131,9 @@ export default {
     overflow: hidden;
   }
   .list-info-img {
-    width: 200px;
-    min-height: 180px;
-    height: 100%;
+    width: 180px;
+    height: 130px;
+    min-height: 130px;
     border: 1px solid #d9d9d9;
     border-radius: 2px;
     background-position: center center;
