@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -174,14 +174,14 @@ export default {
     },
     formPost (formData) {
       // Post且跳转
-      Axios({
+      axios({
         url: '/api/admin/news',
         method: 'post',
         data: formData,
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
         console.log('表单post', res)
-        if (res.data.successed === true) {
+        if (res.successed === true) {
           // 跳转到新闻详情页面
           this.$router.push({
             path: '/intervenemanager/TopPush/list'
@@ -218,19 +218,20 @@ export default {
       // 将图片上传到服务器
       const formData = new FormData()
       formData.append('image', $file)
-      Axios({
+      axios({
         url: '/api/resources',
         method: 'post',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
       }).then(url => {
+        console.log('markdown图片', url)
         // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
         /**
          * $vm 指为mavonEditor实例，可以通过如下两种方式获取
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
          */
-        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url.data}`
+        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
       })
     },

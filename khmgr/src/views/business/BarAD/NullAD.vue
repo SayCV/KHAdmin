@@ -82,9 +82,8 @@
 
 <script>
 import moment from 'moment'
-import { axios } from '@/utils/request'
 export default {
-  name: 'AllAD',
+  name: 'NullAD',
   components: {},
   data () {
     return {
@@ -121,34 +120,8 @@ export default {
       return this.pageSize < this.totalCount
     }
   },
-  mounted () {
-    this.fetch()
-  },
   methods: {
     moment,
-    fetch (params = {}) {
-      axios({
-        // url: `/api/admin/ad/used/?pageSize=${this.pageSize}&pageNum=${this.current}`,
-        url: '/api/admin/ad/used/', // 后台数据
-        method: 'get',
-        params: {
-          ...params
-        }
-      }).then(res => {
-        console.log('广告列表', res)
-        // 后台数据
-        // this.totalCount = res.data.result.totalCount
-        if (res.list.length === 0) {
-          this.NodripLists = true
-          this.dripLists = []
-          this.totalCount = 0
-        } else {
-          this.NodripLists = false
-          this.dripLists = res.list
-          this.totalCount = res.total
-        }
-      })
-    },
     handleRefresh () {
 
     },

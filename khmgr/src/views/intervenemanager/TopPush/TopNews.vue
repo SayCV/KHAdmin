@@ -51,8 +51,8 @@
 
 <script>
 import TopItem from '@/components/News/TopItem'
+import { axios } from '@/utils/request'
 
-import Axios from 'axios'
 export default {
   name: 'TopNews',
   components: { TopItem },
@@ -60,9 +60,9 @@ export default {
     return {
       NotopLists: false,
       topLists: [],
-      totalCount: 8,
+      totalCount: 0,
       current: 1,
-      pageSize: 8
+      pageSize: 4
     }
   },
   updated () {
@@ -92,9 +92,9 @@ export default {
   methods: {
     // 获取数据
     fetch (params = {}) {
-      Axios({
-        // url: `/api/intervene/topLists/?pageSize=${this.pageSize}&currentPage=${this.current}`,
-        url: '/api/admin/news/top', // 后台数据
+      axios({
+        url: `/api/admin/news/top/?pageSize=${this.pageSize}&pageNum=${this.current}`,
+        // url: '/api/admin/news/top', // 后台数据
         method: 'get',
         params: {
           ...params
@@ -103,12 +103,14 @@ export default {
         console.log('获取头条列表', res)
         // 后台数据
         // this.totalCount = res.data.result.totalCount
-        if (res.data.length === 0) {
+        if (res.list.length === 0) {
           this.NotopLists = true
           this.topLists = []
+          this.totalCount = 0
         } else {
           this.NotopLists = false
-          this.topLists = res.data
+          this.topLists = res.list
+          this.totalCount = res.total
         }
       })
     },
@@ -132,7 +134,7 @@ export default {
       this.fetch()
     },
     handleDelete (newsId) {
-      return Axios({
+      return axios({
         url: `/api/admin/news/${newsId}`,
         method: 'delete'
       })
@@ -174,7 +176,7 @@ export default {
 <style lang="less" scoped>
 .newsPage {
   width: 100%;
-  min-height: calc(100vh - 320px);
+  min-height: calc(100vh - 280px);
 
   .news-page-top {
     display: flex;

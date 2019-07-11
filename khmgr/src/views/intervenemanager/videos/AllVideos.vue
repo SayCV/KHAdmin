@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
 export default {
   name: 'AllVideos',
   data () {
@@ -77,9 +77,9 @@ export default {
       active: false,
       NoVideoList: false,
       videoList: [],
-      totalCount: 9,
+      totalCount: null,
       current: 1,
-      pageSize: 8
+      pageSize: 4
     }
   },
   mounted () {
@@ -105,18 +105,20 @@ export default {
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
-      Axios({
-        // url: `/api/intervene/videos/?pageSize=${this.pageSize}&currentPage=${this.current}`,
-        url: '/api/admin/videos',
+      axios({
+        url: `/api/admin/videos/?pageSize=${this.pageSize}&pageNum=${this.current}`,
+        // url: '/api/admin/videos',
         method: 'get'
       }).then(res => {
         console.log('video', res)
-        if (res.data.length === 0) {
+        if (res.list.length === 0) {
           this.NoVideoList = true
           this.videoList = []
+          this.totalCount = null
         } else {
           this.NoVideoList = false
-          this.videoList = res.data.reverse()
+          this.videoList = res.list
+          this.totalCount = res.total
         }
       })
     },
@@ -147,7 +149,7 @@ export default {
       this.fetch()
     },
     handleDelete (videoId) {
-      return Axios({
+      return axios({
         url: `/api/admin/videos/${videoId}`,
         method: 'delete'
       })
@@ -163,7 +165,7 @@ export default {
           that.handleDelete(videoId)
             .then(res => {
               console.log('delete', res)
-              if (res.status === 204) {
+              if (res === '') {
                 // refresh data
                 that.fetch()
               }
@@ -180,7 +182,7 @@ export default {
 <style lang="less" scoped>
 .videoPpage {
   width: 100%;
-  min-height: calc(100vh - 320px);
+  min-height: calc(100vh - 280px);
   .videos-pagination {
     // bottom: 0;
     display: flex;

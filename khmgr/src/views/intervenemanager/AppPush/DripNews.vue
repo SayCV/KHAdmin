@@ -51,8 +51,8 @@
 
 <script>
 import DripItem from '@/components/News/DripItem'
+import { axios } from '@/utils/request'
 
-import Axios from 'axios'
 export default {
   name: 'DripNews',
   components: { DripItem },
@@ -60,9 +60,9 @@ export default {
     return {
       NodripLists: false,
       dripLists: [],
-      totalCount: 9,
+      totalCount: 0,
       current: 1,
-      pageSize: 8
+      pageSize: 4
     }
   },
   updated () {
@@ -92,9 +92,9 @@ export default {
   methods: {
     // 获取数据
     fetch (params = {}) {
-      Axios({
-        // url: `/api/intervene/dripLists/?pageSize=${this.pageSize}&currentPage=${this.current}`,
-        url: '/api/admin/news/', // 后台数据
+      axios({
+        url: `/api/admin/news/?pageSize=${this.pageSize}&pageNum=${this.current}`,
+        // url: '/api/admin/news/', // 后台数据
         method: 'get',
         params: {
           ...params
@@ -103,12 +103,14 @@ export default {
         console.log('获取点滴列表', res)
         // 后台数据
         // this.totalCount = res.data.result.totalCount
-        if (res.data.length === 0) {
+        if (res.list.length === 0) {
           this.NodripLists = true
           this.dripLists = []
+          this.totalCount = 0
         } else {
           this.NodripLists = false
-          this.dripLists = res.data
+          this.dripLists = res.list
+          this.totalCount = res.total
         }
       })
     },
@@ -132,7 +134,7 @@ export default {
       this.fetch()
     },
     handleDelete (newsId) {
-      return Axios({
+      return axios({
         url: `/api/admin/news/${newsId}`,
         method: 'delete'
       })
@@ -174,7 +176,7 @@ export default {
 <style lang="less" scoped>
 .newsPage {
   width: 100%;
-  min-height: calc(100vh - 320px);
+  min-height: calc(100vh - 280px);
 
   .news-page-top {
     display: flex;
@@ -209,6 +211,9 @@ export default {
   }
   .news-container {
     .no-newsLists {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       .null-icon {
         .null-svg {
           width: 220px;

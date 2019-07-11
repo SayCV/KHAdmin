@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
 import FooterToolBar from '@/components/FooterToolbar'
 
 export default {
@@ -194,14 +194,14 @@ export default {
       console.log('要提交的表单', formData)
       this.loading = true
       setTimeout(() => {
-        Axios({
+        axios({
           url: '/api/admin/videos',
           method: 'post',
           data: formData,
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
           console.log('表单提交了', res)
-          if (res.data.successed === true) {
+          if (res.successed === true) {
             this.$router.push({ path: '/intervenemanager/videos/allvideos' })
           } else {
             this.$notification['error']({
@@ -236,8 +236,7 @@ export default {
   color: #666;
 }
 .video-container {
-  // display: flex;
-  // justify-content: center;
+  min-height: calc(100vh - 280px);
   .video-page-top {
     display: flex;
     justify-content: space-between;
@@ -259,26 +258,26 @@ export default {
   .video-push {
     // width: 80%;
     display: block;
-  }
-  .video-upload {
-    width: 100%;
-    padding: 0px 0px;
-    display: flex;
-    .clearfix {
-      flex: 1;
+    .video-info {
+      margin-top: 0.8rem;
+      display: flex;
+      justify-content: center;
+    }
+    .ant-form {
+      width: 100%;
+      /* padding: 20px; */
+    }
+    .ant-form-item {
+      width: 100%;
     }
   }
-  .video-info {
-    margin-top: 1.6rem;
-    display: flex;
-    justify-content: center;
-  }
-  .ant-form {
-    width: 100%;
-    /* padding: 20px; */
-  }
-  .ant-form-item {
-    width: 100%;
-  }
+  // .video-upload {
+  //   width: 100%;
+  //   padding: 0px 0px;
+  //   display: flex;
+  //   .clearfix {
+  //     flex: 1;
+  //   }
+  // }
 }
 </style>

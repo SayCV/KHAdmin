@@ -28,7 +28,7 @@ module.exports = {
     ]
   },
 
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.resolve.alias
       .set('@$', resolve('src'))
       .set('@api', resolve('src/api'))
@@ -73,7 +73,6 @@ module.exports = {
       less: {
         modifyVars: {
           /* less 变量覆盖，用于自定义 ant design 主题 */
-
           /*
           'primary-color': '#F5222D',
           'link-color': '#F5222D',
@@ -91,7 +90,8 @@ module.exports = {
     proxy: {
       '/api': {
         // 后端接口地址
-        target: 'http://172.31.214.104/khmsrv',
+        target: 'http://172.31.214.104/khmsrv/',
+        // target: 'http://172.22.21.3:5000',
         ws: false,
         changeOrigin: true, // 是否允许跨越
         pathRewrite: {

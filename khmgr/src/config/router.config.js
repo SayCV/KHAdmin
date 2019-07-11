@@ -340,16 +340,22 @@ export const asyncRouterMap = [
                 path: '/business/BarAD/allAD',
                 name: 'allAD',
                 component: () => import('@/views/business/BarAD/AllAD'),
-                meta: { title: '全部广告', hidden: true, permission: ['profile'] }
+                meta: { title: '已使用广告', hidden: true, permission: ['profile'] }
               },
               {
-                path: '/intervenemanager/videos/videoused',
+                path: '/business/BarAD/nullAD',
+                name: 'nullAD',
+                component: () => import('@/views/business/BarAD/NullAD'),
+                meta: { title: '未使用广告', hidden: true, permission: ['profile'] }
+              },
+              {
+                path: '/business/BarAD/addAD',
                 name: 'addAD',
                 component: () => import('@/views/business/BarAD/AddAD'),
                 meta: { title: '新建广告', hidden: true, keepAlive: true, permission: ['profile'] }
               },
               {
-                path: '/intervenemanager/videos/allvideos',
+                path: '/business/BarAD/editAD',
                 name: 'editAD',
                 component: () => import('@/views/business/BarAD/EditAD'),
                 meta: { title: '编辑广告', hidden: true, keepAlive: true, permission: ['profile'] }

@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -170,14 +170,14 @@ export default {
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
-      Axios({
+      axios({
         url: `/api/admin/news/${newsId}`,
         method: 'get'
       }).then(res => {
         console.log('进入头条详情页面时表单数据', res)
-        this.data = res.data
+        this.data = res
         this.initFileList(this.data)
-        this.editorContent = res.data.content
+        this.editorContent = res.content
       })
     },
     initFileList (data) {
@@ -191,7 +191,7 @@ export default {
     },
     formPost (formData, newsId) {
       // put 编辑
-      Axios({
+      axios({
         url: `/api/admin/news/${newsId}`,
         // url: '/api/admin/news',
         method: 'put',
@@ -199,7 +199,7 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
         console.log('修改后提交表单', res)
-        if (res.status === 200) {
+        if (res) {
           // 跳转到新闻详情页面
           this.$router.push({
             path: '/intervenemanager/TopPush/list'
@@ -236,7 +236,7 @@ export default {
       // 将图片上传到服务器
       const formData = new FormData()
       formData.append('image', $file)
-      Axios({
+      axios({
         url: '/api/resources',
         method: 'post',
         data: formData,
