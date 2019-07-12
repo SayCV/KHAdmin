@@ -118,11 +118,6 @@ export default {
   components: { FooterToolBar },
   data () {
     return {
-      selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
-      options: [
-        { text: '立即投放', value: 0 }, // 每个选项里面就不用在多一个selected 了
-        { text: '稍后投放', value: 1 }
-      ],
       disabled: false,
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
@@ -206,9 +201,9 @@ export default {
       }, 1000)
     },
     handleBack () {
-      // 返回PushList页面
+      // 返回已使用广告页
       this.$router.push({
-        path: '/business/BarAD/allAD'
+        path: '/business/BarAD/allAD/usedAD'
       })
     }
 

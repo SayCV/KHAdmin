@@ -1,8 +1,21 @@
 <template>
-  <a-card>
+  <a-card
+    :bordered="false"
+    :bodyStyle="{ padding: '8px 8px 24px 8px', height: '100%' }"
+    :style="{ height: '100%' }"
+  >
     <div class="adsPage">
       <div class="ads-page-top">
-        <div class="page-top">{{ $route.meta.title }}</div>
+        <div class="page-top">
+          <div class="pagination" v-if="showPagination">
+            <a-pagination
+              @change="handlePageChange"
+              v-model="current"
+              :pageSize="pageSize"
+              :total="totalCount"
+            />
+          </div>
+        </div>
         <div class="page-operation">
           <a-button-group>
             <a-button @click="handleRefresh">刷新</a-button>
@@ -12,18 +25,8 @@
           </a-button-group>
         </div>
       </div>
-      <div class="ads-pagination">
-        <div class="pagination" v-if="showPagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
-        </div>
-      </div>
       <div class="ads-page-content">
-        <div class="no-ads" v-if="NoadLists">
+        <div class="no-ads" v-if="NoadList">
           <div class="null-icon">
             <div class="null-svg"></div>
             <div class="null-txt">还没有投放过广告&nbsp;yo&nbsp;！</div>
@@ -37,7 +40,7 @@
               </div>
               <div class="ad-meta">
                 <div class="meta-title">
-                  <a-tag color="red">{{ ad.createOn }}</a-tag>
+                  <a-tag color="blue">{{ ad.createOn.substring(0,16) }}</a-tag>
                   <div class="title-text">{{ ad.title }}</div>
                 </div>
                 <div class="meta-url">{{ ad.adUrl }}</div>
@@ -45,7 +48,7 @@
                   <div class="ad-date">
                     <div class="date-label">起止时间&nbsp;:&nbsp;</div>
                     <div class="start-end-date">
-                      <a-tag>{{ moment(`${ad.startDate}`).format(dateFormat) }}</a-tag>
+                      <a-tag>{{ moment(`${ad.beginDate}`).format(dateFormat) }}</a-tag>
                       <span>~ &nbsp;</span>
                       <a-tag>{{ moment(`${ad.endDate}`).format(dateFormat) }}</a-tag>
                     </div>
@@ -53,8 +56,14 @@
                 </div>
                 <div class="meta-operation">
                   <div class="meta-contact">
-                    <div class="contact-label">联系人&nbsp;:&nbsp;{{ ad.contact }}</div>
-                    <div class="contact">电话&nbsp;:&nbsp;{{ ad.phone }}</div>
+                    <div class="contact-label">
+                      联系人&nbsp;:&nbsp;
+                      <div class="name">{{ ad.contact }}</div>
+                    </div>
+                    <div class="contact">
+                      电话&nbsp;:&nbsp;
+                      <div class="phone">{{ ad.phone }}</div>
+                    </div>
                   </div>
                   <a-button-group>
                     <a-button @click="() => handleToEditAD(ad.adId)">编辑</a-button>
@@ -82,46 +91,54 @@
 
 <script>
 import moment from 'moment'
+import { axios } from '@/utils/request'
 export default {
-  name: 'NullAD',
+  name: 'AllAD',
   components: {},
   data () {
     return {
       dateFormat: 'YYYY-MM-DD',
-      NoadLists: false,
-      adList: [{
-        adId: '1',
-        imageUrl: 'https://picsum.photos/200/300',
-        adUrl: 'https://www.bilibili.com/',
-        createOn: '2019-7-10',
-        startDate: '2019-7-1',
-        endDate: '2019-9-1',
-        contact: 'yahaha',
-        title: 'bilibili',
-        phone: 13372552822
-      }, {
-        adId: '2',
-        imageUrl: 'https://picsum.photos/200/301',
-        adUrl: 'https://dxy.com/',
-        createOn: '2019-7-10',
-        startDate: '2019-7-1',
-        endDate: '2019-9-1',
-        contact: 'wanghuahau',
-        title: '丁香医生',
-        phone: 13372552822
-      }],
-      totalCount: 9,
+      NoadList: false,
+      adList: [],
+      totalCount: 0,
       current: 1,
-      pageSize: 8
+      pageSize: 4
     }
   },
   computed: {
     showPagination () {
+      console.log('计算分页是否显示', this.pageSize < this.totalCount)
       return this.pageSize < this.totalCount
     }
   },
+  mounted () {
+    this.fetch()
+  },
   methods: {
     moment,
+    fetch (params = {}) {
+      axios({
+        url: `/api/admin/ad/unused/?pageSize=${this.pageSize}&pageNum=${this.current}`,
+        // url: '/api/admin/ad/unused/', // 后台数据
+        method: 'get',
+        params: {
+          ...params
+        }
+      }).then(res => {
+        console.log('未使用广告列表', res)
+        // 后台数据
+        // this.totalCount = res.data.result.totalCount
+        if (res.list.length === 0) {
+          this.NoadList = true
+          this.adList = []
+          this.totalCount = 0
+        } else {
+          this.NoadList = false
+          this.adList = res.list
+          this.totalCount = res.total
+        }
+      })
+    },
     handleRefresh () {
 
     },
@@ -161,32 +178,16 @@ export default {
 
 <style lang="less" scoped>
 .adsPage {
-  min-height: calc(100vh - 280px);
+  // min-height: calc(100vh - 280px);
   .ads-page-top {
+    margin-top: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     .page-top {
-      font-size: 16px;
-      color: rgba(0, 0, 0, 0.85);
-      text-align: center;
-      height: 34px;
-      line-height: 34px;
-      padding: 0 24px;
-      border: 1px solid #d9d9d9;
-      border-top-right-radius: 4px;
-      border-top-left-radius: 4px;
-      color: #2f54eb;
-      background: #f0f5ff;
-      border-color: #adc6ff;
+      display: flex;
+      justify-content: flex-start;
     }
-  }
-  .ads-pagination {
-    // bottom: 0;
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 0.6rem;
-    height: 32px;
   }
   .ads-pagination-bottom {
     // bottom: 0;
@@ -195,7 +196,6 @@ export default {
     margin-top: 0.6rem;
   }
   .ads-page-content {
-    margin-top: 10px;
     .no-ads {
       width: 100%;
       height: calc(100vh - 450px);
@@ -250,7 +250,6 @@ export default {
             background-size: cover;
             background-position: center center;
             border-radius: 4px;
-            border: 1px solid #d9d9d9;
             overflow: hidden;
           }
           .cover:hover {
@@ -314,12 +313,39 @@ export default {
             .meta-contact {
               margin-bottom: 10px;
               .contact-label {
+                margin-bottom: 8px;
                 font-size: 15px;
                 color: rgba(0, 0, 0, 0.85);
+                display: flex;
+                .name {
+                  color: rgba(0, 0, 0, 0.65);
+                  margin: 0 1px;
+                  background: #f2f4f5;
+                  padding: 0px 7px;
+                  border-radius: 3px;
+                  font-size: 0.9em;
+                  border: 1px solid #eee;
+                }
+                .name:hover {
+                  cursor: pointer;
+                }
               }
               .contact {
                 font-size: 15px;
                 color: rgba(0, 0, 0, 0.85);
+                display: flex;
+                .phone {
+                  color: rgba(0, 0, 0, 0.65);
+                  margin: 0 1px;
+                  background: #f2f4f5;
+                  padding: 0px 7px;
+                  border-radius: 3px;
+                  font-size: 0.9em;
+                  border: 1px solid #eee;
+                }
+                .phone:hover {
+                  cursor: pointer;
+                }
               }
             }
           }

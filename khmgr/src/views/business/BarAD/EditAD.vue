@@ -13,6 +13,19 @@
         <div class="ad-info">
           <a-form :layout="formLayout" :form="form" @submit="handleSubmit">
             <a-form-item
+              label="广告名称"
+              :labelCol="{md: {span: 4}, sm: {span: 4}}"
+              :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'title',
+                  { rules: [{ required: true, message: '请输入广告名称' }],
+                    initialValue: data.title}
+                ]"
+              />
+            </a-form-item>
+            <a-form-item
               label="广告链接"
               :labelCol="{md: {span: 4}, sm: {span: 4}}"
               :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
@@ -20,7 +33,7 @@
               <a-input
                 v-decorator="[
                   'adUrl',
-                  {rules: [{ required: true, message: '请输入广告链接' }] }
+                  {rules: [{ required: true, message: '请输入广告链接' }],initialValue: data.adUrl }
                 ]"
               />
             </a-form-item>
@@ -58,28 +71,37 @@
               :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
             >
               <a-range-picker
-                v-decorator="['range-picker', {rules: [{ required: true, message: '请选择起止时间' }] }]"
+                v-decorator="['range-picker', {rules: [{ required: true, message: '请选择起止时间' }], initialValue:[moment(data.beginDate, dateFormat), moment(data.endDate, dateFormat)] }]"
               />
             </a-form-item>
             <a-form-item
+              label="联系人"
               :labelCol="{md: {span: 4}, sm: {span: 4}}"
               :wrapperCol="{md: {span: 4}, sm: {span: 4} }"
-              label="投放状态"
             >
-              <a-select v-model="selected">
-                <a-select-option
-                  v-for="option in options"
-                  :value="option.value"
-                  :key="option.value"
-                >{{ option.text }}</a-select-option>
-              </a-select>
+              <a-input
+                v-decorator="[
+                  'contact',
+                  {rules: [{ required: true, message: '请输入联系人' }], initialValue:data.contact }
+                ]"
+              />
+            </a-form-item>
+            <a-form-item
+              label="联系方式"
+              :labelCol="{md: {span: 4}, sm: {span: 4}}"
+              :wrapperCol="{md: {span: 5}, sm: {span: 5} }"
+            >
+              <a-input
+                v-decorator="[
+                  'phone',
+                  {rules: [{ required: true, message: '请输入联系方式' }], initialValue:data.phone }
+                ]"
+              />
             </a-form-item>
             <!-- fixed footer toolbar -->
             <footer-tool-bar>
-              <a-button type="primary" html-type="submit" :loading="loading">更 &nbsp; 新</a-button>
+              <a-button type="primary" html-type="submit" :loading="loading">提&nbsp;交</a-button>
             </footer-tool-bar>
-            {{ adId }}
-            {{ data }}
           </a-form>
         </div>
       </div>
@@ -88,13 +110,15 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
+import moment from 'moment'
 import FooterToolBar from '@/components/FooterToolbar'
 export default {
   name: 'EditAD',
   components: { FooterToolBar },
   data () {
     return {
+      dateFormat: 'YYYY-MM-DD',
       disabled: false,
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
@@ -103,7 +127,17 @@ export default {
       fileList: [],
       loading: false,
       imgLoading: false,
-      data: {}, // 进入编辑页面填充表单的数据
+      data: {
+        adId: 12,
+        adUrl: 'https://member.bilibili.com/v2#/upload/video/frame',
+        beginDate: '2019-07-12 00:00:00',
+        contact: '呀哈哈',
+        createOn: '2019-07-12 10:24:35',
+        endDate: '2019-07-31 00:00:00',
+        imageUrl: 'http://172.31.214.104/khmsrv/api/resources/fb4676ba75c54fbb9f02862378b07041',
+        phone: '666',
+        title: '广告测试'
+      }, // 进入编辑页面填充表单的数据
       adId: this.$route.query.adId // ADid
     }
   },
@@ -111,13 +145,17 @@ export default {
     '$route.path' (to, from) {
       if (to === '/business/BarAD/editAD') {
         console.log('进入广告编辑页面', to)
-        this.newsId = this.$route.query.newsId
+        this.adId = this.$route.query.adId
         // this.data = this.$route.query.data
-        this.getFormData(this.newsId)
+        this.getFormData(this.adId)
       }
     }
   },
+  mounted () {
+    this.getFormData(this.adId)
+  },
   methods: {
+    moment,
     handleCoverChange (info) {
       console.log('cover', info)
       if (info.file.type === 'image/jpeg' || info.file.type === 'image/png') {
@@ -142,6 +180,15 @@ export default {
     handlePreview (file) {
       this.previewImage = file.url || file.thumbUrl
       this.previewVisible = true
+    },
+    getFormData (newsId) {
+      // 进入广告编辑页面时表单填入数据
+      axios({
+        url: `/api/admin/ad/${newsId}`,
+        method: 'get'
+      }).then(res => {
+        console.log('进入广告编辑页面时表单填入数据', res)
+      })
     },
     // handler
     handleSubmit (e) {
@@ -176,14 +223,14 @@ export default {
       console.log('要提交的表单', formData)
       this.loading = true
       setTimeout(() => {
-        Axios({
+        axios({
           // url: '/api/admin/videos',
           method: 'post',
           data: formData,
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
           console.log('表单提交了', res)
-          if (res.data.successed === true) {
+          if (res.successed === true) {
             this.$router.push({ path: '/business/BarAD/allAD' })
           } else {
             this.$notification['error']({
@@ -196,9 +243,9 @@ export default {
       }, 1000)
     },
     handleBack () {
-      // 返回PushList页面
+      // 返回已使用广告页
       this.$router.push({
-        path: '/business/BarAD/allAD'
+        path: '/business/BarAD/allAD/usedAD'
       })
     }
 
