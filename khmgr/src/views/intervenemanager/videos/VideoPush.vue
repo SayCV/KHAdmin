@@ -43,6 +43,7 @@
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-upload-dragger
+              accept="video/*"
               name="file"
               :multiple="false"
               :disabled="disabled"
@@ -68,6 +69,7 @@
                 <a-tag color="blue">请上传视频封面</a-tag>
               </div>
               <a-upload
+                accept="image/*"
                 action="http://172.31.214.104/khmsrv/api/resources"
                 listType="picture-card"
                 :fileList="fileList"
@@ -179,10 +181,15 @@ export default {
             this.$message.warning('封面不能为空')
           } else {
             // 追加表单字段
+            values = {
+              'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
+              'videoUrl': `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`,
+              'pubType': this.selected
+            }
             // this.appendForm(values)
-            this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
-            this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
-            this.$set(values, 'pubType', this.selected)
+            // this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
+            // this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
+            // this.$set(values, 'pubType', this.selected)
             console.log('Received values of form: ', values)
             this.videoFormPost(values)
           }

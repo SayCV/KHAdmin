@@ -189,7 +189,8 @@ export default {
         }).then(res => {
           console.log('广告提交了', res)
           if (res.successed === true) {
-            this.$router.push({ path: '/business/BarAD/allAD' })
+            // this.$router.push({ path: '/business/BarAD/allAD/usedAD' })
+            this.$router.push({ name: 'allAD' })
           } else {
             this.$notification['error']({
               message: '注意！注意！',

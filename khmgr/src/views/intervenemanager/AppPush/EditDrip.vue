@@ -34,6 +34,7 @@
             <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
               <div class="clearfix">
                 <a-upload
+                  accept="image/*"
                   action="http://172.31.214.104/khmsrv/api/resources"
                   listType="picture-card"
                   :fileList="fileList"
@@ -107,7 +108,7 @@ export default {
       confirmLoading: false, // 预览model的确认loading
       editorContent: '', // markdown编辑器的正文
       form: this.$form.createForm(this),
-      previewVisible: false, // 是否预览的布尔值
+      previewVisible: false, // 是否预览封面的布尔值
       previewImage: '', // 预览封面
       fileList: [], // 上传封面的json数组
       toPostForm: {}, // 最终需要提交的表单
@@ -160,10 +161,15 @@ export default {
         this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
       }
       // $set给post的表单json数据追加字段
-      this.$set(values, 'content', this.editorContent)
-      this.$set(values, 'cover', this.cover)
-      // 点滴内容恒为isTop===false
-      this.$set(values, 'isTop', false)
+      values = {
+        'content': this.editorContent,
+        'cover': this.cover,
+        'isTop': false
+      }
+      // this.$set(values, 'content', this.editorContent)
+      // this.$set(values, 'cover', this.cover)
+      // // 点滴内容恒为isTop===false
+      // this.$set(values, 'isTop', false)
       this.toPostForm = values
       console.log('函数：追加表单字段: ', this.toPostForm)
     },

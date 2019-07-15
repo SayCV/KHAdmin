@@ -48,6 +48,7 @@
                   <a-tag color="blue">请上传广告图片</a-tag>
                 </div>
                 <a-upload
+                  accept="image/*"
                   action="http://172.31.214.104/khmsrv/api/resources"
                   listType="picture-card"
                   :fileList="fileList"
@@ -113,6 +114,7 @@
 import { axios } from '@/utils/request'
 import moment from 'moment'
 import FooterToolBar from '@/components/FooterToolbar'
+
 export default {
   name: 'EditAD',
   components: { FooterToolBar },
@@ -127,17 +129,7 @@ export default {
       fileList: [],
       loading: false,
       imgLoading: false,
-      data: {
-        adId: 12,
-        adUrl: 'https://member.bilibili.com/v2#/upload/video/frame',
-        beginDate: '2019-07-12 00:00:00',
-        contact: '呀哈哈',
-        createOn: '2019-07-12 10:24:35',
-        endDate: '2019-07-31 00:00:00',
-        imageUrl: 'http://172.31.214.104/khmsrv/api/resources/fb4676ba75c54fbb9f02862378b07041',
-        phone: '666',
-        title: '广告测试'
-      }, // 进入编辑页面填充表单的数据
+      data: [], // 进入编辑页面填充表单的数据
       adId: this.$route.query.adId // ADid
     }
   },
@@ -146,7 +138,7 @@ export default {
       if (to === '/business/BarAD/editAD') {
         console.log('进入广告编辑页面', to)
         this.adId = this.$route.query.adId
-        // this.data = this.$route.query.data
+
         this.getFormData(this.adId)
       }
     }
@@ -156,24 +148,19 @@ export default {
   },
   methods: {
     moment,
-    handleCoverChange (info) {
-      console.log('cover', info)
-      if (info.file.type === 'image/jpeg' || info.file.type === 'image/png') {
-        this.fileList = info.fileList
-      }
+    handleCoverChange ({ fileList }) {
+      console.log('cover', fileList)
+      this.fileList = fileList
     },
     beforeUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isPNG = file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG && !isPNG) {
-        this.$message.error('你上传的图片不是JPG或PNG格式!')
-      }
       if (!isLt2M) {
-        this.$message.error('Image must smaller than 2MB!')
+        this.$message.error('图片文件超过 2MB!')
+        return false
       }
-      return isJPG || isPNG || isLt2M
+      return isLt2M
     },
+
     handleCancel () {
       this.previewVisible = false
     },
@@ -183,12 +170,25 @@ export default {
     },
     getFormData (newsId) {
       // 进入广告编辑页面时表单填入数据
-      axios({
-        url: `/api/admin/ad/${newsId}`,
-        method: 'get'
-      }).then(res => {
-        console.log('进入广告编辑页面时表单填入数据', res)
-      })
+      this.data = this.$route.query.data
+      console.log('元素数据:', this.data)
+      // axios({
+      //   url: `/api/admin/ad/${newsId}`,
+      //   method: 'get'
+      // }).then(res => {
+      //   console.log('进入广告编辑页面时表单填入数据', res)
+      // })
+      // this.data = mockData
+      this.initFileList(this.data)
+    },
+    initFileList (data) {
+      // 设置默认封面
+      this.fileList = [{
+        uid: '-1',
+        name: 'default',
+        status: 'done',
+        url: data.imageUrl
+      }]
     },
     // handler
     handleSubmit (e) {
@@ -199,10 +199,19 @@ export default {
             this.$message.warning('广告图片不能为空')
           } else {
             // 追加表单字段
+            if (this.fileList[0].name === 'default') {
+              // 判断是否修改了默认填充的封面
+              this.cover = null
+              this.cover = this.fileList[0].url
+            } else {
+              this.cover = null
+              this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+            }
             const rangeValue = fieldsValue['range-picker']
             const values = {
               ...fieldsValue,
-              'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
+              // 'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
+              'imageUrl': this.cover,
               'useDate': [rangeValue[0].format('YYYY-MM-DD'), rangeValue[1].format('YYYY-MM-DD')],
               'startDate': rangeValue[0].format('YYYY-MM-DD'),
               'endDate': rangeValue[1].format('YYYY-MM-DD'),
@@ -213,25 +222,25 @@ export default {
             // this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
             // this.$set(values, 'pubType', this.selected)
             console.log('Received values of form: ', values)
-            // this.videoFormPost(values)
+            this.adFormPost(values)
           }
         }
       })
     },
-    videoFormPost (formData) {
+    adFormPost (formData) {
       // Post且跳转
       console.log('要提交的表单', formData)
       this.loading = true
       setTimeout(() => {
         axios({
-          // url: '/api/admin/videos',
-          method: 'post',
+          url: `/api/admin/ad/${this.adId}`,
+          method: 'put',
           data: formData,
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
-          console.log('表单提交了', res)
-          if (res.successed === true) {
-            this.$router.push({ path: '/business/BarAD/allAD' })
+          console.log('表单更新了', res)
+          if (res) {
+            this.$router.push({ name: 'allAD' })
           } else {
             this.$notification['error']({
               message: '注意！注意！',

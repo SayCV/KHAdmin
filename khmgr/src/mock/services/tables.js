@@ -4,7 +4,7 @@ import { builder } from '../util'
 // 基础数据-客户管理
 const customerInfoTable = () => {
   return builder({
-    'data': [
+    data: [
       {
         accountId: '1001',
         userId: '10049',
@@ -70,17 +70,17 @@ const customerInfoTable = () => {
         birthday: '1990-12-9'
       }
     ],
-    'pageSize': 10,
-    'pageNo': 1,
-    'totalCount': 66,
-    'totalPage': 10
+    pageSize: 10,
+    pageNo: 1,
+    totalCount: 66,
+    totalPage: 10
   })
 }
 
 // 基础数据-健康管理师
 const khmanagerInfoTable = () => {
   return builder({
-    'data': [
+    data: [
       {
         accountId: '1001',
         username: '137*******',
@@ -109,17 +109,17 @@ const khmanagerInfoTable = () => {
         createdTime: '2019-4-12'
       }
     ],
-    'pageSize': 10,
-    'pageNo': 1,
-    'totalCount': 23,
-    'totalPage': 10
+    pageSize: 10,
+    pageNo: 1,
+    totalCount: 23,
+    totalPage: 10
   })
 }
 
 // 基础数据-设备管理
 const devicesTable = () => {
   return builder({
-    'data': [
+    data: [
       {
         equipmentId: '10001',
         category: '马桶盖',
@@ -153,17 +153,16 @@ const devicesTable = () => {
         createdTime: '2019-4-12'
       }
     ],
-    'pageSize': 10,
-    'pageNo': 1,
-    'totalCount': 23,
-    'totalPage': 10
+    pageSize: 10,
+    pageNo: 1,
+    totalCount: 23,
+    totalPage: 10
   })
 }
 // 基础数据-客户管理-详细信息
 const accountInfo = () => {
   return builder({
-    'data':
-    {
+    data: {
       avatar: 'https://picsum.photos/id/964/200/200',
       identityId: '51012xxxxxxxx',
       nation: '汉族',
@@ -193,8 +192,7 @@ const accountInfo = () => {
 // 基础数据-健康管理-详细信息
 const khmanagerInfo = () => {
   return builder({
-    'data':
-    {
+    data: {
       organization: '杭州西湖',
       username: '137**********',
       AccountId: '1001',
@@ -211,8 +209,7 @@ const khmanagerInfo = () => {
 // 基础数据-设备管理-详细信息
 const equipmentInfo = () => {
   return builder({
-    'data':
-    {
+    data: {
       equipmentId: '51012xxxxxxxx',
       category: '马桶盖',
       bindAccountId: '1001',
@@ -230,53 +227,205 @@ const equipmentInfo = () => {
 // 健康档案-健康报告
 const healthReportTable = () => {
   return builder({
-    'data': [{
-      accountId: '1001',
-      name: '李栓蛋',
-      sex: '女',
-      healthRate: 'A',
-      record: '有'
-    },
-    {
-      accountId: '1002',
-      name: '王花花',
-      sex: '女',
-      healthRate: 'B',
-      record: '有'
-    },
-    {
-      accountId: '1003',
-      name: '王花花',
-      sex: '女',
-      healthRate: 'B',
-      record: '有'
-    },
-    {
-      accountId: '1004',
-      name: '王花花',
-      sex: '女',
-      healthRate: 'C',
-      record: '有'
-    },
-    {
-      accountId: '1005',
-      name: '王花花',
-      sex: '女',
-      healthRate: 'B',
-      record: '有'
-    },
-    {
-      accountId: '1006',
-      name: '王花花',
-      sex: '女',
-      healthRate: 'B',
-      record: '有'
-    }
+    data: [
+      {
+        accountId: '1001',
+        name: '李栓蛋',
+        sex: '女',
+        healthRate: 'A',
+        record: '有'
+      },
+      {
+        accountId: '1002',
+        name: '王花花',
+        sex: '女',
+        healthRate: 'B',
+        record: '有'
+      },
+      {
+        accountId: '1003',
+        name: '王花花',
+        sex: '女',
+        healthRate: 'B',
+        record: '有'
+      },
+      {
+        accountId: '1004',
+        name: '王花花',
+        sex: '女',
+        healthRate: 'C',
+        record: '有'
+      },
+      {
+        accountId: '1005',
+        name: '王花花',
+        sex: '女',
+        healthRate: 'B',
+        record: '有'
+      },
+      {
+        accountId: '1006',
+        name: '王花花',
+        sex: '女',
+        healthRate: 'B',
+        record: '有'
+      }
     ],
-    'pageSize': 10,
-    'pageNo': 1,
-    'totalPage': 6,
-    'totalCount': 57
+    pageSize: 10,
+    pageNo: 1,
+    totalPage: 6,
+    totalCount: 57
+  })
+}
+// 生活数据
+const livingDataTable = () => {
+  return builder({
+    data: [
+      {
+        userId: '1001',
+        personId: '1',
+        name: '李栓蛋',
+        sex: '女',
+        age: '22',
+        lastTime: '2019-7-11 15:25',
+        lastEquipmentId: '10000001'
+      },
+      {
+        userId: '1002',
+        personId: '2',
+        name: '王花花',
+        sex: '女',
+        age: '22',
+        lastTime: '2019-7-11 15:25',
+        lastEquipmentId: '10000001'
+      },
+      {
+        userId: '1003',
+        personId: '3',
+        name: '强啊强',
+        sex: '女',
+        age: '22',
+        lastTime: '2019-7-11 15:25',
+        lastEquipmentId: '10000001'
+      },
+      {
+        userId: '1004',
+        personId: '4',
+        name: '豪啊豪',
+        sex: '女',
+        age: '22',
+        lastTime: '2019-7-11 15:25',
+        lastEquipmentId: '10000001'
+      },
+      {
+        userId: '1005',
+        personId: '5',
+        name: '悦啊悦',
+        sex: '女',
+        age: '22',
+        lastTime: '2019-7-11 15:25',
+        lastEquipmentId: '10000001'
+      },
+      {
+        userId: '1006',
+        personId: '6',
+        name: '雨啊雨',
+        sex: '女',
+        age: '22',
+        lastTime: '2019-7-11 15:25',
+        lastEquipmentId: '10000001'
+      }
+    ],
+    pageSize: 10,
+    pageNo: 1,
+    totalPage: 6,
+    totalCount: 57
+  })
+}
+
+// 生活数据详情
+const livingDataInfo = () => {
+  return builder({
+    data: [
+      {
+        label: '体重',
+        value: '55',
+        reference: '60',
+        unit: 'KG'
+      },
+      {
+        label: '心率',
+        value: '55',
+        reference: '786',
+        unit: 'qq'
+      },
+      {
+        label: '阻抗',
+        value: '55',
+        reference: '60',
+        unit: 'rwr'
+      },
+      {
+        label: '脂肪率',
+        value: '55',
+        reference: '60',
+        unit: 'qwr'
+      },
+      {
+        label: '水分率',
+        value: '25',
+        reference: '14',
+        unit: 'sdf'
+      },
+      {
+        label: '基础代谢值',
+        value: '85',
+        reference: '41',
+        unit: 'aa'
+      },
+      {
+        label: '内脏脂肪等级',
+        value: '55',
+        reference: '60',
+        unit: 'KwwG'
+      },
+      {
+        label: '肌肉量',
+        value: '58',
+        reference: '7',
+        unit: 'KG'
+      },
+      {
+        label: '骨密度',
+        value: '37',
+        reference: '60',
+        unit: 'aa'
+      },
+      {
+        label: '蛋白质',
+        value: '786',
+        reference: '77',
+        unit: 'KG'
+      },
+      {
+        label: 'BMI',
+        value: '73',
+        reference: '60',
+        unit: 'ww'
+      },
+      {
+        label: '如厕时间',
+        value: '77',
+        reference: '873',
+        unit: 'KG'
+      },
+      {
+        label: '步数',
+        value: '8',
+        reference: '60',
+        unit: 'mm'
+      }
+    ]
   })
 }
 
@@ -287,3 +436,5 @@ Mock.mock(/\/api\/basedata\/healthreport\/info/, 'get', khmanagerInfo)
 Mock.mock(/\/api\/basedata\/equipmentlist/, 'get', devicesTable)
 Mock.mock(/\/api\/equipmentlistItem\/item/, 'get', equipmentInfo)
 Mock.mock(/\/api\/record\/healthreport/, 'get', healthReportTable)
+Mock.mock(/\/api\/record\/livingdata\/table/, 'get', livingDataTable)
+Mock.mock(/\/api\/record\/livingdata\/info/, 'get', livingDataInfo)
