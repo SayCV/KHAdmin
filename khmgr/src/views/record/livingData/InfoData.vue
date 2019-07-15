@@ -17,24 +17,24 @@
             <div class="title">基本信息</div>
             <div class="basic-data">
               <div class="item">
-                <span class="label">姓名：</span>
-                <span class="data">强啊强</span>
+                <div class="label">姓名</div>
+                <div class="data">强啊强</div>
               </div>
               <div class="item">
-                <span class="label">成员ID：</span>
-                <span class="data">1</span>
+                <div class="label">成员ID</div>
+                <div class="data">1</div>
               </div>
               <div class="item">
-                <span class="label">用户ID：</span>
-                <span class="data">10000000000001</span>
+                <div class="label">用户ID</div>
+                <div class="data">10000000000001</div>
               </div>
               <div class="item">
-                <span class="label">性别：</span>
-                <span class="data">男</span>
+                <div class="label">性别</div>
+                <div class="data">男</div>
               </div>
               <div class="item">
-                <span class="label">年龄：</span>
-                <span class="data">21</span>
+                <div class="label">年龄</div>
+                <div class="data">21</div>
               </div>
             </div>
           </div>
@@ -121,7 +121,7 @@ export default {
     .info-content {
       display: flex;
       .basic-info {
-        max-width: 256px;
+        max-width: 300px;
         flex: 1;
         border-right: 1px solid #d9d9d9;
         .title {
@@ -129,18 +129,26 @@ export default {
           padding: 12px 24px;
           font-size: 16px;
           color: rgba(0, 0, 0, 0.9);
+          border-bottom: 1px solid #d9d9d9;
         }
         .basic-data {
-          background: #fefefe;
           .item {
-            padding: 12px 24px;
-            font-size: 15px;
+            display: flex;
+            border-bottom: 1px solid #d9d9d9;
             .label {
+              flex: 1;
+              background: #fafafa;
               color: rgba(0, 0, 0, 0.85);
+              letter-spacing: 2px;
+              padding: 12px 24px;
+              border-right: 1px solid #d9d9d9;
+              &:last-child {
+                border-right: 0px solid #d9d9d9;
+              }
             }
             .data {
-              padding-left: 2px;
-              font-size: 14px;
+              flex: 2;
+              padding: 12px 24px;
               color: rgba(0, 0, 0, 0.65);
             }
           }
@@ -149,7 +157,7 @@ export default {
       .detail-info {
         flex: 3;
         .title {
-          background: #e6f7ff;
+          background: #fafafa;
           padding: 12px 24px;
           font-size: 16px;
           color: rgba(0, 0, 0, 0.9);
@@ -157,11 +165,13 @@ export default {
         .detail-data {
           .label {
             display: flex;
+            background: #fafafa;
+            border-top: 1px solid #d9d9d9;
             border-bottom: 1px solid #d9d9d9;
             .label-item {
               flex: 1;
               padding: 12px 24px;
-              font-size: 15px;
+              font-size: 14px;
               color: rgba(0, 0, 0, 0.85);
               border-right: 1px solid #d9d9d9;
               &:last-child {
@@ -175,10 +185,17 @@ export default {
               border-bottom: 1px solid #d9d9d9;
               .value-item {
                 flex: 1;
-                padding: 8px 24px;
+                padding: 12px 24px;
                 font-size: 14px;
                 color: rgba(0, 0, 0, 0.65);
                 border-right: 1px solid #d9d9d9;
+                &:first-child {
+                  background: #fafafa;
+                }
+                &:nth-child(2n + 1) {
+                  background: #fafafa;
+                  color: rgba(0, 0, 0, 0.85);
+                }
                 &:last-child {
                   border-right: 0px solid #d9d9d9;
                 }
