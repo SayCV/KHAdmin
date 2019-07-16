@@ -34,6 +34,7 @@
             <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
               <div class="clearfix">
                 <a-upload
+                  accept="image/*"
                   action="http://172.31.214.104/khmsrv/api/resources"
                   listType="picture-card"
                   :fileList="fileList"
@@ -89,7 +90,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -107,7 +108,7 @@ export default {
       confirmLoading: false, // 预览model的确认loading
       editorContent: '', // markdown编辑器的正文
       form: this.$form.createForm(this),
-      previewVisible: false, // 是否预览的布尔值
+      previewVisible: false, // 是否预览封面的布尔值
       previewImage: '', // 预览封面
       fileList: [], // 上传封面的json数组
       toPostForm: {}, // 最终需要提交的表单
@@ -160,23 +161,28 @@ export default {
         this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
       }
       // $set给post的表单json数据追加字段
-      this.$set(values, 'content', this.editorContent)
-      this.$set(values, 'cover', this.cover)
-      // 点滴内容恒为isTop===false
-      this.$set(values, 'isTop', false)
+      values = {
+        'content': this.editorContent,
+        'cover': this.cover,
+        'isTop': false
+      }
+      // this.$set(values, 'content', this.editorContent)
+      // this.$set(values, 'cover', this.cover)
+      // // 点滴内容恒为isTop===false
+      // this.$set(values, 'isTop', false)
       this.toPostForm = values
       console.log('函数：追加表单字段: ', this.toPostForm)
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
-      Axios({
+      axios({
         url: `/api/admin/news/${newsId}`,
         method: 'get'
       }).then(res => {
         console.log('进入点滴详情页面时表单数据', res)
-        this.data = res.data
+        this.data = res
         this.initFileList(this.data)
-        this.editorContent = res.data.content
+        this.editorContent = res.content
       })
     },
     initFileList (data) {
@@ -190,7 +196,7 @@ export default {
     },
     formPost (formData, newsId) {
       // put 编辑
-      Axios({
+      axios({
         url: `/api/admin/news/${newsId}`,
         // url: '/api/admin/news',
         method: 'put',
@@ -198,7 +204,7 @@ export default {
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
         console.log('修改后提交表单', res)
-        if (res.status === 200) {
+        if (res) {
           // 跳转到新闻详情页面
           this.$router.push({
             path: '/intervenemanager/AppPush/list'
@@ -235,7 +241,7 @@ export default {
       // 将图片上传到服务器
       const formData = new FormData()
       formData.append('image', $file)
-      Axios({
+      axios({
         url: '/api/resources',
         method: 'post',
         data: formData,
@@ -247,7 +253,7 @@ export default {
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
          */
-        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url.data}`
+        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
       })
     },

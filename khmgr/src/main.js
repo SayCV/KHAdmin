@@ -17,18 +17,19 @@ import bootstrap from './core/bootstrap'
 import './core/use'
 import './permission' // permission control
 import './utils/filter' // global filter
-import { ACCESS_TOKEN } from '@/store/mutation-types'
-import axios from 'axios'
+// import { ACCESS_TOKEN } from '@/store/mutation-types'
+// import axios from 'axios'
 
 // use mavonEditor
 Vue.use(mavonEditor)
 
 Vue.config.productionTip = false
-// 配置默认根路径
-axios.defaults.baseURL = 'http://172.31.214.104/khmsrv'
-axios.defaults.headers.common['Authorization'] = Vue.ls.get(ACCESS_TOKEN)
+// // 配置默认根路径
+// axios.defaults.baseURL = 'http://172.31.214.104/khmsrv'
+// // axios.defaults.baseURL = 'http://172.22.21.3:5000'
+// axios.defaults.headers.common['Authorization'] = Vue.ls.get(ACCESS_TOKEN)
 // // 配置Vue原型 (在任何组件中都可以正常使用axios)
-Vue.prototype.http = axios
+// Vue.prototype.http = axios
 // mount axios Vue.$http and this.$http
 Vue.use(VueAxios)
 

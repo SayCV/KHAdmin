@@ -4,7 +4,6 @@ import { bxAnaalyse } from '@/core/icons'
 
 // 去除按权限添加路由默认全局admin src/store/modules/permission
 export const asyncRouterMap = [
-
   {
     path: '/',
     name: 'index',
@@ -14,7 +13,8 @@ export const asyncRouterMap = [
       requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
     },
     redirect: '/dashboard/workplace',
-    children: [ // 右侧sidebar里的导航路由
+    children: [
+      // 右侧sidebar里的导航路由
       // dashboard
       {
         path: '/dashboard',
@@ -138,43 +138,65 @@ export const asyncRouterMap = [
         name: 'record',
         component: PageView,
         redirect: '/record/HealthReport',
-        meta: { title: '健康档案', icon: 'table', permission: ['from'] },
+        meta: { title: '健康档案', icon: 'table', permission: ['table'] },
         children: [
           {
-            path: '/record/LifeData',
+            path: '/record/livingData',
             name: 'LifeData',
-            component: () => import('@/views/record/LifeData'),
-            meta: { title: '生活数据', keepAlive: true, permission: ['from'] }
+            component: () => import('@/views/record/livingData/Index'),
+            meta: { title: '生活数据', keepAlive: true, permission: ['table'] },
+            hideChildrenInMenu: true,
+            redirect: '/record/livingData/table',
+            children: [
+              {
+                path: '/record/livingData/table',
+                name: 'LivingTable',
+                component: () => import('@/views/record/livingData/LivingTable'),
+                meta: { title: '生活数据表', keepAlive: true, hidden: true }
+              },
+              {
+                path: '/record/livingData/info',
+                name: 'InfoData',
+                component: () => import('@/views/record/livingData/InfoData'),
+                meta: { title: '生活数据详情页', keepAlive: true, hidden: true }
+              },
+              {
+                path: '/record/livingData/edit',
+                name: 'EditData',
+                component: () => import('@/views/record/livingData/EditData'),
+                meta: { title: '生活数据编辑页', keepAlive: true, hidden: true }
+              }
+            ]
           },
           {
             path: '/record/HealthTarget',
             name: 'HealthTarget',
             component: () => import('@/views/record/HealthTarget'),
-            meta: { title: '健康小目标', keepAlive: true, permission: ['from'] }
+            meta: { title: '健康小目标', keepAlive: true, permission: ['table'] }
           },
           {
             path: '/record/QuestionnaireScale',
             name: 'QuestionnaireScale',
             component: () => import('@/views/record/QuestionnaireScale'),
-            meta: { title: '问卷结果', keepAlive: true, permission: ['from'] }
+            meta: { title: '问卷结果', keepAlive: true, permission: ['table'] }
           },
           {
             path: '/record/MedicalRecords',
             name: 'MedicalRecords',
             component: () => import('@/views/record/MedicalRecords'),
-            meta: { title: '电子病历*', keepAlive: true, permission: ['from'] }
+            meta: { title: '电子病历*', keepAlive: true, permission: ['table'] }
           },
           {
             path: '/record/ExaminationData',
             name: 'SearchArticles',
             component: () => import('../views/record/ExaminationData'),
-            meta: { title: '体检数据*', permission: ['from'] }
+            meta: { title: '体检数据*', permission: ['table'] }
           },
           {
             path: '/record/HealthRecords',
             name: 'HealthRecords',
             component: () => import('../views/record/HealthRecords'),
-            meta: { title: '社区健康记录*', permission: ['from'] }
+            meta: { title: '社区健康记录*', permission: ['table'] }
           }
         ]
       },
@@ -199,7 +221,6 @@ export const asyncRouterMap = [
             component: () => import('@/views/report/Weeklyummary'),
             meta: { title: '每周小结', keepAlive: true, permission: ['from'] }
           }
-
         ]
       },
 
@@ -284,7 +305,7 @@ export const asyncRouterMap = [
             name: 'Videopush',
             component: () => import('@/views/intervenemanager/videos/Index'),
             meta: { title: 'HD视频宣教', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/videos/videopush',
+            redirect: '/intervenemanager/videos/allvideos',
             hideChildrenInMenu: true,
             children: [
               {
@@ -304,12 +325,17 @@ export const asyncRouterMap = [
                 name: 'AllVideos',
                 component: () => import('@/views/intervenemanager/videos/AllVideos'),
                 meta: { title: '全部视频', hidden: true, keepAlive: true, permission: ['profile'] }
+              },
+              {
+                path: '/intervenemanager/videos/videoedit',
+                name: 'VideoEdit',
+                component: () => import('@/views/intervenemanager/videos/VideoEdit'),
+                meta: { title: '编辑视频', hidden: true, keepAlive: true, permission: ['profile'] }
               }
             ]
           }
         ]
       },
-
       // 商城业务business
       {
         path: '/business',
@@ -325,10 +351,89 @@ export const asyncRouterMap = [
             meta: { title: '健康积分管理', keepAlive: true, permission: ['profile'] }
           },
           {
-            path: '/business/BarAdvertising',
-            name: 'BarAdvertising',
-            component: () => import(/* webpackChunkName: "result" */ '@/views/business/BarAdvertising'),
-            meta: { title: 'Bar宣传广告', keepAlive: true, hiddenHeaderContent: false, permission: ['profile'] }
+            path: '/businsss/BarAD/allAD',
+            name: 'allAD',
+            component: () => import('@/views/business/BarAD/AllAD/Index'),
+            meta: { title: 'Bar宣传广告', hideHeader: true, hidden: true },
+            redirect: '/business/BarAD/allAD/usedAD',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/business/BarAD/allAD/usedAD',
+                name: 'usedAD',
+                component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
+                meta: { title: '已使用广告', hidden: true }
+              },
+              {
+                path: '/business/BarAD/allAD/unusedAD',
+                name: 'unusedAD',
+                component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
+                meta: { title: '未使用广告', hidden: true }
+              }
+            ]
+          },
+          {
+            path: '/business/BarAD/addAD',
+            name: 'addAD',
+            component: () => import('@/views/business/BarAD/AddAD'),
+            meta: { title: '新建广告', keepAlive: true, hidden: true },
+            hidden: true
+          },
+          {
+            path: '/business/BarAD/editAD',
+            name: 'editAD',
+            component: () => import('@/views/business/BarAD/EditAD'),
+            meta: { title: '编辑广告', keepAlive: true, hidden: true },
+            hidden: true
+          },
+          {
+            path: '/business/BarAD',
+            name: 'BarAD',
+            component: () => import('@/views/business/BarAD/Index'),
+            meta: { title: 'Bar宣传广告', keepAlive: true },
+            redirect: '/business/BarAD/allAD',
+            hideChildrenInMenu: false,
+            children: [
+              {
+                path: '/businsss/BarAD/allAD',
+                name: 'allAD',
+                component: () => import('@/views/business/BarAD/AllAD/Index'),
+                meta: { title: '全部广告', hideHeader: true, hidden: true },
+                redirect: '/business/BarAD/allAD/usedAD',
+                hideChildrenInMenu: true,
+                hidden: false,
+                children: [
+                  {
+                    path: '/business/BarAD/allAD/usedAD',
+                    name: 'usedAD',
+                    component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
+                    meta: { title: '已使用广告', hidden: true },
+                    hidden: true
+                  },
+                  {
+                    path: '/business/BarAD/allAD/unusedAD',
+                    name: 'unusedAD',
+                    component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
+                    meta: { title: '未使用广告', hidden: true },
+                    hidden: true
+                  }
+                ]
+              },
+              {
+                path: '/business/BarAD/addAD',
+                name: 'addAD',
+                component: () => import('@/views/business/BarAD/AddAD'),
+                meta: { title: '新建广告', keepAlive: true },
+                hidden: true
+              },
+              {
+                path: '/business/BarAD/editAD',
+                name: 'editAD',
+                component: () => import('@/views/business/BarAD/EditAD'),
+                meta: { title: '编辑广告', keepAlive: true },
+                hidden: true
+              }
+            ]
           }
         ]
       },
@@ -431,9 +536,10 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: '*', redirect: '/404', hidden: true
+    path: '*',
+    redirect: '/404',
+    hidden: true
   }
-
 ]
 
 /**
@@ -482,5 +588,4 @@ export const constantRouterMap = [
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
   }
-
 ]

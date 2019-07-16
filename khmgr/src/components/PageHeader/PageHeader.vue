@@ -5,8 +5,8 @@
       <div class="detail">
         <div class="main" v-if="!$route.meta.hiddenHeaderContent">
           <div class="row">
-            <img v-if="logo" :src="logo" class="logo"/>
-            <h1 v-if="title" class="title">{{ title }}</h1>
+            <img v-if="logo" :src="logo" class="logo" />
+            <!-- <h2 v-if="title" class="title">{{ title }}</h2> -->
             <div class="action">
               <slot name="action"></slot>
             </div>
@@ -71,7 +71,7 @@ export default {
   box-shadow: 2px 0px 8px 0px rgba(29, 35, 41, 0.15);
 
   .breadcrumb {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
 
   .detail {
@@ -89,24 +89,20 @@ export default {
         height: 72px;
       }
     }
-
     .main {
       width: 100%;
       flex: 0 1 auto;
-
       .row {
         display: flex;
         width: 100%;
-
         .avatar {
           margin-bottom: 16px;
         }
       }
-
       .title {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 500;
-        font-size: 20px;
+        font-size: 18px;
         line-height: 26px;
         font-weight: 500;
         color: rgba(0, 0, 0, 0.85);

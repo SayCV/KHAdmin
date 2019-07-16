@@ -19,7 +19,7 @@ import {
 export function login (parameter) {
   return axios({
     // url: '/auth/login',
-    url: '/account/login',
+    url: '/api/account/login',
     method: 'post',
     headers: {
       'AppKey': '2bwcNhl0Bfw4BoQddO2hlx2L',
@@ -61,7 +61,7 @@ export function getInfo () {
 export function logout () {
   return axios({
     // url: '/auth/logout',
-    url: '/account/logout',
+    url: '/api/account/logout',
     method: 'delete',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'

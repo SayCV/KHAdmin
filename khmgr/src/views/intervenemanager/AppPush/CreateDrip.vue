@@ -32,6 +32,20 @@
                   ]"
                 />
               </a-form-item>
+              <a-form-item
+                :labelCol="{md: {span: 4}, sm: {span: 4}}"
+                :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
+                label="发送人群"
+                has-feedback
+              >
+                <a-select v-model="selected">
+                  <a-select-option
+                    v-for="option in options"
+                    :value="option.value"
+                    :key="option.value"
+                  >{{ option.text }}</a-select-option>
+                </a-select>
+              </a-form-item>
               <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
                 <div class="clearfix">
                   <a-upload
@@ -91,7 +105,7 @@
 </template>
 
 <script>
-import Axios from 'axios'
+import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -101,6 +115,11 @@ export default {
   components: { FooterToolBar },
   data () {
     return {
+      selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
+      options: [
+        { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '条件推送', value: 1 }
+      ],
       previewMdHtml: null,
       ModalTitle: null,
       ModalText: {},
@@ -166,6 +185,8 @@ export default {
       // $set给post的表单json数据追加字段
       this.$set(values, 'content', this.editorContent)
       this.$set(values, 'cover', this.cover)
+      // 推送类型
+      this.$set(values, 'pubType', this.selected)
       // 点滴内容恒为isTop===false
       this.$set(values, 'isTop', false)
       this.toPostForm = values
@@ -174,14 +195,14 @@ export default {
     formPost (formData) {
       // Post且跳转
       console.log('要提交的表单', formData)
-      Axios({
+      axios({
         url: '/api/admin/news',
         method: 'post',
         data: formData,
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
-        console.log('表单提交了', res.data)
-        if (res.data.successed === true) {
+        console.log('表单提交了', res)
+        if (res) {
           // 跳转到新闻详情页面
           this.$router.push({
             path: '/intervenemanager/AppPush/list'
@@ -218,7 +239,7 @@ export default {
       // 将图片上传到服务器
       const formData = new FormData()
       formData.append('image', $file)
-      Axios({
+      axios({
         url: '/api/resources',
         method: 'post',
         data: formData,
@@ -230,7 +251,7 @@ export default {
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
          */
-        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url.data}`
+        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
       })
     },

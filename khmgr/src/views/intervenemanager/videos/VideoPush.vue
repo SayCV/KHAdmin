@@ -1,11 +1,19 @@
 <template>
   <div class="video-container">
+    <div class="video-page-top">
+      <div class="page-top">{{ $route.meta.title }}</div>
+      <div class="video-operation">
+        <a-button type="primary" @click="() => handleBack()">
+          <a-icon type="left" />返回
+        </a-button>
+      </div>
+    </div>
     <div class="video-push">
       <div class="video-info">
         <a-form :layout="formLayout" :form="form" @submit="handleSubmit">
           <a-form-item
             label="标题"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-input
@@ -17,13 +25,13 @@
           </a-form-item>
           <a-form-item
             label="简介"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-textarea
               rows="3"
               v-decorator="[
-                'description',
+                'summary',
                 {rules: [{ required: true, message: '请输入简介' }] }
               ]"
             />
@@ -31,26 +39,29 @@
           <a-form-item
             label="视频"
             :required="true"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-upload-dragger
+              accept="video/*"
               name="file"
-              :multiple="true"
-              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-              @change="handleChange"
+              :multiple="false"
+              :disabled="disabled"
+              action="http://172.31.214.104/khmsrv/api/resources"
+              :videoList="videoList"
+              listType="picture"
+              @change="handleVideoChange"
             >
               <p class="ant-upload-drag-icon">
                 <a-icon type="inbox" />
               </p>
-              <p class="ant-upload-text">点击上传视频</p>
-              <p class="ant-upload-hint">Support for a single or bulk upload.</p>
+              <p class="ant-upload-text">点击上传视频（拖拽）</p>
             </a-upload-dragger>
           </a-form-item>
           <a-form-item
             label="封面"
             :required="true"
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <div class="clearfix">
@@ -58,14 +69,16 @@
                 <a-tag color="blue">请上传视频封面</a-tag>
               </div>
               <a-upload
+                accept="image/*"
                 action="http://172.31.214.104/khmsrv/api/resources"
                 listType="picture-card"
                 :fileList="fileList"
                 @preview="handlePreview"
-                @change="imgHandleChange"
+                @change="handleCoverChange"
+                :beforeUpload="beforeUpload"
               >
                 <div v-if="fileList.length < 1">
-                  <a-icon type="plus" />
+                  <a-icon :type="imgLoading ? 'loading' : 'plus'" />
                   <div class="ant-upload-text">上传视频封面</div>
                 </div>
               </a-upload>
@@ -75,19 +88,23 @@
             </div>
           </a-form-item>
           <a-form-item
-            :labelCol="{md: {span: 2}, sm: {span: 2}}"
-            :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
+            :labelCol="{md: {span: 3}, sm: {span: 3}}"
+            :wrapperCol="{md: {span: 4}, sm: {span: 4} }"
             label="发送人群"
             has-feedback
           >
-            <a-select default-value="1">
-              <a-select-option value="1">全部推送</a-select-option>
-              <a-select-option value="2">按条件推送</a-select-option>
+            <a-select v-model="selected">
+              <a-select-option
+                v-for="option in options"
+                :value="option.value"
+                :key="option.value"
+              >{{ option.text }}</a-select-option>
             </a-select>
           </a-form-item>
-          <div class="from-option">
-            <a-button type="primary" html-type="submit">提交</a-button>
-          </div>
+          <!-- fixed footer toolbar -->
+          <footer-tool-bar>
+            <a-button type="primary" html-type="submit" :loading="loading">提 交</a-button>
+          </footer-tool-bar>
         </a-form>
       </div>
     </div>
@@ -95,34 +112,55 @@
 </template>
 
 <script>
+import { axios } from '@/utils/request'
+import FooterToolBar from '@/components/FooterToolbar'
+
 export default {
   name: 'VideoPush',
+  components: { FooterToolBar },
   data () {
     return {
-      isUsed: false,
-      showVideoFrom: false,
-      VideoList: [],
+      selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
+      options: [
+        { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '条件推送', value: 1 }
+      ],
+      disabled: false,
+      videoList: [],
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
       previewVisible: false,
       previewImage: '',
-      fileList: []
+      fileList: [],
+      loading: false,
+      imgLoading: false
     }
   },
   methods: {
-    handleChange (info) {
-      const status = info.file.status
-      if (status !== 'uploading') {
-        console.log('video', info.file, info.VideoList)
+    handleCoverChange (info) {
+      console.log('cover', info)
+      if (info.file.type === 'image/jpeg' || info.file.type === 'image/png') {
+        this.fileList = info.fileList
       }
-      if (status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully.`)
-        this.showVideoFrom = !this.showVideoFrom
-        this.isUsed = !this.isUsed
-      } else if (status === 'error') {
-        this.$message.error(`${info.file.name} file upload failed.`)
-        this.showVideoFrom = !this.showVideoFrom
-        this.isUsed = !this.isUsed
+    },
+    beforeUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      if (!isJPG && !isPNG) {
+        this.$message.error('你上传的图片不是JPG或PNG格式!')
+      }
+      return isJPG || isPNG
+    },
+    handleVideoChange (info) {
+      this.videoList = info.fileList
+      console.log('videoList', info)
+      switch (this.videoList.length) {
+        case 0: this.disabled = false
+          console.log('启用', this.videoList.length)
+          break
+        case 1: this.disabled = true
+          console.log('禁用', this.videoList.length)
+          break
       }
     },
     handleCancel () {
@@ -131,22 +169,64 @@ export default {
     handlePreview (file) {
       this.previewImage = file.url || file.thumbUrl
       this.previewVisible = true
-      this.showVideoFrom = false
-    },
-    imgHandleChange ({ fileList }) {
-      this.fileList = fileList
-      console.log('file', fileList)
     },
     // handler
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          // eslint-disable-next-line no-console
-          console.log('Received values of form: ', values)
+          if (this.videoList.length === 0) {
+            this.$message.warning('视频不能为空')
+          } else if (this.fileList.length === 0) {
+            this.$message.warning('封面不能为空')
+          } else {
+            // 追加表单字段
+            values = {
+              'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
+              'videoUrl': `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`,
+              'pubType': this.selected
+            }
+            // this.appendForm(values)
+            // this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
+            // this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
+            // this.$set(values, 'pubType', this.selected)
+            console.log('Received values of form: ', values)
+            this.videoFormPost(values)
+          }
         }
       })
+    },
+    videoFormPost (formData) {
+      // Post且跳转
+      console.log('要提交的表单', formData)
+      this.loading = true
+      setTimeout(() => {
+        axios({
+          url: '/api/admin/videos',
+          method: 'post',
+          data: formData,
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => {
+          console.log('表单提交了', res)
+          if (res.successed === true) {
+            this.$router.push({ path: '/intervenemanager/videos/allvideos' })
+          } else {
+            this.$notification['error']({
+              message: '注意！注意！',
+              description: '上传视频失败.'
+            })
+          }
+        })
+        this.loading = false
+      }, 1000)
+    },
+    handleBack () {
+      // 返回PushList页面
+      this.$router.push({
+        path: '/intervenemanager/videos/allvideos'
+      })
     }
+
   }
 }
 </script>
@@ -163,40 +243,48 @@ export default {
   color: #666;
 }
 .video-container {
-  display: flex;
-  // justify-content: center;
-
-  .video-push {
-    width: 80%;
-    display: block;
-    padding: 20px;
-    /* height: calc(100vh - 350px); */
-  }
-
-  .video-upload {
-    width: 100%;
-    padding: 0px 0px;
+  min-height: calc(100vh - 280px);
+  .video-page-top {
     display: flex;
-    .clearfix {
-      flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    .page-top {
+      font-size: 16px;
+      color: rgba(0, 0, 0, 0.85);
+      text-align: center;
+      line-height: 36px;
+      padding: 0 24px;
+      border: 1px solid #d9d9d9;
+      border-top-right-radius: 4px;
+      border-top-left-radius: 4px;
+      color: #2f54eb;
+      background: #f0f5ff;
+      border-color: #adc6ff;
     }
   }
-  .video-info {
-    margin-top: 1.6rem;
-    display: flex;
-    justify-content: center;
+  .video-push {
+    // width: 80%;
+    display: block;
+    .video-info {
+      margin-top: 0.8rem;
+      display: flex;
+      justify-content: center;
+    }
+    .ant-form {
+      width: 100%;
+      /* padding: 20px; */
+    }
+    .ant-form-item {
+      width: 100%;
+    }
   }
-  .ant-form {
-    width: 100%;
-    /* padding: 20px; */
-  }
-  .ant-form-item {
-    width: 100%;
-  }
-  .from-option {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  // .video-upload {
+  //   width: 100%;
+  //   padding: 0px 0px;
+  //   display: flex;
+  //   .clearfix {
+  //     flex: 1;
+  //   }
+  // }
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div :class="prefixCls">
-    <div style="float: left">
+    <div>
       <slot name="extra">{{ extra }}</slot>
     </div>
     <div class="footer-bar">
@@ -26,6 +26,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ant-pro-footer-toolbar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .footer-bar {
   display: flex;
   justify-content: center;
