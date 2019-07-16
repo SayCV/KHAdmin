@@ -139,7 +139,6 @@ export default {
               flex: 1;
               background: #fafafa;
               color: rgba(0, 0, 0, 0.85);
-              letter-spacing: 2px;
               padding: 12px 24px;
               border-right: 1px solid #d9d9d9;
               &:last-child {

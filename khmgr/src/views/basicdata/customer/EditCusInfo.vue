@@ -251,7 +251,7 @@ import moment from 'moment'
 
 export default {
   // 客户管理编辑
-  name: 'EditInfo',
+  name: 'EditCusInfo',
   data () {
     return {
       dateFormat: 'YYYY-MM-DD',

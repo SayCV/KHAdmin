@@ -4,142 +4,74 @@
     <a-card :bordered="false">
       <a-row>
         <div class="table-operator">
-          <a-button
-            type="primary"
-            icon="plus"
-          >新建</a-button>
-          <a-button
-            type="primary"
-            icon="export"
-          >导出</a-button>
-          <a-button
-            type="danger"
-            icon="edit"
-          >删除</a-button>
+          <a-button type="primary" icon="user-add" @click="handleAddCus">邀请用户</a-button>
+          <div
+            class="table-page-search-submitButtons"
+            :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
+          >
+            <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+            <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+            <a @click="toggleAdvanced" style="margin-left: 8px">
+              {{ advanced ? '收起' : '展开' }}
+              <a-icon :type="advanced ? 'up' : 'down'" />
+            </a>
+          </div>
         </div>
       </a-row>
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
-            <a-col
-              :md="8"
-              :sm="24"
-            >
-              <a-form-item label="账号ID">
-                <a-input
-                  v-model="queryParam.id"
-                  placeholder
-                  style="width: 100%"
-                />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="健康号">
+                <a-input v-model="queryParam.id" placeholder style="width: 100%" />
               </a-form-item>
             </a-col>
-            <a-col
-              :md="8"
-              :sm="24"
-            >
-              <a-form-item label="用户名">
-                <a-input
-                  v-model="queryParam.name"
-                  style="width: 100%"
-                />
+            <a-col :md="8" :sm="24">
+              <a-form-item label="姓名">
+                <a-input v-model="queryParam.name" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="健康评级">
+                <a-select default-value="0">
+                  <a-select-option value="0">A</a-select-option>
+                  <a-select-option value="1">B</a-select-option>
+                  <a-select-option value="2">C</a-select-option>
+                  <a-select-option value="3">D</a-select-option>
+                </a-select>
               </a-form-item>
             </a-col>
             <template v-if="advanced">
-              <a-col
-                :md="8"
-                :sm="24"
-              >
-                <a-form-item label="用户组">
-                  <a-input
-                    v-model="queryParam.group"
-                    style="width: 100%"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col
-                :md="8"
-                :sm="24"
-              >
+              <a-col :md="8" :sm="24">
                 <a-form-item label="人员ID">
-                  <a-input
-                    v-model="queryParam.name"
-                    style="width: 100%"
-                  />
+                  <a-input v-model="queryParam.name" style="width: 100%" />
                 </a-form-item>
               </a-col>
-              <a-col
-                :md="8"
-                :sm="24"
-              >
+              <a-col :md="8" :sm="24">
                 <a-form-item label="用户单位">
-                  <a-input
-                    v-model="queryParam.name"
-                    style="width: 100%"
-                  />
+                  <a-input v-model="queryParam.name" style="width: 100%" />
                 </a-form-item>
               </a-col>
-              <a-col
-                :md="8"
-                :sm="24"
-              >
+              <a-col :md="8" :sm="24">
                 <a-form-item>
-                  <a-input-group
-                    compact
-                    style="width: 100%;"
-                  >
-                    <a-select
-                      defaultValue="0"
-                      style="width: 30%;"
-                    >
+                  <a-input-group compact style="width: 100%;">
+                    <a-select defaultValue="0" style="width: 30%;">
                       <a-select-option value="0">性别</a-select-option>
                       <a-select-option value="1">邮箱地址</a-select-option>
                       <a-select-option value="2">手机号码</a-select-option>
                       <a-select-option value="3">固定电话</a-select-option>
                     </a-select>
-                    <a-input
-                      style="width: 70%"
-                      defaultValue="input content"
-                    />
+                    <a-input style="width: 70%" defaultValue="input content" />
                   </a-input-group>
                 </a-form-item>
               </a-col>
             </template>
-            <a-col
-              :md="!advanced && 8 || 24"
-              :sm="24"
-            >
-              <span
-                class="table-page-search-submitButtons"
-                :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
-              >
-                <a-button
-                  type="primary"
-                  @click="$refs.table.refresh(true)"
-                >查询</a-button>
-                <a-button
-                  style="margin-left: 8px"
-                  @click="() => queryParam = {}"
-                >重置</a-button>
-                <a
-                  @click="toggleAdvanced"
-                  style="margin-left: 8px"
-                >
-                  {{ advanced ? '收起' : '展开' }}
-                  <a-icon :type="advanced ? 'up' : 'down'" />
-                </a>
-              </span>
-            </a-col>
           </a-row>
         </a-form>
       </div>
       <!-- 全选 -->
       <div style="margin-bottom: 16px">
-        <a-button
-          type="primary"
-          @click="start"
-          :disabled="!hasSelected"
-          :loading="loading"
-        >重置</a-button>
+        <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
         <span style="margin-left: 8px;margin-right: 8px;">
           <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
         </span>
@@ -158,10 +90,7 @@
         :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
         bordered
       >
-        <span
-          slot="serial"
-          slot-scope="text, record, index"
-        >{{ index + 1 }}</span>
+        <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
         <a
           slot="accountId"
           slot-scope="text, record"
@@ -172,10 +101,7 @@
           slot-scope="text, record"
           @click="() => handleView(record.accountId)"
         >{{ text }}</a>
-        <template
-          slot="operation"
-          slot-scope="text, record"
-        >
+        <template slot="operation" slot-scope="text, record">
           <div class="editable-row-operations">
             <span slot="operation">
               <a @click="() => handleEdit(record.accountId)">编辑</a>
@@ -187,7 +113,6 @@
       </a-table>
     </a-card>
   </div>
-
 </template>
 
 <script>
@@ -280,6 +205,7 @@ export default {
   data () {
     // this.cacheData = data.map(item => ({ ...item }))
     return {
+
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
@@ -376,6 +302,12 @@ export default {
         }
       })
     },
+    handleAddCus () {
+      // 点击行进入邀请客户页
+      this.$router.push({
+        path: '/basicdata/Customermanage/add'
+      })
+    },
     toggleAdvanced () {
       this.advanced = !this.advanced
     }
@@ -385,7 +317,9 @@ export default {
 
 <style scoped>
 .table-operator {
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .table-operator .ant-btn {

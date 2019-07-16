@@ -135,7 +135,7 @@ import axios from 'axios'
 
 export default {
   // 客户管理详情页
-  name: 'CustomInfo',
+  name: 'CustomerInfo',
   data () {
     return {
       accountId: this.$route.query.accountId,
