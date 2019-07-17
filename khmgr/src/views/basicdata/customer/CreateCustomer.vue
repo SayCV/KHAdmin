@@ -2,6 +2,11 @@
   <a-card>
     <div class="create-cus-page">
       <div class="create-container">
+        <div class="page-top">
+          <a-button type="primary" @click="handleBtnBack">
+            <a-icon type="left" />返回
+          </a-button>
+        </div>
         <div class="top">
           <div class="title">
             <a-icon type="user-add" />
@@ -13,44 +18,48 @@
             <a-form :form="form" @submit="handleSearch">
               <a-form-item label="健康号" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
                 <a-input
-                  v-decorator="[ '健康号', {rules: [{ required: true, message: '请输入您要查询的健康号!' }]} ]"
+                  v-decorator="[ 'userNo', {rules: [{ required: true, message: '请输入您要查询的健康号!' }]} ]"
                 ></a-input>
               </a-form-item>
               <div class="search-btn">
-                <a-button type="primary" html-type="submit">查询</a-button>
+                <a-button type="primary" html-type="submit" :loading="loading">查询</a-button>
+                <a-button :style="{ marginLeft: '8px' }" @click="handleReset">清空</a-button>
               </div>
             </a-form>
           </div>
           <div class="return-list">
-            <a-list
-              class="demo-loadmore-list"
-              :loading="loading"
-              itemLayout="horizontal"
-              :dataSource="data"
+            <a-card
+              :bordered="false"
+              :bodyStyle="{ padding: '0px', height: '100%' }"
+              :style="{ height: '100%' }"
             >
-              <div
-                v-if="showLoadingMore"
-                slot="loadMore"
-                :style="{ textAlign: 'center', marginTop: '12px', height: '32px', lineHeight: '32px' }"
-              >
-                <a-spin v-if="loadingMore" />
-                <a-button v-else @click="onLoadMore">loading more</a-button>
+              <div class="user-item" v-if="showResult">
+                <div class="avatar">
+                  <a-avatar :size="75" icon="user" :src="data.avatar" />
+                </div>
+                <div class="info">
+                  <div class="nickname">{{ data.name }}</div>
+                  <div class="name_id">
+                    <div>
+                      昵称&nbsp;:
+                      <span>{{ data.userName }}</span>
+                    </div>
+                    <div>
+                      健康号&nbsp;:
+                      <span>{{ data.userNo }}</span>
+                    </div>
+                  </div>
+                  <div class="tag">
+                    <a-tag color="blue">客户</a-tag>
+                  </div>
+                </div>
+                <div class="btn">
+                  <a-button type="primary" icon="user-add">邀请用户</a-button>
+                </div>
               </div>
-              <a-list-item slot="renderItem" slot-scope="item">
-                <a slot="actions">edit</a>
-                <a slot="actions">more</a>
-                <a-list-item-meta
-                  description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                >
-                  <a slot="title" href="https://vue.ant.design/">{{ item.name.last }}</a>
-                  <a-avatar
-                    slot="avatar"
-                    src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                  />
-                </a-list-item-meta>
-                <div>content</div>
-              </a-list-item>
-            </a-list>
+              <div class="nofind-user-item" v-else-if="notFound">{{ notFoundUser }}</div>
+              <div class="no-user-item" v-else>{{ noData }}</div>
+            </a-card>
           </div>
         </div>
       </div>
@@ -60,27 +69,26 @@
 
 <script>
 
-import reqwest from 'reqwest'
-
-const fakeDataUrl = 'https://randomuser.me/api/?results=5&inc=name,gender,email,nat&noinfo'
+import { axios } from '@/utils/request'
 
 export default {
   name: 'CreateCusromer',
   data () {
     return {
+      notFoundUser: '未找到该用户，请确认健康号是否正确！',
+      noData: '暂无数据',
       form: this.$form.createForm(this),
-      // list
-      loading: true,
-      loadingMore: false,
-      showLoadingMore: true,
+      // userNo 健康号
+      userNo: '',
+      // result
+      showResult: false,
+      notFound: false,
+      loading: false,
       data: []
     }
   },
   mounted () {
-    this.getData((res) => {
-      this.loading = false
-      this.data = res.results
-    })
+
   },
   methods: {
     handleSearch (e) {
@@ -88,29 +96,39 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values)
+          this.handleOk(values)
         }
       })
     },
-    getData (callback) {
-      reqwest({
-        url: fakeDataUrl,
-        type: 'json',
-        method: 'get',
-        contentType: 'application/json',
-        success: (res) => {
-          callback(res)
+    handleReset () {
+      this.form.resetFields()
+      this.showResult = false
+    },
+    getData (values) {
+      axios({
+        url: `/api/admin/customers/summary/${values.userNo}`,
+        methods: 'get'
+      }).then((res) => {
+        console.log(res)
+        this.data = res
+        this.showResult = true
+      }).catch(err => {
+        console.log(err)
+        if (err) {
+          this.notFound = true
+          this.showResult = false
         }
       })
     },
-    onLoadMore () {
-      this.loadingMore = true
-      this.getData((res) => {
-        this.data = this.data.concat(res.results)
-        this.loadingMore = false
-        this.$nextTick(() => {
-          window.dispatchEvent(new Event('resize'))
-        })
-      })
+    handleOk (values) {
+      this.loading = true
+      setTimeout(() => {
+        this.getData(values)
+        this.loading = false
+      }, 500)
+    },
+    handleBtnBack () {
+      this.$router.push({ name: 'CustomerTable' })
     }
   }
 }
@@ -128,8 +146,12 @@ export default {
     border-radius: 6px;
     width: 61.8%;
     height: 61.8vh;
+    .page-top {
+      display: flex;
+      justify-content: flex-end;
+    }
     .top {
-      padding: 16px;
+      padding-bottom: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -154,12 +176,57 @@ export default {
       }
       .return-list {
         margin-top: 20px;
-        display: flex;
-        justify-content: center;
-        padding: 12px;
-        background: #fff;
-        border: 1px solid #f3f3f3;
         border-radius: 4px;
+        .user-item {
+          width: 100%;
+          height: 95px;
+          display: flex;
+          padding: 10px;
+          border-bottom: 1px solid #e9e9e9;
+          .avatar {
+            // flex: 1;
+            padding: 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+          .info {
+            flex: 1;
+            padding-left: 6px;
+            .nickname {
+              font-size: 16px;
+              color: rgba(0, 0, 0, 0.85);
+            }
+            .name_id {
+              font-size: 12px;
+              color: rgba(0, 0, 0, 0.65);
+              display: flex;
+              & span {
+                padding-right: 8px;
+              }
+            }
+            .tag {
+              margin-top: 8px;
+            }
+          }
+          .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+        .nofind-user-item {
+          text-align: center;
+          padding: 20px;
+          font-size: 16px;
+          color: rgba(0, 0, 0, 0.85);
+        }
+        .no-user-item {
+          padding: 20px;
+          text-align: center;
+          font-size: 16px;
+          color: rgba(0, 0, 0, 0.85);
+        }
       }
     }
   }

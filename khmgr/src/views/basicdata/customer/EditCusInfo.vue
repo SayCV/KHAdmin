@@ -8,8 +8,8 @@
         </h1>
       </div>
       <a-button type="primary" @click="handleBtnBack">
+        <a-icon type="left" />
         返回
-        <a-icon type="rollback" />
       </a-button>
     </div>
     <div class="customer-container">
