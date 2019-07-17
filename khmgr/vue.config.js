@@ -7,6 +7,8 @@ function resolve (dir) {
 
 // vue.config.js
 module.exports = {
+  publicPath: process.env.NODE_ENV === 'production' ? '/khmgr/' : '/',
+
   /*
     Vue-cli3:
     Crashed when using Webpack `import()` #2463
