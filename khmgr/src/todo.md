@@ -159,4 +159,5 @@
 ### 2019-7-17
 
 - [x] 添加客户页面, 输入健康号查询用户
+- [x] vue.config.js 文件配置 build 的子目录 `publicPath: process.env.NODE_ENV === 'production' ? '/khmgr/' : '/',`
 - [ ] 使用客户管理接口对接数据
