@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { axios } from '@/utils/request'
+
 import moment from 'moment'
 
 export default {
@@ -68,20 +68,9 @@ export default {
     moment,
     handleToEditAD (adId) {
       // 点击行进入edit页
-      this.$router.push({
-        path: '/business/BarAD/editAD',
-        query: {
-          adId: adId,
-          data: this.adItem
-        }
-      })
+      this.$emit('toEdit', adId)
     },
-    handleDelete (adId) {
-      return axios({
-        url: `/api/admin/ad/${adId}`,
-        method: 'delete'
-      })
-    },
+
     deleteConfirm (adId) {
       const that = this
       this.$confirm({
@@ -90,12 +79,7 @@ export default {
         okType: 'danger',
         onOk () {
           // 异步请求
-          that.handleDelete(adId)
-            .then(res => {
-              // refresh data
-              that.$emit('update-adList', res)
-              console.log('子组件更新父组件数据', res)
-            })
+          that.$emit('toDelete', adId)
         },
         onCancel () {
         }

@@ -49,11 +49,13 @@
               <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
                 <div class="clearfix">
                   <a-upload
+                    accept="image/*"
                     action="http://172.31.214.104/khmsrv/api/resources"
                     listType="picture-card"
                     :fileList="fileList"
                     @preview="handlePreview"
                     @change="imgHandleChange"
+                    :beforeUpload="beforeUpload"
                   >
                     <div v-if="fileList.length < 1">
                       <a-icon type="plus" />
@@ -148,6 +150,13 @@ export default {
   },
   methods: {
     moment,
+    beforeUpload (file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('Image must smaller than 2MB!')
+      }
+      return isLt2M
+    },
     clearFormData () {
       // 清空表单内容
       this.form.resetFields()
@@ -208,7 +217,9 @@ export default {
             path: '/intervenemanager/AppPush/list'
             // query: { newsId: res.data.value }
           })
-        } else {
+        }
+      }).catch(err => {
+        if (err) {
           this.$notification['error']({
             message: '注意！注意！',
             description: '发表点滴失败.'

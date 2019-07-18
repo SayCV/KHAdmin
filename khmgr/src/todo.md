@@ -161,3 +161,16 @@
 - [x] 添加客户页面, 输入健康号查询用户
 - [x] vue.config.js 文件配置 build 的子目录 `publicPath: process.env.NODE_ENV === 'production' ? '/khmgr/' : '/',`
 - [ ] 使用客户管理接口对接数据
+- [ ] 发现干预的部分的 bug，视频，头条，点滴，删除时到达 pageSize 就显示无数据的页面
+
+### 2019-7-18
+
+- [x] 修改健康干预下，新闻，视频删除到和 pageSize 一样数量时候显示无数据的 bug
+- [x] 分页 bug，删除第二页内容，拿到第二页内容 list 为 0
+- [x] 编辑页，进入编辑页后，完成编辑后返回原来页
+- [x] 新闻创建和编辑预览时候的格式限制，图片会超出
+- [x] Empty 组件 可以使用 image 值来设置 Empty 组件的图片 noAdDescription 属性设置组件字段
+- [x] 广告投放后自动刷新，且广告分页同上新闻分页 bug
+- [x] video 的分页 bug 处理
+- [x] video 编辑页面 等待 video 详情接口
+- [x] 客户管理 table 列表

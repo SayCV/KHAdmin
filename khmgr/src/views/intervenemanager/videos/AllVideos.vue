@@ -11,8 +11,8 @@
         </a-button-group>
       </div>
     </div>
-    <div class="videos-pagination">
-      <div class="pagination" v-if="showPagination">
+    <div class="videos-pagination" v-if="showPagination">
+      <div class="pagination">
         <a-pagination
           @change="handlePageChange"
           v-model="current"
@@ -23,10 +23,7 @@
     </div>
     <div class="all-videos">
       <div class="no-videdos" v-if="NoVideoList">
-        <div class="null-icon">
-          <div class="null-svg"></div>
-          <div class="null-txt">还没有上传过视频&nbsp;yo&nbsp;！</div>
-        </div>
+        <Empty :image="image"></Empty>
       </div>
       <div class="video-container" v-else>
         <div class="video-item" v-for="(video) in videoList" :key="video.videoId">
@@ -40,12 +37,12 @@
               </div>
               <div class="meta-summary">{{ video.summary }}</div>
               <div class="meta-view">
-                <a-tag color="red">{{ video.createOn }}</a-tag>
+                <a-tag color="blue">{{ video.createOn }}</a-tag>
                 <div>{{ video.title }}</div>
               </div>
               <div class="meta-operation">
                 <a-button-group>
-                  <a-button>编辑</a-button>
+                  <a-button @click="() => handleToEdit(video.videoId)">编辑</a-button>
                   <a-button type="danger" @click="() => deleteConfirm(video.videoId)">删除</a-button>
                 </a-button-group>
               </div>
@@ -68,13 +65,15 @@
 </template>
 
 <script>
+import Empty from '@/components/Empty/Empty'
 import { axios } from '@/utils/request'
+
 export default {
   name: 'AllVideos',
+  components: { Empty },
   data () {
     return {
-      showIndex: null,
-      active: false,
+      image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCA2NCA0MSIgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAxKSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgIDxlbGxpcHNlIGZpbGw9IiNGNUY1RjUiIGN4PSIzMiIgY3k9IjMzIiByeD0iMzIiIHJ5PSI3Ii8+CiAgICA8ZyBmaWxsLXJ1bGU9Im5vbnplcm8iIHN0cm9rZT0iI0Q5RDlEOSI+CiAgICAgIDxwYXRoIGQ9Ik01NSAxMi43Nkw0NC44NTQgMS4yNThDNDQuMzY3LjQ3NCA0My42NTYgMCA0Mi45MDcgMEgyMS4wOTNjLS43NDkgMC0xLjQ2LjQ3NC0xLjk0NyAxLjI1N0w5IDEyLjc2MVYyMmg0NnYtOS4yNHoiLz4KICAgICAgPHBhdGggZD0iTTQxLjYxMyAxNS45MzFjMC0xLjYwNS45OTQtMi45MyAyLjIyNy0yLjkzMUg1NXYxOC4xMzdDNTUgMzMuMjYgNTMuNjggMzUgNTIuMDUgMzVoLTQwLjFDMTAuMzIgMzUgOSAzMy4yNTkgOSAzMS4xMzdWMTNoMTEuMTZjMS4yMzMgMCAyLjIyNyAxLjMyMyAyLjIyNyAyLjkyOHYuMDIyYzAgMS42MDUgMS4wMDUgMi45MDEgMi4yMzcgMi45MDFoMTQuNzUyYzEuMjMyIDAgMi4yMzctMS4zMDggMi4yMzctMi45MTN2LS4wMDd6IiBmaWxsPSIjRkFGQUZBIi8+CiAgICA8L2c+CiAgPC9nPgo8L3N2Zz4K',
       NoVideoList: false,
       videoList: [],
       totalCount: null,
@@ -83,16 +82,18 @@ export default {
     }
   },
   mounted () {
-    this.fetch()
+    if (this.$route.query.page) {
+      this.current = this.$route.query.page
+    } this.fetch()
   },
   watch: {
     '$route.path': function (to, from) {
       if (to === '/intervenemanager/videos/allvideos') {
         console.log('再次进入全部视频页')
-        // 切换页面时滚动条自动滚动到顶部
-        console.log('置顶')
         window.scrollTo(0, 0)
-        this.fetch()
+        if (this.$route.query.page) {
+          this.current = this.$route.query.page
+        } this.fetch()
       }
     }
   },
@@ -120,6 +121,14 @@ export default {
           this.videoList = res.list
           this.totalCount = res.total
         }
+      }).catch(err => {
+        if (err) {
+          this.NoVideoList = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
+        }
       })
     },
     handlePageChange (pagination) {
@@ -141,17 +150,33 @@ export default {
         path: '/intervenemanager/videos/videopush'
       })
     },
-    mouseOver (index) {
-      this.active = !this.active
+    handleToEdit (videoId) {
+      // 点击行进入edit页
+      this.$router.push({
+        path: '/intervenemanager/videos/videoedit',
+        query: {
+          videoId: videoId,
+          page: this.current
+        }
+      })
     },
     handleRefresh () {
       // 手动刷新数据
       this.fetch()
     },
     handleDelete (videoId) {
-      return axios({
+      axios({
         url: `/api/admin/videos/${videoId}`,
         method: 'delete'
+      }).then(res => {
+        console.log('删除！！！')
+        console.log(this.totalCount)
+        const totalPage = Math.ceil((this.totalCount - 1) / this.pageSize) // 总页数
+        console.log('总页数', totalPage)
+        console.log('计算前当前页', this.current)
+        this.current = this.current > totalPage ? totalPage : this.current
+        this.current = this.current < 1 ? 1 : this.current
+        this.fetch()
       })
     },
     deleteConfirm (videoId) {
@@ -163,13 +188,6 @@ export default {
         onOk () {
           // 异步请求
           that.handleDelete(videoId)
-            .then(res => {
-              console.log('delete', res)
-              if (res === '') {
-                // refresh data
-                that.fetch()
-              }
-            })
         },
         onCancel () {
         }
@@ -303,23 +321,6 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      .null-icon {
-        .null-svg {
-          width: 220px;
-          height: 260px;
-          background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-position: 50% 50%;
-          background-size: contain;
-        }
-        .null-txt {
-          font-size: 20px;
-          color: rgba(0, 0, 0, 0.85);
-          text-align: center;
-          margin-top: 40px;
-        }
-      }
     }
   }
 }

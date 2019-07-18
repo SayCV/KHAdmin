@@ -27,16 +27,16 @@
             <span>状态 :</span>
             <a-badge :status="topItem.status" :text="topItem.statusTxt" />
           </div>
-          <div class="operation-desc-txt">
+          <!-- <div class="operation-desc-txt">
             <div>
               消息类型 :
               <span>{{ topItem.msgcategory }}</span>
             </div>
             <div>
               发送人群 :
-              <span>{{ topItem.msgRq }}</span>
+              <span class="txt">{{ topItem.msgRq }}</span>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="opertion-btn">
           <a-button-group>
@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import { axios } from '@/utils/request'
 
 export default {
   name: 'TopItem',
@@ -71,20 +70,9 @@ export default {
   methods: {
     handleEdit (newsId) {
       // 点击行进入edit页
-      this.$router.push({
-        path: '/intervenemanager/TopPush/edit',
-        query: {
-          newsId: newsId,
-          data: this.topItem
-        }
-      })
+      this.$emit('toEdit', newsId)
     },
-    handleDelete (newsId) {
-      return axios({
-        url: `/api/admin/news/${newsId}`,
-        method: 'delete'
-      })
-    },
+
     showConfirm (newsId) {
       const that = this
       this.$confirm({
@@ -93,12 +81,7 @@ export default {
         okType: 'danger',
         onOk () {
           // 异步请求
-          that.handleDelete(newsId)
-            .then(res => {
-              // refresh data
-              that.$emit('update-topList', res)
-              console.log('子组件更新父组件数据', res)
-            })
+          that.$emit('toDelete', newsId)
         },
         onCancel () {
         }
@@ -209,19 +192,18 @@ export default {
       font-size: 16px;
       margin-right: 16px;
     }
+
     .operation-desc-txt {
       color: rgba(0, 0, 0, 0.85);
-    }
-    .operation-desc-txt > div {
-      margin-bottom: 5px;
-    }
-    .operation-desc-txt > div > span {
-      margin: 0 1px;
-      background: #f2f4f5;
-      padding: 0px 7px;
-      border-radius: 3px;
-      font-size: 0.9em;
-      border: 1px solid #eee;
+      .txt {
+        color: rgba(0, 0, 0, 0.65);
+        margin: 0 1px;
+        background: #f2f4f5;
+        padding: 2px 7px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        border: 1px solid #eee;
+      }
     }
     .opertion-btn {
       padding: 10px 0;

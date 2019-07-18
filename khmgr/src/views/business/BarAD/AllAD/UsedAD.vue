@@ -27,14 +27,11 @@
       </div>
       <div class="ads-page-content">
         <div class="no-ads" v-if="NoadList">
-          <div class="null-icon">
-            <div class="null-svg"></div>
-            <div class="null-txt">还没有投放过广告&nbsp;yo&nbsp;！</div>
-          </div>
+          <Empty :description="noAdDescription"></Empty>
         </div>
         <div class="ad-container" v-else>
           <div v-for="item in adList" :key="item.adId">
-            <AdItem :adItem="item" @update-adList="handleRefresh()"></AdItem>
+            <AdItem :adItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete"></AdItem>
           </div>
           <!-- <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
             <div class="ad-inner">
@@ -96,12 +93,13 @@
 import moment from 'moment'
 import { axios } from '@/utils/request'
 import AdItem from '@/components/AdItems/AdItem'
-
+import Empty from '@/components/Empty/Empty'
 export default {
   name: 'AllAD',
-  components: { AdItem },
+  components: { AdItem, Empty },
   data () {
     return {
+      noAdDescription: '暂无广告',
       dateFormat: 'YYYY-MM-DD',
       NoadList: false,
       adList: [],
@@ -110,14 +108,15 @@ export default {
       pageSize: 4
     }
   },
+
   watch: {
     '$route.path': function (to, from) {
-      if (to === '/business/BarAD/allAD') {
+      if (to === '/business/BarAD/allAD/usedAD') {
         console.log('再次进入已使用广告列表页')
-        // 切换页面时滚动条自动滚动到顶部
-        console.log('置顶')
         window.scrollTo(0, 0)
-        this.fetch()
+        if (this.$route.query.page) {
+          this.current = this.$route.query.page
+        } this.fetch()
       }
     }
   },
@@ -128,23 +127,23 @@ export default {
     }
   },
   mounted () {
-    this.fetch()
+    if (this.$route.query.page) {
+      this.current = this.$route.query.page
+    } this.fetch()
+    console.log('current', this.current)
   },
   methods: {
     moment,
     fetch (params = {}) {
       axios({
         url: `/api/admin/ad/used/?pageSize=${this.pageSize}&pageNum=${this.current}`,
-        // url: '/api/admin/ad/used/', // 后台数据
         method: 'get',
         params: {
           ...params
         }
       }).then(res => {
         console.log('广告列表', res)
-        // 后台数据
-        // this.totalCount = res.data.result.totalCount
-        if (res.list.length === 0) {
+        if (res.total === 0) {
           this.NoadList = true
           this.adList = []
           this.totalCount = 0
@@ -161,17 +160,41 @@ export default {
     handleToAddAD () {
       // 点击行进入add页
       this.$router.push({
-        path: '/business/BarAD/addAD'
-        // name: 'addAD'
+        // path: '/business/BarAD/addAD'
+        name: 'addAD'
       })
     },
-    handleToEditAD (adId) {
+
+    handleEdit (item) {
       // 点击行进入edit页
       this.$router.push({
         path: '/business/BarAD/editAD',
         query: {
-          adId: adId,
-          data: null
+          adId: item.adId,
+          page: this.current,
+          data: item
+        }
+      })
+    },
+    handleDelete (adId) {
+      axios({
+        url: `/api/admin/ad/${adId}`,
+        method: 'delete'
+      }).then(res => {
+        console.log('删除！！！')
+        console.log(this.totalCount)
+        const totalPage = Math.ceil((this.totalCount - 1) / this.pageSize) // 总页数
+        console.log('总页数', totalPage)
+        console.log('计算前当前页', this.current)
+        this.current = this.current > totalPage ? totalPage : this.current
+        this.current = this.current < 1 ? 1 : this.current
+        this.fetch()
+      }).catch(err => {
+        if (err) {
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '删除广告失败.'
+          })
         }
       })
     },

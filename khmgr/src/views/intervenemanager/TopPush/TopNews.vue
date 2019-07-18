@@ -12,8 +12,8 @@
           </a-button-group>
         </div>
       </div>
-      <div class="news-pagination">
-        <div class="pagination" v-if="showPagination">
+      <div class="news-pagination" v-if="showPagination">
+        <div class="pagination">
           <a-pagination
             @change="handlePageChange"
             v-model="current"
@@ -24,14 +24,17 @@
       </div>
       <div class="news-container">
         <div class="no-newsLists" v-if="NotopLists">
-          <div class="null-icon">
-            <div class="null-svg"></div>
-            <div class="null-txt">还没有上传过文章&nbsp;yo&nbsp;！</div>
-          </div>
+          <Empty></Empty>
         </div>
         <div class="news-main" v-else>
           <div v-for="Item in topLists" :key="Item.newsId">
-            <TopItem :topItem="Item" @update-topList="handleRefresh()"></TopItem>
+            <TopItem
+              ref="top"
+              :topItem="Item"
+              @update-topList="fetch()"
+              @toEdit="handleEdit"
+              @toDelete="handleDelete"
+            ></TopItem>
           </div>
         </div>
       </div>
@@ -51,11 +54,12 @@
 
 <script>
 import TopItem from '@/components/News/TopItem'
+import Empty from '@/components/Empty/Empty'
 import { axios } from '@/utils/request'
 
 export default {
   name: 'TopNews',
-  components: { TopItem },
+  components: { TopItem, Empty },
   data () {
     return {
       NotopLists: false,
@@ -71,16 +75,17 @@ export default {
     window.scrollTo(0, 0)
   },
   mounted () {
-    this.fetch()
+    if (this.$route.query.page) {
+      this.current = this.$route.query.page
+    } this.fetch()
   },
   watch: {
     '$route.path': function (to, from) {
       if (to === '/intervenemanager/TopPush/list') {
-        console.log('再次进入列表页面')
-        // 切换页面时滚动条自动滚动到顶部
-        console.log('置顶')
-        window.scrollTo(0, 0)
-        this.fetch()
+        console.log(' 进入头条列表页面')
+        if (this.$route.query.page) {
+          this.current = this.$route.query.page
+        } this.fetch()
       }
     }
   },
@@ -103,7 +108,7 @@ export default {
         console.log('获取头条列表', res)
         // 后台数据
         // this.totalCount = res.data.result.totalCount
-        if (res.list.length === 0) {
+        if (res.total === 0) {
           this.NotopLists = true
           this.topLists = []
           this.totalCount = 0
@@ -112,6 +117,14 @@ export default {
           this.topLists = res.list
           this.totalCount = res.total
         }
+      }).catch(err => {
+        if (err) {
+          this.NotopLists = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
+        }
       })
     },
     handleEdit (newsId) {
@@ -119,7 +132,8 @@ export default {
       this.$router.push({
         path: '/intervenemanager/TopPush/edit',
         query: {
-          newsId: newsId
+          newsId: newsId,
+          page: this.current
         }
       })
     },
@@ -129,33 +143,26 @@ export default {
         path: '/intervenemanager/TopPush/add'
       })
     },
+    handleDelete (newsId) {
+      axios({
+        url: `/api/admin/news/${newsId}`,
+        method: 'delete'
+      }).then(res => {
+        console.log('删除！！！')
+        console.log(this.totalCount)
+        const totalPage = Math.ceil((this.totalCount - 1) / this.pageSize) // 总页数
+        console.log('总页数', totalPage)
+        console.log('计算前当前页', this.current)
+        this.current = this.current > totalPage ? totalPage : this.current
+        this.current = this.current < 1 ? 1 : this.current
+        this.fetch()
+      })
+    },
     handleRefresh () {
       // news列表刷新
       this.fetch()
     },
-    handleDelete (newsId) {
-      return axios({
-        url: `/api/admin/news/${newsId}`,
-        method: 'delete'
-      })
-    },
-    showConfirm (newsId) {
-      const that = this
-      this.$confirm({
-        title: `你确定想要删除这条新闻吗? NewsID:${newsId}`,
-        content: '当你点击确定按钮时，就会删除选中的这条新闻',
-        onOk () {
-          // 异步请求
-          that.handleDelete(newsId)
-            .then(res => {
-              // refresh data
-              that.fetch()
-            })
-        },
-        onCancel () {
-        }
-      })
-    },
+
     handlePageChange (pagination) {
       console.log('pagination', pagination)
       const pager = {
@@ -211,23 +218,11 @@ export default {
   }
   .news-container {
     .no-newsLists {
-      .null-icon {
-        .null-svg {
-          width: 220px;
-          height: 260px;
-          background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-position: 50% 50%;
-          background-size: contain;
-        }
-        .null-txt {
-          font-size: 20px;
-          color: rgba(0, 0, 0, 0.85);
-          text-align: center;
-          margin-top: 40px;
-        }
-      }
+      width: 100%;
+      height: calc(100vh - 450px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .news-main {
       padding: 10px;

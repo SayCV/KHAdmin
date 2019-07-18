@@ -12,8 +12,8 @@
           </a-button-group>
         </div>
       </div>
-      <div class="news-pagination">
-        <div class="pagination" v-if="showPagination">
+      <div class="news-pagination" v-if="showPagination">
+        <div class="pagination">
           <a-pagination
             @change="handlePageChange"
             v-model="current"
@@ -24,14 +24,17 @@
       </div>
       <div class="news-container">
         <div class="no-newsLists" v-if="NodripLists">
-          <div class="null-icon">
-            <div class="null-svg"></div>
-            <div class="null-txt">还没有上传过文章&nbsp;yo&nbsp;！</div>
-          </div>
+          <Empty></Empty>
         </div>
         <div class="news-main" v-else>
           <div v-for="Item in dripLists" :key="Item.newsId">
-            <DripItem :dripItem="Item" @update-dripList="handleRefresh()"></DripItem>
+            <DripItem
+              ref="drip"
+              :dripItem="Item"
+              @update-dripList="fetch()"
+              @toEdit="handleEdit"
+              @toDelete="handleDelete"
+            ></DripItem>
           </div>
         </div>
       </div>
@@ -51,11 +54,12 @@
 
 <script>
 import DripItem from '@/components/News/DripItem'
+import Empty from '@/components/Empty/Empty'
 import { axios } from '@/utils/request'
 
 export default {
   name: 'DripNews',
-  components: { DripItem },
+  components: { DripItem, Empty },
   data () {
     return {
       NodripLists: false,
@@ -66,21 +70,20 @@ export default {
     }
   },
   updated () {
-    // 切换页面时滚动条自动滚动到顶部
-    console.log('置顶')
     window.scrollTo(0, 0)
   },
   mounted () {
-    this.fetch()
+    if (this.$route.query.page) {
+      this.current = this.$route.query.page
+    } this.fetch()
   },
   watch: {
     '$route.path': function (to, from) {
       if (to === '/intervenemanager/AppPush/list') {
-        console.log('再次进入列表页面')
-        // 切换页面时滚动条自动滚动到顶部
-        console.log('置顶')
-        window.scrollTo(0, 0)
-        this.fetch()
+        console.log(' 进入点滴列表页面')
+        if (this.$route.query.page) {
+          this.current = this.$route.query.page
+        } this.fetch()
       }
     }
   },
@@ -90,8 +93,13 @@ export default {
     }
   },
   methods: {
+    handleRefresh () {
+      // news列表刷新
+      this.fetch()
+    },
     // 获取数据
     fetch (params = {}) {
+      console.log(this.current)
       axios({
         url: `/api/admin/news/?pageSize=${this.pageSize}&pageNum=${this.current}`,
         // url: '/api/admin/news/', // 后台数据
@@ -103,7 +111,7 @@ export default {
         console.log('获取点滴列表', res)
         // 后台数据
         // this.totalCount = res.data.result.totalCount
-        if (res.list.length === 0) {
+        if (res.total === 0) {
           this.NodripLists = true
           this.dripLists = []
           this.totalCount = 0
@@ -112,47 +120,13 @@ export default {
           this.dripLists = res.list
           this.totalCount = res.total
         }
-      })
-    },
-    handleEdit (newsId) {
-      // 点击行进入edit页
-      this.$router.push({
-        path: '/intervenemanager/AppPush/edit',
-        query: {
-          newsId: newsId
-        }
-      })
-    },
-    handleAdd () {
-      // 点击行进入add页
-      this.$router.push({
-        path: '/intervenemanager/AppPush/add'
-      })
-    },
-    handleRefresh () {
-      // news列表刷新
-      this.fetch()
-    },
-    handleDelete (newsId) {
-      return axios({
-        url: `/api/admin/news/${newsId}`,
-        method: 'delete'
-      })
-    },
-    showConfirm (newsId) {
-      const that = this
-      this.$confirm({
-        title: `你确定想要删除这条新闻吗? NewsID:${newsId}`,
-        content: '当你点击确定按钮时，就会删除选中的这条新闻',
-        onOk () {
-          // 异步请求
-          that.handleDelete(newsId)
-            .then(res => {
-              // refresh data
-              that.fetch()
-            })
-        },
-        onCancel () {
+      }).catch(err => {
+        if (err) {
+          this.NodripLists = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
         }
       })
     },
@@ -161,12 +135,45 @@ export default {
       const pager = {
         ...this.pagination
       }
-      console.log('pager', pager)
       pager.current = pagination
-      this.current = pager.current
+      // console.log('pagerCurrent', pager.current)
+      // this.current = pager.current
+      this.current = pagination
+      console.log('pagerCurrent', this.current)
       this.fetch({
         results: this.pageSize,
         page: pagination
+      })
+    },
+    handleAdd () {
+      // 点击行进入add页
+      this.$router.push({
+        path: '/intervenemanager/AppPush/add'
+      })
+    },
+    handleEdit (newsId) {
+      // 点击行进入edit页
+      this.$router.push({
+        path: '/intervenemanager/AppPush/edit',
+        query: {
+          newsId: newsId,
+          page: this.current
+        }
+      })
+    },
+    handleDelete (newsId) {
+      axios({
+        url: `/api/admin/news/${newsId}`,
+        method: 'delete'
+      }).then(res => {
+        console.log('删除！！！')
+        console.log(this.totalCount)
+        const totalPage = Math.ceil((this.totalCount - 1) / this.pageSize) // 总页数
+        console.log('总页数', totalPage)
+        console.log('计算前当前页', this.current)
+        this.current = this.current > totalPage ? totalPage : this.current
+        this.current = this.current < 1 ? 1 : this.current
+        this.fetch()
       })
     }
   }
@@ -211,26 +218,11 @@ export default {
   }
   .news-container {
     .no-newsLists {
+      width: 100%;
+      height: calc(100vh - 450px);
       display: flex;
       justify-content: center;
       align-items: center;
-      .null-icon {
-        .null-svg {
-          width: 220px;
-          height: 260px;
-          background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-position: 50% 50%;
-          background-size: contain;
-        }
-        .null-txt {
-          font-size: 20px;
-          color: rgba(0, 0, 0, 0.85);
-          text-align: center;
-          margin-top: 40px;
-        }
-      }
     }
     .news-main {
       padding: 10px;

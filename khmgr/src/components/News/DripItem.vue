@@ -28,10 +28,8 @@
             <a-badge :status="dripItem.status" :text="dripItem.statusTxt" />
           </div>
           <div class="operation-desc-txt">
-            <div>
-              发送人群 :
-              <span>{{ dripItem.pubType ? '条件推送' : '全部推送' }}</span>
-            </div>
+            发送人群 :
+            <span class="txt">{{ dripItem.pubType ? '条件推送' : '全部推送' }}</span>
           </div>
         </div>
         <div class="opertion-btn">
@@ -46,7 +44,6 @@
 </template>
 
 <script>
-import { axios } from '@/utils/request'
 
 export default {
   name: 'DripItem',
@@ -68,20 +65,9 @@ export default {
   methods: {
     handleEdit (newsId) {
       // 点击行进入edit页
-      this.$router.push({
-        path: '/intervenemanager/AppPush/edit',
-        query: {
-          newsId: newsId,
-          data: this.dripItem
-        }
-      })
+      this.$emit('toEdit', newsId)
     },
-    handleDelete (newsId) {
-      return axios({
-        url: `/api/admin/news/${newsId}`,
-        method: 'delete'
-      })
-    },
+
     showConfirm (newsId) {
       const that = this
       this.$confirm({
@@ -90,13 +76,7 @@ export default {
         okType: 'danger',
         onOk () {
           // 异步请求
-          that.handleDelete(newsId)
-            .then(res => {
-              // refresh data
-              // that.fetch()
-              that.$emit('update-dripList', res)
-              console.log('子组件更新父组件数据', res)
-            })
+          that.$emit('toDelete', newsId)
         },
         onCancel () {
         }
@@ -209,17 +189,15 @@ export default {
     }
     .operation-desc-txt {
       color: rgba(0, 0, 0, 0.85);
-    }
-    .operation-desc-txt > div {
-      margin-bottom: 5px;
-    }
-    .operation-desc-txt > div > span {
-      margin: 0 1px;
-      background: #f2f4f5;
-      padding: 0px 7px;
-      border-radius: 3px;
-      font-size: 0.9em;
-      border: 1px solid #eee;
+      .txt {
+        color: rgba(0, 0, 0, 0.65);
+        margin: 0 1px;
+        background: #f2f4f5;
+        padding: 2px 7px;
+        border-radius: 3px;
+        font-size: 0.9em;
+        border: 1px solid #eee;
+      }
     }
     .opertion-btn {
       padding: 10px 0;

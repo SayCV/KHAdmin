@@ -47,6 +47,7 @@
                   <a-tag color="blue">请上传广告图片</a-tag>
                 </div>
                 <a-upload
+                  accept="image/*"
                   action="http://172.31.214.104/khmsrv/api/resources"
                   listType="picture-card"
                   :fileList="fileList"
@@ -131,21 +132,14 @@ export default {
   methods: {
     handleCoverChange (info) {
       console.log('cover', info)
-      if (info.file.type === 'image/jpeg' || info.file.type === 'image/png') {
-        this.fileList = info.fileList
-      }
+      this.fileList = info.fileList
     },
     beforeUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isPNG = file.type === 'image/png'
       const isLt2M = file.size / 1024 / 1024 < 2
-      if (!isJPG && !isPNG) {
-        this.$message.error('你上传的图片不是JPG或PNG格式!')
-      }
       if (!isLt2M) {
         this.$message.error('Image must smaller than 2MB!')
       }
-      return isJPG || isPNG || isLt2M
+      return isLt2M
     },
     handleCancel () {
       this.previewVisible = false
@@ -191,10 +185,12 @@ export default {
           if (res.successed === true) {
             // this.$router.push({ path: '/business/BarAD/allAD/usedAD' })
             this.$router.push({ name: 'allAD' })
-          } else {
+          }
+        }).catch(err => {
+          if (err) {
             this.$notification['error']({
               message: '注意！注意！',
-              description: '投放广告失败.'
+              description: '广告投放失败.'
             })
           }
         })

@@ -130,7 +130,8 @@ export default {
       loading: false,
       imgLoading: false,
       data: [], // 进入编辑页面填充表单的数据
-      adId: this.$route.query.adId // ADid
+      adId: this.$route.query.adId, // ADid
+      current: 1
     }
   },
   watch: {
@@ -138,7 +139,7 @@ export default {
       if (to === '/business/BarAD/editAD') {
         console.log('进入广告编辑页面', to)
         this.adId = this.$route.query.adId
-
+        this.data = this.$route.query.data
         this.getFormData(this.adId)
       }
     }
@@ -217,10 +218,6 @@ export default {
               'endDate': rangeValue[1].format('YYYY-MM-DD'),
               'status': this.selected
             }
-            // this.appendForm(values)
-            // this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
-            // this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
-            // this.$set(values, 'pubType', this.selected)
             console.log('Received values of form: ', values)
             this.adFormPost(values)
           }
@@ -241,7 +238,9 @@ export default {
           console.log('表单更新了', res)
           if (res) {
             this.$router.push({ name: 'allAD' })
-          } else {
+          }
+        }).catch(err => {
+          if (err) {
             this.$notification['error']({
               message: '注意！注意！',
               description: '更新广告失败.'

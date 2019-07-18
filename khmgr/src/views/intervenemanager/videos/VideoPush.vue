@@ -45,10 +45,9 @@
             <a-upload-dragger
               accept="video/*"
               name="file"
-              :multiple="false"
+              :fileList="videoList"
               :disabled="disabled"
               action="http://172.31.214.104/khmsrv/api/resources"
-              :videoList="videoList"
               listType="picture"
               @change="handleVideoChange"
             >
@@ -136,20 +135,32 @@ export default {
       imgLoading: false
     }
   },
+  watch: {
+    '$route.path': function (to, from) {
+      if (to === '/intervenemanager/videos/videopush') {
+        console.log('再次进入新建video页且清空表单')
+        this.clearFormData()
+      }
+    }
+  },
   methods: {
+    clearFormData () {
+      // 清空表单内容
+      this.form.resetFields()
+      this.videoList = []
+      this.fileList = []
+      this.disabled = false
+    },
     handleCoverChange (info) {
       console.log('cover', info)
-      if (info.file.type === 'image/jpeg' || info.file.type === 'image/png') {
-        this.fileList = info.fileList
-      }
+      this.fileList = info.fileList
     },
     beforeUpload (file) {
-      const isJPG = file.type === 'image/jpeg'
-      const isPNG = file.type === 'image/png'
-      if (!isJPG && !isPNG) {
-        this.$message.error('你上传的图片不是JPG或PNG格式!')
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('Image must smaller than 2MB!')
       }
-      return isJPG || isPNG
+      return isLt2M
     },
     handleVideoChange (info) {
       this.videoList = info.fileList
@@ -182,14 +193,11 @@ export default {
           } else {
             // 追加表单字段
             values = {
+              ...values,
               'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
               'videoUrl': `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`,
               'pubType': this.selected
             }
-            // this.appendForm(values)
-            // this.$set(values, 'imageUrl', `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`)
-            // this.$set(values, 'videoUrl', `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`)
-            // this.$set(values, 'pubType', this.selected)
             console.log('Received values of form: ', values)
             this.videoFormPost(values)
           }
@@ -210,7 +218,9 @@ export default {
           console.log('表单提交了', res)
           if (res.successed === true) {
             this.$router.push({ path: '/intervenemanager/videos/allvideos' })
-          } else {
+          }
+        }).catch(err => {
+          if (err) {
             this.$notification['error']({
               message: '注意！注意！',
               description: '上传视频失败.'
@@ -278,13 +288,5 @@ export default {
       width: 100%;
     }
   }
-  // .video-upload {
-  //   width: 100%;
-  //   padding: 0px 0px;
-  //   display: flex;
-  //   .clearfix {
-  //     flex: 1;
-  //   }
-  // }
 }
 </style>

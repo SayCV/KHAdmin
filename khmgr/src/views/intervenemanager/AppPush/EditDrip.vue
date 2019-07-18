@@ -11,7 +11,7 @@
           <div class="main-basic">
             <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
               <a-input
-                v-decorator="[ 'title', {rules: [{ required: true, message: '请填写点滴标题!' }],initialValue: data.title} ]"
+                v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]"
               />
             </a-form-item>
             <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
@@ -19,7 +19,7 @@
                 rows="4"
                 v-decorator="[
                   'summary',
-                  {rules: [{ required: true, message: '请填写点滴摘要!' }],initialValue: data.summary}
+                  {rules: [{ required: true, message: '请填写摘要！' }],initialValue: data.summary}
                 ]"
               />
             </a-form-item>
@@ -34,12 +34,12 @@
             <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
               <div class="clearfix">
                 <a-upload
-                  accept="image/*"
                   action="http://172.31.214.104/khmsrv/api/resources"
                   listType="picture-card"
                   :fileList="fileList"
                   @preview="handlePreview"
                   @change="imgHandleChange"
+                  :beforeUpload="beforeUpload"
                 >
                   <div v-if="fileList.length < 1">
                     <a-icon type="plus" />
@@ -108,7 +108,7 @@ export default {
       confirmLoading: false, // 预览model的确认loading
       editorContent: '', // markdown编辑器的正文
       form: this.$form.createForm(this),
-      previewVisible: false, // 是否预览封面的布尔值
+      previewVisible: false, // 是否预览的布尔值
       previewImage: '', // 预览封面
       fileList: [], // 上传封面的json数组
       toPostForm: {}, // 最终需要提交的表单
@@ -118,7 +118,7 @@ export default {
   watch: {
     '$route.path' (to, from) {
       if (to === '/intervenemanager/AppPush/edit') {
-        console.log('进入新闻编辑页面', to)
+        console.log('进入点滴编辑页面', to)
         this.newsId = this.$route.query.newsId
         // this.data = this.$route.query.data
         this.getFormData(this.newsId)
@@ -130,48 +130,43 @@ export default {
   },
   methods: {
     moment,
-    handleBack () {
-      // 返回PushList页面
-      this.$router.push({
-        path: '/intervenemanager/AppPush/list'
-      })
+    beforeUpload (file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('Image must smaller than 2MB!')
+      }
+      return isLt2M
     },
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.editorContent === '') {
-            this.$message.warning('MarkDown文本编辑器内容不能为空！')
+            this.$message.warning('MarkDown编辑器内容不能为空！')
           } else {
-            // 追加表单字段
-            this.appendForm(values)
+            // 给表单追加其他字段
+            if (this.fileList[0].name === 'default') {
+              // 判断是否修改了默认填充的封面
+              this.cover = null
+              this.cover = this.fileList[0].url
+            } else {
+              this.cover = null
+              this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+            }
+            // $set给post的表单json数据追加字段
+            values = {
+              ...values,
+              'content': this.editorContent,
+              'cover': this.cover,
+              'isTop': false // 点滴属性为isTop===false
+            }
+            this.toPostForm = values
+            console.log('追加 values of form: ', this.toPostForm)
             // 弹出model层，等待进一步操作
             this.showModal()
           }
         }
       })
-    },
-    appendForm (values) {
-      if (this.fileList[0].name === 'default') {
-        // 判断是否修改了默认填充的封面
-        this.cover = null
-        this.cover = this.fileList[0].url
-      } else {
-        this.cover = null
-        this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
-      }
-      // $set给post的表单json数据追加字段
-      values = {
-        'content': this.editorContent,
-        'cover': this.cover,
-        'isTop': false
-      }
-      // this.$set(values, 'content', this.editorContent)
-      // this.$set(values, 'cover', this.cover)
-      // // 点滴内容恒为isTop===false
-      // this.$set(values, 'isTop', false)
-      this.toPostForm = values
-      console.log('函数：追加表单字段: ', this.toPostForm)
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
@@ -210,7 +205,9 @@ export default {
             path: '/intervenemanager/AppPush/list'
             // query: { newsId: res.data.value }
           })
-        } else {
+        }
+      }).catch(err => {
+        if (err) {
           this.$notification['error']({
             message: '注意！注意！',
             description: '修改点滴失败.'
@@ -223,6 +220,7 @@ export default {
       this.ModalTitle = '点滴预览'
       this.ModalText = this.toPostForm
       this.previewMdHtml = Mdjs.md2html(this.ModalText.content)
+      console.log(this.previewMdHtml)
     },
     handleOk () {
       this.confirmLoading = true
@@ -253,6 +251,7 @@ export default {
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
          */
+        console.log('image', url)
         const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
       })
@@ -263,6 +262,12 @@ export default {
     },
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
+    },
+    handleBack () {
+      // 返回PushList页面
+      this.$router.push({
+        path: '/intervenemanager/AppPush/list'
+      })
     }
   }
 }

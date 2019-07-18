@@ -82,7 +82,7 @@
         ref="table"
         size="default"
         :columns="columns"
-        rowKey="accountId"
+        rowKey="userId"
         :dataSource="data"
         :pagination="pagination"
         :loading="loading"
@@ -91,22 +91,19 @@
         bordered
       >
         <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
+        <span slot="sex" slot-scope="sex">{{ sex ? '男' : '女' }}</span>
         <a
-          slot="accountId"
+          slot="userId"
           slot-scope="text, record"
-          @click="() => handleView(record.accountId)"
+          @click="() => handleView(record.userId)"
         >{{ text }}</a>
-        <a
-          slot="name"
-          slot-scope="text, record"
-          @click="() => handleView(record.accountId)"
-        >{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
         <template slot="operation" slot-scope="text, record">
           <div class="editable-row-operations">
             <span slot="operation">
-              <a @click="() => handleEdit(record.accountId)">编辑</a>
+              <a @click="() => handleEdit(record.userId)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="() => handleView(record.accountId)">查看</a>
+              <a @click="() => handleView(record.userId)">查看</a>
             </span>
           </div>
         </template>
@@ -117,7 +114,7 @@
 
 <script>
 import { STable } from '@/components'
-import axios from 'axios'
+import { axios } from '@/utils/request'
 
 const columns = [
   {
@@ -128,12 +125,18 @@ const columns = [
     }
   },
   {
-    title: '账号ID',
+    title: '用户号',
     align: 'center',
-    dataIndex: 'accountId',
+    dataIndex: 'userId',
     scopedSlots: {
-      customRender: 'accountId'
+      customRender: 'userId'
     },
+    sorter: true
+  },
+  {
+    title: '健康号',
+    align: 'center',
+    dataIndex: 'userNo',
     sorter: true
   },
   {
@@ -155,6 +158,9 @@ const columns = [
     title: '性别',
     align: 'center',
     dataIndex: 'sex',
+    scopedSlots: {
+      customRender: 'sex'
+    },
     filters: [
       {
         text: '男',
@@ -166,22 +172,17 @@ const columns = [
       }
     ]
   },
-  {
-    title: '单位',
-    align: 'center',
-    dataIndex: 'workplace',
-    sorter: true
-  },
+
   {
     title: '健康评级',
     align: 'center',
-    dataIndex: 'healthRate',
+    dataIndex: 'healthLevel',
     sorter: true
   },
   {
     title: '创建时间',
     align: 'center',
-    dataIndex: 'createdTime',
+    dataIndex: 'createOn',
     sorter: true
   },
 
@@ -205,7 +206,6 @@ export default {
   data () {
     // this.cacheData = data.map(item => ({ ...item }))
     return {
-
       // 高级搜索 展开/关闭
       advanced: false,
       // 查询参数
@@ -250,25 +250,28 @@ export default {
       console.log('params:', params)
       this.loading = true
       axios({
-        // url: 'http://yapi.sagaii.cn/mock/11/api/basedata/userlist',
-        url: '/api/basedata/userlist',
+        url: '/api/admin/customers',
         method: 'get',
         params: {
           results: 10,
           ...params
         }
       }).then(res => {
-        console.log('res')
-        console.log(res)
+        console.log('customer table', res)
         const pagination = {
           ...this.pagination
         }
         // Read total count from server
-        pagination.total = res.data.result.totalCount
+        pagination.total = res.total
         // pagination.total = 20;
         this.loading = false
-        this.data = res.data.result.data
+        this.data = res.list
         this.pagination = pagination
+      }).catch(err => {
+        if (err) {
+          console.log(err)
+          this.loading = false
+        }
       })
     },
     start () {
@@ -284,21 +287,21 @@ export default {
       this.selectedRowKeys = selectedRowKeys
     },
 
-    handleEdit (accountId) {
+    handleEdit (userId) {
       // 点击行进入详情页
       this.$router.push({
         path: '/basicdata/Customermanage/edit',
         query: {
-          accountId: accountId
+          userId: userId
         }
       })
     },
-    handleView (accountId) {
+    handleView (userId) {
       // 点击行进入详情页
       this.$router.push({
         path: '/basicdata/Customermanage/info',
         query: {
-          accountId: accountId
+          userId: userId
         }
       })
     },

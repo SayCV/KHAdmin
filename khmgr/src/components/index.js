@@ -28,6 +28,7 @@ import ExceptionPage from '@/components/Exception'
 // self components
 import TopItem from '@/components/News/TopItem'
 import DripItem from '@/components/News/DripItem'
+import Empty from '@/components/Empty/Empty'
 
 export {
   AvatarList,
@@ -55,6 +56,8 @@ export {
   Result,
   ExceptionPage,
   IconSelector,
+  // 自定义组件
   DripItem,
-  TopItem
+  TopItem,
+  Empty
 }

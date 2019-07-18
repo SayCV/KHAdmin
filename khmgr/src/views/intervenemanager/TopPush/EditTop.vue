@@ -19,7 +19,7 @@
                 rows="4"
                 v-decorator="[
                   'summary',
-                  {rules: [{ required: true, message: '请填写安装地址' }],initialValue: data.summary}
+                  {rules: [{ required: true, message: '请填写摘要！' }],initialValue: data.summary}
                 ]"
               />
             </a-form-item>
@@ -39,6 +39,7 @@
                   :fileList="fileList"
                   @preview="handlePreview"
                   @change="imgHandleChange"
+                  :beforeUpload="beforeUpload"
                 >
                   <div v-if="fileList.length < 1">
                     <a-icon type="plus" />
@@ -129,44 +130,12 @@ export default {
   },
   methods: {
     moment,
-    handleBack () {
-      // 返回PushList页面
-      this.$router.push({
-        path: '/intervenemanager/TopPush/list'
-      })
-    },
-    handleSubmit (e) {
-      e.preventDefault()
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          if (this.editorContent === '') {
-            this.$message.warning('MarkDown编辑器内容不能为空！')
-          } else {
-            // 追加表单字段
-            this.appendForm(values)
-            // 弹出model层，等待进一步操作
-            this.showModal()
-          }
-        }
-      })
-    },
-    appendForm (values) {
-      // 给表单追加其他字段
-      if (this.fileList[0].name === 'default') {
-        // 判断是否修改了默认填充的封面
-        this.cover = null
-        this.cover = this.fileList[0].url
-      } else {
-        this.cover = null
-        this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+    beforeUpload (file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isLt2M) {
+        this.$message.error('Image must smaller than 2MB!')
       }
-      // $set给post的表单json数据追加字段
-      this.$set(values, 'content', this.editorContent)
-      this.$set(values, 'cover', this.cover)
-      // 点滴内容恒为isTop===false
-      this.$set(values, 'isTop', true)
-      this.toPostForm = values
-      console.log('追加 values of form: ', this.toPostForm)
+      return isLt2M
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
@@ -180,14 +149,37 @@ export default {
         this.editorContent = res.content
       })
     },
-    initFileList (data) {
-      // 设置默认封面
-      this.fileList = [{
-        uid: '-1',
-        name: 'default',
-        status: 'done',
-        url: data.cover
-      }]
+
+    handleSubmit (e) {
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          if (this.editorContent === '') {
+            this.$message.warning('MarkDown编辑器内容不能为空！')
+          } else {
+            // 给表单追加其他字段
+            if (this.fileList[0].name === 'default') {
+              // 判断是否修改了默认填充的封面
+              this.cover = null
+              this.cover = this.fileList[0].url
+            } else {
+              this.cover = null
+              this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+            }
+            // $set给post的表单json数据追加字段
+            values = {
+              ...values,
+              'content': this.editorContent,
+              'cover': this.cover,
+              'isTop': true // 头条属性为isTop===true
+            }
+            this.toPostForm = values
+            console.log('追加 values of form: ', this.toPostForm)
+            // 弹出model层，等待进一步操作
+            this.showModal()
+          }
+        }
+      })
     },
     formPost (formData, newsId) {
       // put 编辑
@@ -205,12 +197,35 @@ export default {
             path: '/intervenemanager/TopPush/list'
             // query: { newsId: res.data.value }
           })
-        } else {
+        }
+      }).catch(err => {
+        if (err) {
           this.$notification['error']({
             message: '注意！注意！',
             description: '修改头条失败.'
           })
         }
+      })
+    },
+    // 绑定@imgAdd event
+    $imgAdd (pos, $file) {
+      // 将图片上传到服务器
+      const formData = new FormData()
+      formData.append('image', $file)
+      axios({
+        url: '/api/resources',
+        method: 'post',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' }
+      }).then(url => {
+        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+        /**
+         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+         */
+        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
+        this.$refs.md.$img2Url(pos, mdImgUrl)
       })
     },
     showModal () {
@@ -231,33 +246,28 @@ export default {
       this.visible = false
       this.previewVisible = false
     },
-    // 绑定@imgAdd event
-    $imgAdd (pos, $file) {
-      // 将图片上传到服务器
-      const formData = new FormData()
-      formData.append('image', $file)
-      axios({
-        url: '/api/resources',
-        method: 'post',
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' }
-      }).then(url => {
-        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-        /**
-         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-         */
-        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url.data}`
-        this.$refs.md.$img2Url(pos, mdImgUrl)
-      })
-    },
+
     handlePreview (file) {
       this.previewImage = file.url || file.thumbUrl
       this.previewVisible = true
     },
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
+    },
+    handleBack () {
+      // 返回PushList页面
+      this.$router.push({
+        path: '/intervenemanager/TopPush/list'
+      })
+    },
+    initFileList (data) {
+      // 设置默认封面
+      this.fileList = [{
+        uid: '-1',
+        name: 'default',
+        status: 'done',
+        url: data.cover
+      }]
     }
   }
 }
