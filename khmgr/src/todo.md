@@ -182,3 +182,4 @@
 - [x] 抽离刷新和新建操作为组件
 - [x] fetch 方法修改，通过数据来驱动，实现 isLoading 效果
 - [x] 抽离 pageTitle 组件，有页面的 title，和刷新和新建操作按钮为 PageTitle
+- [x] 添加操作页面的 PageTitle 抽离组件
