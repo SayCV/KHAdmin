@@ -220,7 +220,7 @@ export default {
   color: #666;
 }
 .adsPage {
-  height: calc(100vh - 280px);
+  min-height: calc(100vh - 280px);
   .ads-page-top {
     display: flex;
     justify-content: space-between;
