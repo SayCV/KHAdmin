@@ -29,7 +29,7 @@
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-textarea
-              rows="3"
+              rows="4"
               v-decorator="[
                 'summary',
                 {rules: [{ required: true, message: '请输入简介' }] }
@@ -48,7 +48,7 @@
               :fileList="videoList"
               :disabled="disabled"
               action="http://172.31.214.104/khmsrv/api/resources"
-              listType="picture"
+              listType="text"
               @change="handleVideoChange"
             >
               <p class="ant-upload-drag-icon">
@@ -259,10 +259,18 @@ export default {
     justify-content: space-between;
     align-items: center;
     .page-top {
-      font-size: 16px;
-      color: rgba(0, 0, 0, 0.85);
+      font-weight: 400;
       text-align: center;
-      line-height: 36px;
+      -ms-touch-action: manipulation;
+      touch-action: manipulation;
+      cursor: pointer;
+      background-image: none;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      font-size: 14px;
+      height: 32px;
+      text-align: center;
+      line-height: 32px;
       padding: 0 24px;
       border: 1px solid #d9d9d9;
       border-top-right-radius: 4px;

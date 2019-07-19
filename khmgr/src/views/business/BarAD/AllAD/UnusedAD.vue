@@ -5,35 +5,39 @@
     :style="{ height: '100%' }"
   >
     <div class="adsPage">
-      <div class="ads-page-top">
-        <div class="page-top">
-          <div class="pagination" v-if="showPagination">
-            <a-pagination
-              @change="handlePageChange"
-              v-model="current"
-              :pageSize="pageSize"
-              :total="totalCount"
-            />
-          </div>
-        </div>
-        <div class="page-operation">
-          <a-button-group>
-            <a-button @click="handleRefresh">刷新</a-button>
-            <a-button type="primary" @click="handleToAddAD">
-              <a-icon type="plus" />投放广告
-            </a-button>
-          </a-button-group>
-        </div>
+      <div class="spin" v-if="refresh">
+        <a-spin></a-spin>
       </div>
-      <div class="ads-page-content">
-        <div class="no-ads" v-if="NoadList">
-          <div class="null-icon">
-            <div class="null-svg"></div>
-            <div class="null-txt">还没有投放过广告&nbsp;yo&nbsp;！</div>
+      <div class="data-loading" v-else>
+        <div class="ads-page-top">
+          <div class="page-top">
+            <div class="pagination" v-if="showPagination">
+              <a-pagination
+                @change="handlePageChange"
+                v-model="current"
+                :pageSize="pageSize"
+                :total="totalCount"
+              />
+            </div>
+          </div>
+          <div class="page-operation">
+            <ButtonRefresh
+              @toRefresh="fetch"
+              name="投放广告"
+              linkTo="/business/BarAD/addAD"
+              :isLoading="refresh"
+            ></ButtonRefresh>
           </div>
         </div>
-        <div class="ad-container" v-else>
-          <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
+        <div class="ads-page-content">
+          <div class="no-ads" v-if="NoadList">
+            <Empty :description="noAdDescription"></Empty>
+          </div>
+          <div class="ad-container" v-else>
+            <div v-for="item in adList" :key="item.adId">
+              <AdItem :adItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete"></AdItem>
+            </div>
+            <!-- <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
             <div class="ad-inner">
               <div class="ad-cover">
                 <div class="cover" :style="{ backgroundImage:'url(' + ad.imageUrl + ')' }"></div>
@@ -72,17 +76,18 @@
                 </div>
               </div>
             </div>
+            </div>-->
           </div>
         </div>
-      </div>
-      <div class="ads-pagination-bottom" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
+        <div class="ads-pagination-bottom" v-if="showPagination">
+          <div class="pagination">
+            <a-pagination
+              @change="handlePageChange"
+              v-model="current"
+              :pageSize="pageSize"
+              :total="totalCount"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -92,17 +97,35 @@
 <script>
 import moment from 'moment'
 import { axios } from '@/utils/request'
+import AdItem from '@/components/AdItems/AdItem'
+import Empty from '@/components/Empty/Empty'
+import ButtonRefresh from '@/components/Button/ButtonRefresh'
+
 export default {
-  name: 'AllAD',
-  components: {},
+  name: 'UnusedAD',
+  components: { AdItem, Empty, ButtonRefresh },
   data () {
     return {
+      refresh: false,
+      noAdDescription: '暂无广告',
       dateFormat: 'YYYY-MM-DD',
       NoadList: false,
       adList: [],
       totalCount: 0,
       current: 1,
       pageSize: 4
+    }
+  },
+
+  watch: {
+    '$route.path': function (to, from) {
+      if (to === '/business/BarAD/allAD/usedAD') {
+        console.log('再次进入为使用广告列表页')
+        window.scrollTo(0, 0)
+        if (this.$route.query.page) {
+          this.current = this.$route.query.page
+        } this.fetch()
+      }
     }
   },
   computed: {
@@ -112,23 +135,24 @@ export default {
     }
   },
   mounted () {
-    this.fetch()
+    if (this.$route.query.page) {
+      this.current = this.$route.query.page
+    } this.fetch()
+    console.log('current', this.current)
   },
   methods: {
     moment,
     fetch (params = {}) {
+      this.refresh = true
       axios({
         url: `/api/admin/ad/unused/?pageSize=${this.pageSize}&pageNum=${this.current}`,
-        // url: '/api/admin/ad/unused/', // 后台数据
         method: 'get',
         params: {
           ...params
         }
       }).then(res => {
-        console.log('未使用广告列表', res)
-        // 后台数据
-        // this.totalCount = res.data.result.totalCount
-        if (res.list.length === 0) {
+        console.log('为使用广告列表', res)
+        if (res.total === 0) {
           this.NoadList = true
           this.adList = []
           this.totalCount = 0
@@ -137,11 +161,21 @@ export default {
           this.adList = res.list
           this.totalCount = res.total
         }
-      })
+        this.refresh = false
+      }).catch(err => {
+        if (err) {
+          this.NoadList = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
+        }
+        this.refresh = false
+      }).finally(
+        console.log('data loading done')
+      )
     },
-    handleRefresh () {
 
-    },
     handleToAddAD () {
       // 点击行进入add页
       this.$router.push({
@@ -149,13 +183,37 @@ export default {
         // name: 'addAD'
       })
     },
-    handleToEditAD (adId) {
+
+    handleEdit (item) {
       // 点击行进入edit页
       this.$router.push({
         path: '/business/BarAD/editAD',
         query: {
-          adId: adId,
-          data: null
+          adId: item.adId,
+          page: this.current,
+          data: item
+        }
+      })
+    },
+    handleDelete (adId) {
+      axios({
+        url: `/api/admin/ad/${adId}`,
+        method: 'delete'
+      }).then(res => {
+        console.log('删除！！！')
+        console.log(this.totalCount)
+        const totalPage = Math.ceil((this.totalCount - 1) / this.pageSize) // 总页数
+        console.log('总页数', totalPage)
+        console.log('计算前当前页', this.current)
+        this.current = this.current > totalPage ? totalPage : this.current
+        this.current = this.current < 1 ? 1 : this.current
+        this.fetch()
+      }).catch(err => {
+        if (err) {
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '删除广告失败.'
+          })
         }
       })
     },
@@ -178,180 +236,65 @@ export default {
 
 <style lang="less" scoped>
 .adsPage {
-  // min-height: calc(100vh - 280px);
-  .ads-page-top {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .page-top {
+  min-height: calc(100vh - 310px);
+  position: relative;
+  .data-loading {
+    .ads-page-top {
+      margin-top: 10px;
       display: flex;
-      justify-content: flex-start;
+      justify-content: space-between;
+      align-items: center;
+      .page-top {
+        display: flex;
+        justify-content: flex-start;
+      }
     }
-  }
-  .ads-pagination-bottom {
-    // bottom: 0;
-    display: flex;
-    justify-content: center;
-    margin-top: 0.6rem;
-  }
-  .ads-page-content {
-    .no-ads {
-      width: 100%;
-      height: calc(100vh - 450px);
+    .ads-pagination-bottom {
+      // bottom: 0;
       display: flex;
       justify-content: center;
-      align-items: center;
-      .null-icon {
-        .null-svg {
-          width: 220px;
-          height: 260px;
-          background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-position: 50% 50%;
-          background-size: contain;
-        }
-        .null-txt {
-          font-size: 20px;
-          color: rgba(0, 0, 0, 0.85);
-          text-align: center;
-          margin-top: 40px;
+      margin-top: 0.6rem;
+    }
+    .ads-page-content {
+      .no-ads {
+        width: 100%;
+        height: calc(100vh - 450px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .null-icon {
+          .null-svg {
+            width: 220px;
+            height: 260px;
+            background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            background-size: contain;
+          }
+          .null-txt {
+            font-size: 20px;
+            color: rgba(0, 0, 0, 0.85);
+            text-align: center;
+            margin-top: 40px;
+          }
         }
       }
-    }
-    .ad-container {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      padding-top: 10px;
-      .ad-item {
+      .ad-container {
         width: 940px;
         margin: 0 auto;
-        border: 1px solid #d9d9d9;
-        border-radius: 4px;
-        transition: all 0.3s;
-        margin-bottom: 10px;
-      }
-      .ad-item:hover {
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s;
-      }
-      .ad-inner {
         display: flex;
-        padding: 20px;
-        .ad-cover {
-          // flex: 1;
-          width: 180px;
-          height: 100px;
-          .cover {
-            width: 180px;
-            height: 100px;
-            background-size: cover;
-            background-position: center center;
-            border-radius: 4px;
-            overflow: hidden;
-          }
-          .cover:hover {
-            cursor: pointer;
-          }
-        }
-        .ad-meta {
-          position: relative;
-          flex: 1;
-          padding-left: 20px;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          .meta-title {
-            height: 24px;
-            display: flex;
-            align-items: center;
-            .title-text {
-              display: inline-block;
-              max-width: 400px;
-              font-size: 18px;
-              color: rgba(0, 0, 0, 0.85);
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              transition: all 0.23s;
-            }
-          }
-          .meta-url {
-            font-size: 15px;
-            color: rgba(0, 0, 0, 0.75);
-            text-decoration: underline;
-            max-width: 500px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            transition: all 0.23s;
-          }
-          .meta-url:hover {
-            cursor: pointer;
-            color: #4facfe;
-            transition: all 0.23s ease;
-          }
-          .meta-date {
-            max-width: 300px;
-            margin-bottom: 8px;
-            .ad-date {
-              display: flex;
-              align-items: center;
-              .date-label {
-                font-size: 15px;
-                color: rgba(0, 0, 0, 0.85);
-              }
-            }
-          }
-          .meta-operation {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            .meta-contact {
-              margin-bottom: 10px;
-              .contact-label {
-                margin-bottom: 8px;
-                font-size: 15px;
-                color: rgba(0, 0, 0, 0.85);
-                display: flex;
-                .name {
-                  color: rgba(0, 0, 0, 0.65);
-                  margin: 0 1px;
-                  background: #f2f4f5;
-                  padding: 0px 7px;
-                  border-radius: 3px;
-                  font-size: 0.9em;
-                  border: 1px solid #eee;
-                }
-                .name:hover {
-                  cursor: pointer;
-                }
-              }
-              .contact {
-                font-size: 15px;
-                color: rgba(0, 0, 0, 0.85);
-                display: flex;
-                .phone {
-                  color: rgba(0, 0, 0, 0.65);
-                  margin: 0 1px;
-                  background: #f2f4f5;
-                  padding: 0px 7px;
-                  border-radius: 3px;
-                  font-size: 0.9em;
-                  border: 1px solid #eee;
-                }
-                .phone:hover {
-                  cursor: pointer;
-                }
-              }
-            }
-          }
-        }
+        flex-direction: column;
+        padding-top: 10px;
       }
     }
+  }
+
+  .spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>

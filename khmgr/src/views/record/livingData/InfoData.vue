@@ -37,6 +37,15 @@
                 <div class="data">21</div>
               </div>
             </div>
+            <div class="data-change">
+              <div class="label">选择日期</div>
+              <div class="data-picker">
+                <a-date-picker format="YYYY-MM-DD" :disabledDate="disabledDate" />
+              </div>
+              <div class="btn">
+                <a-button type="primary" icon="search">查询</a-button>
+              </div>
+            </div>
           </div>
           <div class="detail-info">
             <div class="title">生活数据</div>
@@ -64,6 +73,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { axios } from '@/utils/request'
 export default {
   // 生活数据
@@ -77,6 +87,11 @@ export default {
     this.fetch()
   },
   methods: {
+    moment,
+    disabledDate (current) {
+      // Can not select days before today and today
+      return current && current > moment().endOf('day')
+    },
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)

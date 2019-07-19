@@ -241,13 +241,13 @@ export const asyncRouterMap = [
           {
             path: '/intervenemanager/Healthgoals',
             name: 'Healthgoals',
-            component: () => import('@/views/intervenemanager/Healthgoals'),
+            component: () => import('@/views/intervenemanager/Healthgoals/Healthgoals'),
             meta: { title: '小目标设定策略', keepAlive: true, permission: ['profile'] }
           },
           {
             path: '/intervenemanager/Planandcourse',
             name: 'Planandcourse',
-            component: () => import('@/views/intervenemanager/Planandcourse'),
+            component: () => import('@/views/intervenemanager/PlanAndCourse/PlanAndCourse'),
             meta: { title: '干预计划与课程', keepAlive: true, permission: ['profile'] }
           },
           {

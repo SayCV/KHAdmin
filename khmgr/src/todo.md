@@ -174,3 +174,11 @@
 - [x] video 的分页 bug 处理
 - [x] video 编辑页面 等待 video 详情接口
 - [x] 客户管理 table 列表
+
+### 2019-7-19
+
+- [x] video 编辑页默认数据填充
+- [x] video 默认视频填充后禁止上传其他视频
+- [x] 抽离刷新和新建操作为组件
+- [x] fetch 方法修改，通过数据来驱动，实现 isLoading 效果
+- [x] 抽离 pageTitle 组件，有页面的 title，和刷新和新建操作按钮为 PageTitle

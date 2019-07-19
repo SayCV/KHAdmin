@@ -19,7 +19,7 @@
             <a-input
               v-decorator="[
                 'title',
-                {rules: [{ required: true, message: '请输入标题' }] }
+                {rules: [{ required: true, message: '请输入标题' }], initialValue: data.title }
               ]"
             />
           </a-form-item>
@@ -29,10 +29,10 @@
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
             <a-textarea
-              rows="3"
+              rows="4"
               v-decorator="[
                 'summary',
-                {rules: [{ required: true, message: '请输入简介' }] }
+                {rules: [{ required: true, message: '请输入简介' }], initialValue: data.summary }
               ]"
             />
           </a-form-item>
@@ -48,7 +48,7 @@
               :fileList="videoList"
               :disabled="disabled"
               action="http://172.31.214.104/khmsrv/api/resources"
-              listType="picture"
+              listType="text"
               @change="handleVideoChange"
             >
               <p class="ant-upload-drag-icon">
@@ -132,20 +132,21 @@ export default {
       previewImage: '',
       fileList: [],
       loading: false,
-      imgLoading: false
+      imgLoading: false,
+      data: {}, // 进入编辑页面填充表单的数据
+      videoId: this.$route.query.videoId
     }
   },
   watch: {
     '$route.path' (to, from) {
       if (to === '/intervenemanager/videos/videoedit') {
         console.log('进入新闻编辑页面', to)
-        this.videoId = this.$route.query.videoId
-        // this.data = this.$route.query.data
-        this.getFormData(this.videoId)
+
+        this.getFormData()
       }
     }
   },
-  mounted () { this.getFormData(this.videoId) },
+  mounted () { this.getFormData() },
   methods: {
     moment,
     handleCoverChange (info) {
@@ -161,15 +162,29 @@ export default {
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
-      axios({
-        url: `/api/admin/video/${newsId}`,
-        method: 'get'
-      }).then(res => {
-        console.log('进入头条详情页面时表单数据', res)
-        this.data = res
-        this.initFileList(this.data)
-        this.editorContent = res.content
-      })
+      this.videoId = this.$route.query.videoId
+      this.data = this.$route.query.data
+      console.log(this.videoId, this.data)
+
+      this.initEditForm(this.data)
+    },
+    initEditForm (data) {
+      // 设置默认编辑页面的值
+      this.fileList = [{
+        uid: '-1',
+        name: 'default',
+        status: 'done',
+        url: data.imageUrl
+      }]
+      this.videoList = [{
+        uid: data.videoId,
+        name: data.imageUrl || '',
+        status: 'done',
+        type: 'video/*',
+        url: data.videoUrl
+      }]
+      this.selected = data.pubType
+      this.disabled = true
     },
     handleVideoChange (info) {
       this.videoList = info.fileList
@@ -268,10 +283,18 @@ export default {
     justify-content: space-between;
     align-items: center;
     .page-top {
-      font-size: 16px;
-      color: rgba(0, 0, 0, 0.85);
+      font-weight: 400;
       text-align: center;
-      line-height: 36px;
+      -ms-touch-action: manipulation;
+      touch-action: manipulation;
+      cursor: pointer;
+      background-image: none;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      font-size: 14px;
+      height: 32px;
+      text-align: center;
+      line-height: 32px;
       padding: 0 24px;
       border: 1px solid #d9d9d9;
       border-top-right-radius: 4px;

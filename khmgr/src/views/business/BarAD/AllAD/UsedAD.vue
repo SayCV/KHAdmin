@@ -5,35 +5,39 @@
     :style="{ height: '100%' }"
   >
     <div class="adsPage">
-      <div class="ads-page-top">
-        <div class="page-top">
-          <div class="pagination" v-if="showPagination">
-            <a-pagination
-              @change="handlePageChange"
-              v-model="current"
-              :pageSize="pageSize"
-              :total="totalCount"
-            />
-          </div>
-        </div>
-        <div class="page-operation">
-          <a-button-group>
-            <a-button @click="handleRefresh">刷新</a-button>
-            <a-button type="primary" @click="handleToAddAD">
-              <a-icon type="plus" />投放广告
-            </a-button>
-          </a-button-group>
-        </div>
+      <div class="spin" v-if="refresh">
+        <a-spin></a-spin>
       </div>
-      <div class="ads-page-content">
-        <div class="no-ads" v-if="NoadList">
-          <Empty :description="noAdDescription"></Empty>
-        </div>
-        <div class="ad-container" v-else>
-          <div v-for="item in adList" :key="item.adId">
-            <AdItem :adItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete"></AdItem>
+      <div class="data-loading" v-else>
+        <div class="ads-page-top">
+          <div class="page-top">
+            <div class="pagination" v-if="showPagination">
+              <a-pagination
+                @change="handlePageChange"
+                v-model="current"
+                :pageSize="pageSize"
+                :total="totalCount"
+              />
+            </div>
           </div>
-          <!-- <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
+          <div class="page-operation">
+            <ButtonRefresh
+              @toRefresh="fetch"
+              name="投放广告"
+              linkTo="/business/BarAD/addAD"
+              :isLoading="refresh"
+            ></ButtonRefresh>
+          </div>
+        </div>
+        <div class="ads-page-content">
+          <div class="no-ads" v-if="NoadList">
+            <Empty :description="noAdDescription"></Empty>
+          </div>
+          <div class="ad-container" v-else>
+            <div v-for="item in adList" :key="item.adId">
+              <AdItem :adItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete"></AdItem>
+            </div>
+            <!-- <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
             <div class="ad-inner">
               <div class="ad-cover">
                 <div class="cover" :style="{ backgroundImage:'url(' + ad.imageUrl + ')' }"></div>
@@ -72,17 +76,18 @@
                 </div>
               </div>
             </div>
-          </div>-->
+            </div>-->
+          </div>
         </div>
-      </div>
-      <div class="ads-pagination-bottom" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
+        <div class="ads-pagination-bottom" v-if="showPagination">
+          <div class="pagination">
+            <a-pagination
+              @change="handlePageChange"
+              v-model="current"
+              :pageSize="pageSize"
+              :total="totalCount"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -94,11 +99,14 @@ import moment from 'moment'
 import { axios } from '@/utils/request'
 import AdItem from '@/components/AdItems/AdItem'
 import Empty from '@/components/Empty/Empty'
+import ButtonRefresh from '@/components/Button/ButtonRefresh'
+
 export default {
-  name: 'AllAD',
-  components: { AdItem, Empty },
+  name: 'UsedAD',
+  components: { AdItem, Empty, ButtonRefresh },
   data () {
     return {
+      refresh: false,
       noAdDescription: '暂无广告',
       dateFormat: 'YYYY-MM-DD',
       NoadList: false,
@@ -135,6 +143,7 @@ export default {
   methods: {
     moment,
     fetch (params = {}) {
+      this.refresh = true
       axios({
         url: `/api/admin/ad/used/?pageSize=${this.pageSize}&pageNum=${this.current}`,
         method: 'get',
@@ -152,16 +161,26 @@ export default {
           this.adList = res.list
           this.totalCount = res.total
         }
-      })
+        this.refresh = false
+      }).catch(err => {
+        if (err) {
+          this.NoadList = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
+        }
+        this.refresh = false
+      }).finally(
+        console.log('data loading done')
+      )
     },
-    handleRefresh () {
-      this.fetch()
-    },
+
     handleToAddAD () {
       // 点击行进入add页
       this.$router.push({
-        // path: '/business/BarAD/addAD'
-        name: 'addAD'
+        path: '/business/BarAD/addAD'
+        // name: 'addAD'
       })
     },
 
@@ -217,55 +236,65 @@ export default {
 
 <style lang="less" scoped>
 .adsPage {
-  // min-height: calc(100vh - 280px);
-  .ads-page-top {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .page-top {
+  min-height: calc(100vh - 310px);
+  position: relative;
+  .data-loading {
+    .ads-page-top {
+      margin-top: 10px;
       display: flex;
-      justify-content: flex-start;
-    }
-  }
-  .ads-pagination-bottom {
-    // bottom: 0;
-    display: flex;
-    justify-content: center;
-    margin-top: 0.6rem;
-  }
-  .ads-page-content {
-    .no-ads {
-      width: 100%;
-      height: calc(100vh - 450px);
-      display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      .null-icon {
-        .null-svg {
-          width: 220px;
-          height: 260px;
-          background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-          background-position: center center;
-          background-repeat: no-repeat;
-          background-position: 50% 50%;
-          background-size: contain;
-        }
-        .null-txt {
-          font-size: 20px;
-          color: rgba(0, 0, 0, 0.85);
-          text-align: center;
-          margin-top: 40px;
-        }
+      .page-top {
+        display: flex;
+        justify-content: flex-start;
       }
     }
-    .ad-container {
-      width: 940px;
-      margin: 0 auto;
+    .ads-pagination-bottom {
+      // bottom: 0;
       display: flex;
-      flex-direction: column;
-      padding-top: 10px;
+      justify-content: center;
+      margin-top: 0.6rem;
     }
+    .ads-page-content {
+      .no-ads {
+        width: 100%;
+        height: calc(100vh - 450px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .null-icon {
+          .null-svg {
+            width: 220px;
+            height: 260px;
+            background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-position: 50% 50%;
+            background-size: contain;
+          }
+          .null-txt {
+            font-size: 20px;
+            color: rgba(0, 0, 0, 0.85);
+            text-align: center;
+            margin-top: 40px;
+          }
+        }
+      }
+      .ad-container {
+        width: 940px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+      }
+    }
+  }
+
+  .spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 </style>
