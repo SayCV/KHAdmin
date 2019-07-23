@@ -3,25 +3,25 @@
     <div class="video-page-top">
       <div class="page-top">{{ $route.meta.title }}</div>
       <div class="video-operation">
-        <a-button type="primary" @click="() => handleBack()">
-          <a-icon type="left" />返回
-        </a-button>
+        <ButtonBack></ButtonBack>
       </div>
     </div>
     <div class="video-push">
       <div class="video-info">
-        <a-form :layout="formLayout" :form="form" @submit="handleSubmit">
+        <a-form
+          :layout="formLayout"
+          :form="form"
+          @submit="handleSubmit"
+        >
           <a-form-item
             label="标题"
             :labelCol="{md: {span: 3}, sm: {span: 3}}"
             :wrapperCol="{md: {span: 18}, sm: {span: 16} }"
           >
-            <a-input
-              v-decorator="[
+            <a-input v-decorator="[
                 'title',
                 {rules: [{ required: true, message: '请输入标题' }], initialValue: data.title }
-              ]"
-            />
+              ]" />
           </a-form-item>
           <a-form-item
             label="简介"
@@ -81,8 +81,16 @@
                   <div class="ant-upload-text">上传视频封面</div>
                 </div>
               </a-upload>
-              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                <img alt="example" style="width: 100%" :src="previewImage" />
+              <a-modal
+                :visible="previewVisible"
+                :footer="null"
+                @cancel="handleCancel"
+              >
+                <img
+                  alt="example"
+                  style="width: 100%"
+                  :src="previewImage"
+                />
               </a-modal>
             </div>
           </a-form-item>
@@ -102,7 +110,11 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提 交</a-button>
+            <a-button
+              type="primary"
+              html-type="submit"
+              :loading="loading"
+            >提 交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -114,9 +126,11 @@
 import { axios } from '@/utils/request'
 import moment from 'moment'
 import FooterToolBar from '@/components/FooterToolbar'
+import ButtonBack from '@/components/Button/ButtonBack'
+
 export default {
   name: 'VideoEdit',
-  components: { FooterToolBar },
+  components: { FooterToolBar, ButtonBack },
   data () {
     return {
       selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C

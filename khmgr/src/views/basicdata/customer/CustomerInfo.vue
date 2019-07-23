@@ -2,10 +2,7 @@
   <a-card>
     <div class="back">
       <a-button type="primary" icon="form" @click="handleBtnToEdit">编辑</a-button>
-      <a-button type="primary" @click="handleBtnBack">
-        返回
-        <a-icon type="rollback" />
-      </a-button>
+      <ButtonBack></ButtonBack>
     </div>
     <div class="info-title">
       <h1>
@@ -88,10 +85,12 @@
 
 <script>
 import { axios } from '@/utils/request'
+import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   // 客户管理详情页
   name: 'CustomerInfo',
+  components: { ButtonBack },
   data () {
     return {
       userId: this.$route.query.userId,

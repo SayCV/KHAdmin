@@ -3,9 +3,7 @@
     <div class="create-cus-page">
       <div class="create-container">
         <div class="page-top">
-          <a-button type="primary" @click="handleBtnBack">
-            <a-icon type="left" />返回
-          </a-button>
+          <ButtonBack></ButtonBack>
         </div>
         <div class="top">
           <div class="title">
@@ -15,15 +13,27 @@
         </div>
         <div class="content">
           <div class="query-form">
-            <a-form :form="form" @submit="handleSearch">
-              <a-form-item label="健康号" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-                <a-input
-                  v-decorator="[ 'userNo', {rules: [{ required: true, message: '请输入您要查询的健康号!' }]} ]"
-                ></a-input>
+            <a-form
+              :form="form"
+              @submit="handleSearch"
+            >
+              <a-form-item
+                label="健康号"
+                :label-col="{ span: 4 }"
+                :wrapper-col="{ span: 16 }"
+              >
+                <a-input v-decorator="[ 'userNo', {rules: [{ required: true, message: '请输入您要查询的健康号!' }]} ]"></a-input>
               </a-form-item>
               <div class="search-btn">
-                <a-button type="primary" html-type="submit" :loading="loading">查询</a-button>
-                <a-button :style="{ marginLeft: '8px' }" @click="handleReset">清空</a-button>
+                <a-button
+                  type="primary"
+                  html-type="submit"
+                  :loading="loading"
+                >查询</a-button>
+                <a-button
+                  :style="{ marginLeft: '8px' }"
+                  @click="handleReset"
+                >清空</a-button>
               </div>
             </a-form>
           </div>
@@ -33,9 +43,16 @@
               :bodyStyle="{ padding: '0px', height: '100%' }"
               :style="{ height: '100%' }"
             >
-              <div class="user-item" v-if="showResult">
+              <div
+                class="user-item"
+                v-if="showResult"
+              >
                 <div class="avatar">
-                  <a-avatar :size="75" icon="user" :src="data.avatar" />
+                  <a-avatar
+                    :size="75"
+                    icon="user"
+                    :src="data.avatar"
+                  />
                 </div>
                 <div class="info">
                   <div class="nickname">{{ data.name }}</div>
@@ -54,11 +71,20 @@
                   </div>
                 </div>
                 <div class="btn">
-                  <a-button type="primary" icon="user-add">邀请用户</a-button>
+                  <a-button
+                    type="primary"
+                    icon="user-add"
+                  >邀请用户</a-button>
                 </div>
               </div>
-              <div class="nofind-user-item" v-else-if="notFound">{{ notFoundUser }}</div>
-              <div class="no-user-item" v-else>{{ noData }}</div>
+              <div
+                class="nofind-user-item"
+                v-else-if="notFound"
+              >{{ notFoundUser }}</div>
+              <div
+                class="no-user-item"
+                v-else
+              >{{ noData }}</div>
             </a-card>
           </div>
         </div>
@@ -70,9 +96,11 @@
 <script>
 
 import { axios } from '@/utils/request'
+import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   name: 'CreateCusromer',
+  components: { ButtonBack },
   data () {
     return {
       notFoundUser: '未找到该用户，请确认健康号是否正确！',

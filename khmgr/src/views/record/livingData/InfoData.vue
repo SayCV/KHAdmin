@@ -11,6 +11,7 @@
             <a-icon type="profile" theme="twoTone" />
             <span>成员详细指标数据</span>
           </div>
+          <ButtonBack></ButtonBack>
         </div>
         <div class="info-content">
           <div class="basic-info">
@@ -21,12 +22,8 @@
                 <div class="data">强啊强</div>
               </div>
               <div class="item">
-                <div class="label">成员ID</div>
-                <div class="data">1</div>
-              </div>
-              <div class="item">
-                <div class="label">用户ID</div>
-                <div class="data">10000000000001</div>
+                <div class="label">健康号</div>
+                <div class="data">1000001</div>
               </div>
               <div class="item">
                 <div class="label">性别</div>
@@ -36,14 +33,27 @@
                 <div class="label">年龄</div>
                 <div class="data">21</div>
               </div>
+              <div class="item">
+                <div class="label">健康评级</div>
+                <div class="data">{{ level }}</div>
+              </div>
             </div>
             <div class="data-change">
               <div class="label">选择日期</div>
-              <div class="data-picker">
-                <a-date-picker format="YYYY-MM-DD" :disabledDate="disabledDate" />
-              </div>
-              <div class="btn">
-                <a-button type="primary" icon="search">查询</a-button>
+              <div class="content">
+                <a-form layout="inline" :form="form" @submit="handleSubmit">
+                  <a-form-item>
+                    <a-date-picker
+                      format="YYYY-MM-DD"
+                      :disabledDate="disabledDate"
+                      v-decorator="['date-picker', {
+                        rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+                        initialValue:moment(moment().endOf('day'),'YYYY-MM-DD')
+                      }]"
+                    />
+                    <a-button type="primary" icon="search" :disabled="refresh" html-type="submit">查询</a-button>
+                  </a-form-item>
+                </a-form>
               </div>
             </div>
           </div>
@@ -57,11 +67,14 @@
                 <div class="label-item">单位</div>
               </div>
               <div class="content">
-                <div class="row" v-for="data in detailData" :key="data.label">
-                  <div class="value-item">{{ data.label }}</div>
-                  <div class="value-item">{{ data.value }}</div>
-                  <div class="value-item">{{ data.reference }}</div>
-                  <div class="value-item">{{ data.unit }}</div>
+                <div class="spin" v-if="refresh">
+                  <a-spin></a-spin>
+                </div>
+                <div v-else class="row" v-for="data in detailData" :key="data.label">
+                  <div class="value-item">{{ data.indicatorNameCN }}</div>
+                  <div class="value-item">{{ isToiletTime(data) }}</div>
+                  <div class="value-item">{{ referenceValue }}</div>
+                  <div class="value-item">{{ data.indicatorUnit }}</div>
                 </div>
               </div>
             </div>
@@ -75,12 +88,20 @@
 <script>
 import moment from 'moment'
 import { axios } from '@/utils/request'
+import ButtonBack from '@/components/Button/ButtonBack'
+
 export default {
   // 生活数据
   name: 'InfoData',
+  components: { ButtonBack },
   data () {
     return {
-      detailData: []
+      personId: this.$route.query.personId,
+      refresh: false,
+      form: this.$form.createForm(this),
+      detailData: [],
+      level: '',
+      referenceValue: '暂无参考值'
     }
   },
   mounted () {
@@ -92,19 +113,42 @@ export default {
       // Can not select days before today and today
       return current && current > moment().endOf('day')
     },
+    handleSubmit (e) {
+      e.preventDefault()
+      this.form.validateFields((err, fieldsValue) => {
+        if (!err) {
+          const values = {
+            ...fieldsValue,
+            'date-picker': fieldsValue['date-picker'].format('YYYY-MM-DD')
+          }
+          console.log('Received values of form: ', values)
+          this.fetch(values)
+        }
+      })
+    },
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
-      this.loading = true
+      this.refresh = true
       axios({
-        url: '/api/record/livingdata/info',
+        url: `/api/persons/${this.$route.query.personId}/indicators`,
+        // url: '/api/record/livingdata/info',
         method: 'get'
 
       }).then(res => {
         console.log('生活数据详情:', res)
-        this.loading = false
-        this.detailData = res.result.data
+        if (res) {
+          this.detailData = res.datas.list
+          this.level = res.level
+        }
+        this.refresh = false
       })
+    },
+    isToiletTime (data) {
+      if (data.indicatorName === 'toilet_time') {
+        return JSON.parse(data.indicatorValue).TimeSpan || '0'
+      }
+      return data.indicatorValue === 'NaN' ? '0' : data.indicatorValue
     }
   }
 }
@@ -119,7 +163,7 @@ export default {
       padding: 14px;
       border-bottom: 1px solid #d9d9d9;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
       .title {
         font-size: 22px;
@@ -167,6 +211,18 @@ export default {
             }
           }
         }
+        .data-change {
+          .label {
+            color: rgba(0, 0, 0, 0.85);
+            background: #fafafa;
+            padding: 12px 24px;
+            border-bottom: 1px solid #d9d9d9;
+          }
+          .content {
+            padding: 12px 24px;
+            display: flex;
+          }
+        }
       }
       .detail-info {
         flex: 3;
@@ -194,6 +250,14 @@ export default {
             }
           }
           .content {
+            position: relative;
+            min-height: calc(45px * 12 + 12px);
+            .spin {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
             .row {
               display: flex;
               border-bottom: 1px solid #d9d9d9;

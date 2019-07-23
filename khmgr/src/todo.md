@@ -183,3 +183,9 @@
 - [x] fetch 方法修改，通过数据来驱动，实现 isLoading 效果
 - [x] 抽离 pageTitle 组件，有页面的 title，和刷新和新建操作按钮为 PageTitle
 - [x] 添加操作页面的 PageTitle 抽离组件
+
+### 2019-7-22-23
+
+- [x] 电脑格式化 重写 生活数据日期查询函数 返回按钮等组件
+- [x] vscode seeting.json
+- [ ] 生活数据应该是先是 user list 页面然后 user 下面的 person 最后在是 详细的生活数据

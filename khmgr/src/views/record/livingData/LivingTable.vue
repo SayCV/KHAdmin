@@ -7,9 +7,21 @@
     <div class="living-table-page">
       <div class="page-top">
         <div class="top-btns">
-          <a-button type="primary" icon="plus">新建</a-button>
-          <a-button type="primary" icon="export">导出</a-button>
-          <a-button type="danger" icon="delete">删除</a-button>
+          <div>
+            <a-button type="primary" icon="export">导出</a-button>
+            <a-button type="danger" icon="delete">删除</a-button>
+          </div>
+          <div
+            class="table-page-search-submitButtons"
+            :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
+          >
+            <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+            <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+            <a @click="toggleAdvanced" style="margin-left: 8px">
+              {{ advanced ? '收起' : '展开' }}
+              <a-icon :type="advanced ? 'up' : 'down'" />
+            </a>
+          </div>
         </div>
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
@@ -39,19 +51,6 @@
                   </a-form-item>
                 </a-col>
               </template>
-              <a-col :md="!advanced && 8 || 24" :sm="24">
-                <span
-                  class="table-page-search-submitButtons"
-                  :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
-                >
-                  <a-button type="primary">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-                  <a @click="toggleAdvanced" style="margin-left: 8px">
-                    {{ advanced ? '收起' : '展开' }}
-                    <a-icon :type="advanced ? 'up' : 'down'" />
-                  </a>
-                </span>
-              </a-col>
             </a-row>
           </a-form>
         </div>
@@ -206,11 +205,8 @@ export default {
       this.loading = true
       axios({
         url: '/api/record/livingdata/table',
-        method: 'get',
-        params: {
-          results: 10,
-          ...params
-        }
+        // url: '/api/users/2/persons/',
+        method: 'get'
       }).then(res => {
         console.log('res', res)
         const pagination = { ...this.pagination }
@@ -243,17 +239,17 @@ export default {
         this.data = newData
       }
     },
-    handleDelete (userId) {
+    handleDelete (personId) {
       // 点击行进入edit页
-      console.log(' 点击删除 ')
+      console.log(' 点击删除 ', personId)
     },
-    handleView (userId) {
+    handleView (personId) {
       // 点击行进入详情页
       this.$router.push({
         // path: '/basicdata/Healthmanager/info',
         path: '/record/livingData/info',
         query: {
-          userId: userId
+          personId: personId
         }
       })
     },
@@ -270,13 +266,10 @@ export default {
 .living-table-page {
   .page-top {
     .top-btns {
-      max-width: 300px;
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
     }
-  }
-  .table-page-search-wrapper {
   }
 }
 </style>

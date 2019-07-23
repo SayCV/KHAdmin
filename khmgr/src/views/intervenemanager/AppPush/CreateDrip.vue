@@ -3,9 +3,7 @@
     <a-card :bordered="true">
       <div class="create-container">
         <div class="create-top">
-          <a-button type="primary" @click="() => handleBack()">
-            <a-icon type="left" />返回
-          </a-button>
+          <ButtonBack></ButtonBack>
         </div>
         <div class="create-main">
           <a-form :form="form" @submit="handleSubmit">
@@ -111,10 +109,11 @@ import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
+import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   name: 'CreateDrip',
-  components: { FooterToolBar },
+  components: { FooterToolBar, ButtonBack },
   data () {
     return {
       selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C

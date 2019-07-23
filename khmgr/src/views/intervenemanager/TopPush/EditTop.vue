@@ -2,19 +2,26 @@
   <a-card :bordered="true">
     <div class="create-container">
       <div class="create-top">
-        <a-button type="primary" @click="() => handleBack()">
-          <a-icon type="left" />返回
-        </a-button>
+        <ButtonBack></ButtonBack>
       </div>
       <div class="create-main">
-        <a-form :form="form" @submit="handleSubmit">
+        <a-form
+          :form="form"
+          @submit="handleSubmit"
+        >
           <div class="main-basic">
-            <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-              <a-input
-                v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]"
-              />
+            <a-form-item
+              label="标题"
+              :label-col="{ span: 4 }"
+              :wrapper-col="{ span: 16 }"
+            >
+              <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]" />
             </a-form-item>
-            <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-form-item
+              label="摘要"
+              :label-col="{ span: 4 }"
+              :wrapper-col="{ span: 16 }"
+            >
               <a-textarea
                 rows="4"
                 v-decorator="[
@@ -23,15 +30,21 @@
                 ]"
               />
             </a-form-item>
-            <a-form-item label="作者" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-              <a-input
-                v-decorator="[
+            <a-form-item
+              label="作者"
+              :label-col="{ span: 4 }"
+              :wrapper-col="{ span: 16 }"
+            >
+              <a-input v-decorator="[
                   'author',
                   {rules: [{ required: true, message: 'Please input your author!' }], initialValue: data.author }
-                ]"
-              />
+                ]" />
             </a-form-item>
-            <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-form-item
+              label="封面"
+              :label-col="{ span: 4 }"
+              :wrapper-col="{ span: 16 }"
+            >
               <div class="clearfix">
                 <a-upload
                   action="http://172.31.214.104/khmsrv/api/resources"
@@ -46,23 +59,41 @@
                     <div class="ant-upload-text">上传视频封面</div>
                   </div>
                 </a-upload>
-                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                  <img alt="example" style="width: 100%" :src="previewImage" />
+                <a-modal
+                  :visible="previewVisible"
+                  :footer="null"
+                  @cancel="handleCancel"
+                >
+                  <img
+                    alt="example"
+                    style="width: 100%"
+                    :src="previewImage"
+                  />
                 </a-modal>
               </div>
             </a-form-item>
           </div>
           <div class="main-content">
             <a-form-item>
-              <div id="main" ref="myEditor">
-                <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
+              <div
+                id="main"
+                ref="myEditor"
+              >
+                <mavon-editor
+                  ref="md"
+                  v-model="editorContent"
+                  @imgAdd="$imgAdd"
+                />
               </div>
             </a-form-item>
           </div>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
             <div>
-              <a-button type="primary" html-type="submit">提交</a-button>
+              <a-button
+                type="primary"
+                html-type="submit"
+              >提交</a-button>
               <a-modal
                 :title="ModalTitle"
                 :visible="visible"
@@ -73,7 +104,10 @@
                 <div class="model-content">
                   <div class="title">{{ ModalText.title }}</div>
                   <div class="desc">
-                    <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
+                    <a-tag
+                      class="author"
+                      color="blue"
+                    >{{ ModalText.author }}</a-tag>
                     <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
                   </div>
                   <div class="content">
@@ -94,9 +128,11 @@ import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
+import ButtonBack from '@/components/Button/ButtonBack'
+
 export default {
   name: 'EditTop',
-  components: { FooterToolBar },
+  components: { FooterToolBar, ButtonBack },
   data () {
     return {
       newsId: this.$route.query.newsId, // 新闻id
@@ -254,12 +290,7 @@ export default {
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
     },
-    handleBack () {
-      // 返回PushList页面
-      this.$router.push({
-        path: '/intervenemanager/TopPush/list'
-      })
-    },
+    
     initFileList (data) {
       // 设置默认封面
       this.fileList = [{

@@ -387,22 +387,22 @@ export const asyncRouterMap = [
                     component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
                     meta: { title: '未使用广告', hidden: true },
                     hidden: true
+                  },
+                  {
+                    path: '/business/BarAD/addAD',
+                    name: 'addAD',
+                    component: () => import('@/views/business/BarAD/AddAD'),
+                    meta: { title: '新建广告', keepAlive: true },
+                    hidden: true
+                  },
+                  {
+                    path: '/business/BarAD/editAD',
+                    name: 'editAD',
+                    component: () => import('@/views/business/BarAD/EditAD'),
+                    meta: { title: '编辑广告', keepAlive: true },
+                    hidden: true
                   }
                 ]
-              },
-              {
-                path: '/business/BarAD/addAD',
-                name: 'addAD',
-                component: () => import('@/views/business/BarAD/AddAD'),
-                meta: { title: '新建广告', keepAlive: true },
-                hidden: true
-              },
-              {
-                path: '/business/BarAD/editAD',
-                name: 'editAD',
-                component: () => import('@/views/business/BarAD/EditAD'),
-                meta: { title: '编辑广告', keepAlive: true },
-                hidden: true
               }
             ]
           }

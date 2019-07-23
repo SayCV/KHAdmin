@@ -1,13 +1,9 @@
 <template>
-  <a-card>
+  <a-card :bordered="false">
     <div class="adsPage">
       <div class="ads-page-top">
-        <div class="page-top">{{ $route.meta.title }}</div>
-        <div class="page-operation">
-          <a-button type="primary" @click="handleBack">
-            <a-icon type="left" />返回
-          </a-button>
-        </div>
+        <PageName></PageName>
+        <ButtonBack></ButtonBack>
       </div>
       <div class="ads-page-content">
         <div class="ad-info">
@@ -113,10 +109,12 @@
 
 import { axios } from '@/utils/request'
 import FooterToolBar from '@/components/FooterToolbar'
+import PageName from '@/components/PageHeader/PageName'
+import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   name: 'AddAD',
-  components: { FooterToolBar },
+  components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
       disabled: false,
@@ -225,20 +223,6 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .page-top {
-      font-size: 16px;
-      color: rgba(0, 0, 0, 0.85);
-      text-align: center;
-      height: 34px;
-      line-height: 34px;
-      padding: 0 24px;
-      border: 1px solid #d9d9d9;
-      border-top-right-radius: 4px;
-      border-top-left-radius: 4px;
-      color: #2f54eb;
-      background: #f0f5ff;
-      border-color: #adc6ff;
-    }
   }
   .ads-page-content {
     // width: 80%;

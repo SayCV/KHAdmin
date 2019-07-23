@@ -5,30 +5,30 @@
     :style="{ height: '100%' }"
   >
     <div class="adsPage">
+      <div class="ads-page-top">
+        <div class="page-top">
+          <div class="pagination" v-if="showPagination">
+            <a-pagination
+              @change="handlePageChange"
+              v-model="current"
+              :pageSize="pageSize"
+              :total="totalCount"
+            />
+          </div>
+        </div>
+        <div class="page-operation">
+          <ButtonRefresh
+            @toRefresh="fetch"
+            name="投放广告"
+            linkTo="/business/BarAD/addAD"
+            :isLoading="refresh"
+          ></ButtonRefresh>
+        </div>
+      </div>
       <div class="spin" v-if="refresh">
         <a-spin></a-spin>
       </div>
       <div class="data-loading" v-else>
-        <div class="ads-page-top">
-          <div class="page-top">
-            <div class="pagination" v-if="showPagination">
-              <a-pagination
-                @change="handlePageChange"
-                v-model="current"
-                :pageSize="pageSize"
-                :total="totalCount"
-              />
-            </div>
-          </div>
-          <div class="page-operation">
-            <ButtonRefresh
-              @toRefresh="fetch"
-              name="投放广告"
-              linkTo="/business/BarAD/addAD"
-              :isLoading="refresh"
-            ></ButtonRefresh>
-          </div>
-        </div>
         <div class="ads-page-content">
           <div class="no-ads" v-if="NoadList">
             <Empty :description="noAdDescription"></Empty>
@@ -238,17 +238,17 @@ export default {
 .adsPage {
   min-height: calc(100vh - 310px);
   position: relative;
-  .data-loading {
-    .ads-page-top {
-      margin-top: 10px;
+  .ads-page-top {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .page-top {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .page-top {
-        display: flex;
-        justify-content: flex-start;
-      }
+      justify-content: flex-start;
     }
+  }
+  .data-loading {
     .ads-pagination-bottom {
       // bottom: 0;
       display: flex;

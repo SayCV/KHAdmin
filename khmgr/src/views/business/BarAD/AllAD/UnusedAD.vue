@@ -5,13 +5,22 @@
     :style="{ height: '100%' }"
   >
     <div class="adsPage">
-      <div class="spin" v-if="refresh">
+      <div
+        class="spin"
+        v-if="refresh"
+      >
         <a-spin></a-spin>
       </div>
-      <div class="data-loading" v-else>
+      <div
+        class="data-loading"
+        v-else
+      >
         <div class="ads-page-top">
           <div class="page-top">
-            <div class="pagination" v-if="showPagination">
+            <div
+              class="pagination"
+              v-if="showPagination"
+            >
               <a-pagination
                 @change="handlePageChange"
                 v-model="current"
@@ -30,12 +39,25 @@
           </div>
         </div>
         <div class="ads-page-content">
-          <div class="no-ads" v-if="NoadList">
+          <div
+            class="no-ads"
+            v-if="NoadList"
+          >
             <Empty :description="noAdDescription"></Empty>
           </div>
-          <div class="ad-container" v-else>
-            <div v-for="item in adList" :key="item.adId">
-              <AdItem :adItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete"></AdItem>
+          <div
+            class="ad-container"
+            v-else
+          >
+            <div
+              v-for="item in adList"
+              :key="item.adId"
+            >
+              <AdItem
+                :adItem="item"
+                @toEdit="handleEdit(item)"
+                @toDelete="handleDelete"
+              ></AdItem>
             </div>
             <!-- <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
             <div class="ad-inner">
@@ -79,7 +101,10 @@
             </div>-->
           </div>
         </div>
-        <div class="ads-pagination-bottom" v-if="showPagination">
+        <div
+          class="ads-pagination-bottom"
+          v-if="showPagination"
+        >
           <div class="pagination">
             <a-pagination
               @change="handlePageChange"

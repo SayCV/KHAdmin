@@ -2,9 +2,7 @@
   <a-card :bordered="true">
     <div class="create-container">
       <div class="create-top">
-        <a-button type="primary" @click="() => handleBack()">
-          <a-icon type="left" />返回
-        </a-button>
+        <ButtonBack></ButtonBack>
       </div>
       <div class="create-main">
         <a-form :form="form" @submit="handleSubmit">
@@ -94,9 +92,11 @@ import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
+import ButtonBack from '@/components/Button/ButtonBack'
+
 export default {
   name: 'EditDrip',
-  components: { FooterToolBar },
+  components: { FooterToolBar, ButtonBack},
   data () {
     return {
       newsId: this.$route.query.newsId, // 新闻id

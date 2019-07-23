@@ -30,7 +30,9 @@ import TopItem from '@/components/News/TopItem'
 import DripItem from '@/components/News/DripItem'
 import Empty from '@/components/Empty/Empty'
 import ButtonRefresh from '@/components/Button/ButtonRefresh'
+import ButtonBack from '@/components/Button/ButtonBack'
 import PageTitle from '@/components/PageHeader/PageTitle'
+import PageName from '@/components/PageHeader/PageName'
 
 export {
   AvatarList,
@@ -63,5 +65,7 @@ export {
   TopItem,
   Empty,
   ButtonRefresh,
-  PageTitle
+  PageTitle,
+  PageName,
+  ButtonBack
 }
