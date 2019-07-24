@@ -1,9 +1,5 @@
 <template>
-  <a-card
-    :bordered="false"
-    :bodyStyle="{ padding: '16px 8px 24px 8px', height: '100%' }"
-    :style="{ height: '100%' }"
-  >
+  <div>
     <div class="living-table-page">
       <div class="page-top">
         <div class="top-btns">
@@ -69,7 +65,7 @@
         ref="table"
         size="default"
         :columns="columns"
-        rowKey="personId"
+        rowKey="userId"
         :dataSource="data"
         :pagination="pagination"
         :loading="loading"
@@ -79,22 +75,22 @@
       >
         <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
         <a
-          slot="personId"
+          slot="userNo"
           slot-scope="text, record"
-          @click="() => handleView(record.personId)"
+          @click="() => handleView(record.userNo)"
         >{{ text }}</a>
         <template slot="operation" slot-scope="text, record">
           <div class="editable-row-operations">
             <span slot="operation">
-              <a @click="() => handleView(record.personId)">查看</a>
+              <a @click="() => handleView(record.userId)">查看</a>
               <a-divider type="vertical" />
-              <a @click="() => handleDelete(record.personId)">删除</a>
+              <a @click="() => handleDelete(record.userId)">删除</a>
             </span>
           </div>
         </template>
       </a-table>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
@@ -107,48 +103,36 @@ const columns = [
     scopedSlots: { customRender: 'serial' }
   },
   {
-    title: '账号ID',
+    title: '健康号',
     align: 'center',
-    dataIndex: 'userId',
-    scopedSlots: { customRender: 'userId' },
+    dataIndex: 'userNo',
+    scopedSlots: { customRender: 'userNo' },
+    sorter: false
+  },
+
+  {
+    title: '用户名',
+    align: 'center',
+    dataIndex: 'userName',
+    scopedSlots: { customRender: 'userName' },
     sorter: false
   },
   {
-    title: '成员ID',
+    title: '电话',
     align: 'center',
-    dataIndex: 'personId',
-    scopedSlots: { customRender: 'personId' },
+    dataIndex: 'phone',
     sorter: false
   },
   {
-    title: '姓名',
+    title: '邮箱',
     align: 'center',
-    dataIndex: 'name',
-    scopedSlots: { customRender: 'name' },
-    sorter: false
-  },
-  {
-    title: '性别',
-    align: 'center',
-    dataIndex: 'sex',
-    sorter: false
-  },
-  {
-    title: '年龄',
-    align: 'center',
-    dataIndex: 'age',
+    dataIndex: 'email',
     sorter: false
   },
   {
     title: '提交时间',
     align: 'center',
     dataIndex: 'lastTime',
-    sorter: true
-  },
-  {
-    title: '设备ID',
-    align: 'center',
-    dataIndex: 'lastEquipmentId',
     sorter: true
   },
   {
@@ -204,17 +188,17 @@ export default {
       console.log('params:', params)
       this.loading = true
       axios({
-        url: '/api/record/livingdata/table',
-        // url: '/api/users/2/persons/',
+        // url: '/api/record/livingdata/table',
+        url: '/api/admin/customers',
         method: 'get'
       }).then(res => {
         console.log('res', res)
         const pagination = { ...this.pagination }
         // Read total count from server
-        pagination.total = res.result.totalCount
+        pagination.total = res.total
         // pagination.total = 20;
         this.loading = false
-        this.data = res.result.data
+        this.data = res.list
         this.pagination = pagination
       })
     },
@@ -239,17 +223,17 @@ export default {
         this.data = newData
       }
     },
-    handleDelete (personId) {
+    handleDelete (userId) {
       // 点击行进入edit页
-      console.log(' 点击删除 ', personId)
+      console.log(' 点击删除 ', userId)
     },
-    handleView (personId) {
+    handleView (userId) {
       // 点击行进入详情页
       this.$router.push({
         // path: '/basicdata/Healthmanager/info',
-        path: '/record/livingData/info',
+        path: '/record/livingData/person',
         query: {
-          personId: personId
+          userId: userId
         }
       })
     },

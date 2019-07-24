@@ -158,19 +158,29 @@ export const asyncRouterMap = [
                 path: '/record/livingData/table',
                 name: 'LivingTable',
                 component: () => import('@/views/record/livingData/LivingTable'),
-                meta: { title: '生活数据表', keepAlive: true, hidden: true }
+                meta: { title: '用户列表', keepAlive: true, hidden: true }
               },
               {
-                path: '/record/livingData/info',
-                name: 'InfoData',
-                component: () => import('@/views/record/livingData/InfoData'),
-                meta: { title: '生活数据详情页', keepAlive: true, hidden: true }
-              },
-              {
-                path: '/record/livingData/edit',
-                name: 'EditData',
-                component: () => import('@/views/record/livingData/EditData'),
-                meta: { title: '生活数据编辑页', keepAlive: true, hidden: true }
+                path: '/record/livingData/person',
+                name: 'PersonTable',
+                component: () => import('@/views/record/livingData/SubIndex'),
+                meta: { title: '用户列表', keepAlive: true, hidden: true },
+                hideChildrenInMenu: true,
+                redirect: '/record/livingData/person/list',
+                children: [
+                  {
+                    path: '/record/livingData/person/list',
+                    name: 'PersonList',
+                    component: () => import('@/views/record/livingData/personData/PersonList'),
+                    meta: { title: '成员列表', keepAlive: true, hidden: true }
+                  },
+                  {
+                    path: '/record/livingData/person/data',
+                    name: 'InfoData',
+                    component: () => import('@/views/record/livingData/personData/InfoData'),
+                    meta: { title: '成员生活数据', keepAlive: true, hidden: true }
+                  }
+                ]
               }
             ]
           },
@@ -357,91 +367,91 @@ export const asyncRouterMap = [
             meta: { title: '健康积分管理', keepAlive: true, permission: ['profile'] }
           },
 
-          {
-            path: '/business/BarAD',
-            name: 'BarAD',
-            component: () => import('@/views/business/BarAD/Index'),
-            meta: { title: 'Bar宣传广告', keepAlive: true },
-            redirect: '/businsss/BarAD/allAD',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/businsss/BarAD/allAD',
-                name: 'allAD',
-                component: () => import('@/views/business/BarAD/AllAD/Index'),
-                meta: { title: '全部广告', hideHeader: true, hidden: true },
-                redirect: '/business/BarAD/allAD/usedAD',
-                hideChildrenInMenu: false,
-                hidden: false,
-                children: [
-                  {
-                    path: '/business/BarAD/allAD/usedAD',
-                    name: 'usedAD',
-                    component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
-                    meta: { title: '已使用广告', hidden: true },
-                    hidden: true
-                  },
-                  {
-                    path: '/business/BarAD/allAD/unusedAD',
-                    name: 'unusedAD',
-                    component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
-                    meta: { title: '未使用广告', hidden: true },
-                    hidden: true
-                  },
-                  {
-                    path: '/business/BarAD/addAD',
-                    name: 'addAD',
-                    component: () => import('@/views/business/BarAD/AddAD'),
-                    meta: { title: '新建广告', keepAlive: true },
-                    hidden: true
-                  },
-                  {
-                    path: '/business/BarAD/editAD',
-                    name: 'editAD',
-                    component: () => import('@/views/business/BarAD/EditAD'),
-                    meta: { title: '编辑广告', keepAlive: true },
-                    hidden: true
-                  }
-                ]
-              }
-            ]
-          }
           // {
-          //   path: '/businsss/BarAD/allAD',
-          //   name: 'allAD',
-          //   component: () => import('@/views/business/BarAD/AllAD/Index'),
-          //   meta: { title: 'Bar宣传广告', hideHeader: true, hidden: true },
-          //   redirect: '/business/BarAD/allAD/usedAD',
+          //   path: '/business/BarAD',
+          //   name: 'BarAD',
+          //   component: () => import('@/views/business/BarAD/Index'),
+          //   meta: { title: 'Bar宣传广告', keepAlive: true },
+          //   redirect: '/businsss/BarAD/allAD',
           //   hideChildrenInMenu: true,
           //   children: [
           //     {
-          //       path: '/business/BarAD/allAD/usedAD',
-          //       name: 'usedAD',
-          //       component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
-          //       meta: { title: '已使用广告', hidden: true }
-          //     },
-          //     {
-          //       path: '/business/BarAD/allAD/unusedAD',
-          //       name: 'unusedAD',
-          //       component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
-          //       meta: { title: '未使用广告', hidden: true }
+          //       path: '/businsss/BarAD/allAD',
+          //       name: 'allAD',
+          //       component: () => import('@/views/business/BarAD/AllAD/Index'),
+          //       meta: { title: '全部广告', hideHeader: true, hidden: true },
+          //       redirect: '/business/BarAD/allAD/usedAD',
+          //       hideChildrenInMenu: false,
+          //       hidden: false,
+          //       children: [
+          //         {
+          //           path: '/business/BarAD/allAD/usedAD',
+          //           name: 'usedAD',
+          //           component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
+          //           meta: { title: '已使用广告', hidden: true },
+          //           hidden: true
+          //         },
+          //         {
+          //           path: '/business/BarAD/allAD/unusedAD',
+          //           name: 'unusedAD',
+          //           component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
+          //           meta: { title: '未使用广告', hidden: true },
+          //           hidden: true
+          //         },
+          //         {
+          //           path: '/business/BarAD/addAD',
+          //           name: 'addAD',
+          //           component: () => import('@/views/business/BarAD/AddAD'),
+          //           meta: { title: '新建广告', keepAlive: true },
+          //           hidden: true
+          //         },
+          //         {
+          //           path: '/business/BarAD/editAD',
+          //           name: 'editAD',
+          //           component: () => import('@/views/business/BarAD/EditAD'),
+          //           meta: { title: '编辑广告', keepAlive: true },
+          //           hidden: true
+          //         }
+          //       ]
           //     }
           //   ]
           // },
-          // {
-          //   path: '/business/BarAD/addAD',
-          //   name: 'addAD',
-          //   component: () => import('@/views/business/BarAD/AddAD'),
-          //   meta: { title: '新建广告', keepAlive: true, hidden: true },
-          //   hidden: true
-          // },
-          // {
-          //   path: '/business/BarAD/editAD',
-          //   name: 'editAD',
-          //   component: () => import('@/views/business/BarAD/EditAD'),
-          //   meta: { title: '编辑广告', keepAlive: true, hidden: true },
-          //   hidden: true
-          // }
+          {
+            path: '/businsss/BarAD/allAD',
+            name: 'allAD',
+            component: () => import('@/views/business/BarAD/AllAD/Index'),
+            meta: { title: 'Bar宣传广告', hideHeader: true, hidden: true },
+            redirect: '/business/BarAD/allAD/usedAD',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/business/BarAD/allAD/usedAD',
+                name: 'usedAD',
+                component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
+                meta: { title: '已使用广告', hidden: true }
+              },
+              {
+                path: '/business/BarAD/allAD/unusedAD',
+                name: 'unusedAD',
+                component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
+                meta: { title: '未使用广告', hidden: true }
+              },
+              {
+                path: '/business/BarAD/addAD',
+                name: 'addAD',
+                component: () => import('@/views/business/BarAD/AllAD/AddAD'),
+                meta: { title: '新建广告', keepAlive: true },
+                hidden: true
+              },
+              {
+                path: '/business/BarAD/editAD',
+                name: 'editAD',
+                component: () => import('@/views/business/BarAD/AllAD/EditAD'),
+                meta: { title: '编辑广告', keepAlive: true, hidden: true },
+                hidden: true
+              }
+            ]
+          }
         ]
       },
 
@@ -457,7 +467,12 @@ export const asyncRouterMap = [
             path: '/datareport/Onlineanalyze',
             name: 'Onlineanalyze',
             component: () => import(/* webpackChunkName: "result" */ '@/views/datareport/Onlineanalyze'),
-            meta: { title: '在线情况分析', keepAlive: true, hiddenHeaderContent: false, permission: ['result'] }
+            meta: {
+              title: '在线情况分析',
+              keepAlive: true,
+              hiddenHeaderContent: false,
+              permission: ['result']
+            }
           }
         ]
       },

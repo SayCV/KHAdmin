@@ -1,9 +1,6 @@
 <template>
-  <a-card
-    :bordered="false"
-    :bodyStyle="{ padding: '8px 8px 24px 8px', height: '100%' }"
-    :style="{ height: '100%' }"
-  >
+  <div>
+    <ButtonBack></ButtonBack>
     <div class="living-data-info">
       <div class="data-info">
         <div class="info-top">
@@ -11,9 +8,30 @@
             <a-icon type="profile" theme="twoTone" />
             <span>成员详细指标数据</span>
           </div>
-          <ButtonBack></ButtonBack>
         </div>
         <div class="info-content">
+          <div class="detail-info">
+            <div class="title">生活数据</div>
+            <div class="detail-data">
+              <div class="label">
+                <div class="label-item">名称</div>
+                <div class="label-item">结果</div>
+                <div class="label-item">参考</div>
+                <div class="label-item">单位</div>
+              </div>
+              <div class="content">
+                <div class="spin" v-if="refresh">
+                  <a-spin></a-spin>
+                </div>
+                <div v-else class="row" v-for="data in detailData" :key="data.label">
+                  <div class="value-item">{{ data.indicatorNameCN }}</div>
+                  <div class="value-item">{{ isToiletTime(data) }}</div>
+                  <div class="value-item">{{ referenceValue }}</div>
+                  <div class="value-item">{{ data.indicatorUnit }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="basic-info">
             <div class="title">基本信息</div>
             <div class="basic-data">
@@ -51,38 +69,18 @@
                         initialValue:moment(moment().endOf('day'),'YYYY-MM-DD')
                       }]"
                     />
+                  </a-form-item>
+                  <a-form-item>
                     <a-button type="primary" icon="search" :disabled="refresh" html-type="submit">查询</a-button>
                   </a-form-item>
                 </a-form>
               </div>
             </div>
           </div>
-          <div class="detail-info">
-            <div class="title">生活数据</div>
-            <div class="detail-data">
-              <div class="label">
-                <div class="label-item">名称</div>
-                <div class="label-item">结果</div>
-                <div class="label-item">参考</div>
-                <div class="label-item">单位</div>
-              </div>
-              <div class="content">
-                <div class="spin" v-if="refresh">
-                  <a-spin></a-spin>
-                </div>
-                <div v-else class="row" v-for="data in detailData" :key="data.label">
-                  <div class="value-item">{{ data.indicatorNameCN }}</div>
-                  <div class="value-item">{{ isToiletTime(data) }}</div>
-                  <div class="value-item">{{ referenceValue }}</div>
-                  <div class="value-item">{{ data.indicatorUnit }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
@@ -160,10 +158,10 @@ export default {
     border: 1px solid #d9d9d9;
     border-radius: 4px;
     .info-top {
-      padding: 14px;
+      padding: 10px;
       border-bottom: 1px solid #d9d9d9;
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       .title {
         font-size: 22px;
@@ -180,13 +178,13 @@ export default {
     .info-content {
       display: flex;
       .basic-info {
-        max-width: 300px;
+        max-width: 340px;
         flex: 1;
-        border-right: 1px solid #d9d9d9;
+        border-left: 1px solid #d9d9d9;
         .title {
           background: #fafafa;
           padding: 12px 24px;
-          font-size: 16px;
+          font-size: 14px;
           color: rgba(0, 0, 0, 0.9);
           border-bottom: 1px solid #d9d9d9;
         }
@@ -220,7 +218,7 @@ export default {
           }
           .content {
             padding: 12px 24px;
-            display: flex;
+            border-bottom: 1px solid #d9d9d9;
           }
         }
       }
@@ -229,7 +227,7 @@ export default {
         .title {
           background: #fafafa;
           padding: 12px 24px;
-          font-size: 16px;
+          font-size: 14px;
           color: rgba(0, 0, 0, 0.9);
         }
         .detail-data {

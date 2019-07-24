@@ -189,3 +189,10 @@
 - [x] 电脑格式化 重写 生活数据日期查询函数 返回按钮等组件
 - [x] vscode seeting.json
 - [ ] 生活数据应该是先是 user list 页面然后 user 下面的 person 最后在是 详细的生活数据
+
+### 2019-7-24
+
+- [x] 生活数据应该是先是 user list 页面然后 user 下面的 person 最后在是 详细的生活数据
+- [x] 生活数据应该要在嵌套一级路由
+- [x] video 点滴 头条 广告 数据 isLoading 位置变化，不能把分页包含在 data-loading 内
+- [x] 生活数据修改路由路由结构

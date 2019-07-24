@@ -7,22 +7,21 @@
         linkTo="/intervenemanager/TopPush/add"
         :isLoading="refresh"
       ></PageTitle>
-
-      <div class="spin" v-if="refresh">
-        <a-spin></a-spin>
-      </div>
-      <div class="data-loading" v-else>
-        <div class="news-pagination" v-if="showPagination">
-          <div class="pagination">
-            <a-pagination
-              @change="handlePageChange"
-              v-model="current"
-              :pageSize="pageSize"
-              :total="totalCount"
-            />
-          </div>
+      <div class="news-pagination" v-if="showPagination">
+        <div class="pagination">
+          <a-pagination
+            @change="handlePageChange"
+            v-model="current"
+            :pageSize="pageSize"
+            :total="totalCount"
+          />
         </div>
-        <div class="news-container">
+      </div>
+      <div class="news-container">
+        <div class="spin" v-if="refresh">
+          <a-spin></a-spin>
+        </div>
+        <div class="data-loading">
           <div class="no-newsLists" v-if="NotopLists">
             <Empty></Empty>
           </div>
@@ -38,15 +37,15 @@
             </div>
           </div>
         </div>
-        <div class="news-pagination-bottom" v-if="showPagination">
-          <div class="pagination">
-            <a-pagination
-              @change="handlePageChange"
-              v-model="current"
-              :pageSize="pageSize"
-              :total="totalCount"
-            />
-          </div>
+      </div>
+      <div class="news-pagination-bottom" v-if="showPagination">
+        <div class="pagination">
+          <a-pagination
+            @change="handlePageChange"
+            v-model="current"
+            :pageSize="pageSize"
+            :total="totalCount"
+          />
         </div>
       </div>
     </div>

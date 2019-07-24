@@ -1,7 +1,7 @@
 <template>
   <a-card
     :bordered="false"
-    :bodyStyle="{ padding: '8px 8px 24px 8px', height: '100%' }"
+    :bodyStyle="{ padding: '0px 8px 24px 8px', height: '100%' }"
     :style="{ height: '100%' }"
   >
     <div class="adsPage">
@@ -25,11 +25,11 @@
           ></ButtonRefresh>
         </div>
       </div>
-      <div class="spin" v-if="refresh">
-        <a-spin></a-spin>
-      </div>
-      <div class="data-loading" v-else>
-        <div class="ads-page-content">
+      <div class="ads-page-content">
+        <div class="spin" v-if="refresh">
+          <a-spin></a-spin>
+        </div>
+        <div class="data-loading" v-else>
           <div class="no-ads" v-if="NoadList">
             <Empty :description="noAdDescription"></Empty>
           </div>
@@ -37,46 +37,6 @@
             <div v-for="item in adList" :key="item.adId">
               <AdItem :adItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete"></AdItem>
             </div>
-            <!-- <div class="ad-item" v-for="(ad) in adList" :key="ad.adId">
-            <div class="ad-inner">
-              <div class="ad-cover">
-                <div class="cover" :style="{ backgroundImage:'url(' + ad.imageUrl + ')' }"></div>
-              </div>
-              <div class="ad-meta">
-                <div class="meta-title">
-                  <a-tag color="blue">{{ ad.createOn.substring(0,16) }}</a-tag>
-                  <div class="title-text">{{ ad.title }}</div>
-                </div>
-                <div class="meta-url">{{ ad.adUrl }}</div>
-                <div class="meta-date">
-                  <div class="ad-date">
-                    <div class="date-label">起止时间&nbsp;:&nbsp;</div>
-                    <div class="start-end-date">
-                      <a-tag>{{ moment(`${ad.beginDate}`).format(dateFormat) }}</a-tag>
-                      <span>~ &nbsp;</span>
-                      <a-tag>{{ moment(`${ad.endDate}`).format(dateFormat) }}</a-tag>
-                    </div>
-                  </div>
-                </div>
-                <div class="meta-operation">
-                  <div class="meta-contact">
-                    <div class="contact-label">
-                      联系人&nbsp;:&nbsp;
-                      <div class="name">{{ ad.contact }}</div>
-                    </div>
-                    <div class="contact">
-                      电话&nbsp;:&nbsp;
-                      <div class="phone">{{ ad.phone }}</div>
-                    </div>
-                  </div>
-                  <a-button-group>
-                    <a-button @click="() => handleToEditAD(ad.adId)">编辑</a-button>
-                    <a-button type="danger" @click="() => deleteConfirm(ad.adId)">删除</a-button>
-                  </a-button-group>
-                </div>
-              </div>
-            </div>
-            </div>-->
           </div>
         </div>
         <div class="ads-pagination-bottom" v-if="showPagination">
@@ -235,66 +195,5 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.adsPage {
-  min-height: calc(100vh - 310px);
-  position: relative;
-  .ads-page-top {
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    .page-top {
-      display: flex;
-      justify-content: flex-start;
-    }
-  }
-  .data-loading {
-    .ads-pagination-bottom {
-      // bottom: 0;
-      display: flex;
-      justify-content: center;
-      margin-top: 0.6rem;
-    }
-    .ads-page-content {
-      .no-ads {
-        width: 100%;
-        height: calc(100vh - 450px);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .null-icon {
-          .null-svg {
-            width: 220px;
-            height: 260px;
-            background-image: url('https://gw.alipayobjects.com/zos/rmsportal/wZcnGqRDyhPOEYFcZDnb.svg');
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-position: 50% 50%;
-            background-size: contain;
-          }
-          .null-txt {
-            font-size: 20px;
-            color: rgba(0, 0, 0, 0.85);
-            text-align: center;
-            margin-top: 40px;
-          }
-        }
-      }
-      .ad-container {
-        width: 940px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        padding-top: 10px;
-      }
-    }
-  }
-
-  .spin {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
+@import './adslist.less';
 </style>

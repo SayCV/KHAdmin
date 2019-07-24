@@ -1,0 +1,45 @@
+.adsPage {
+  min-height: calc(100vh - 310px);
+  position: relative;
+
+  .ads-page-top {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .page-top {
+      display: flex;
+      justify-content: flex-start;
+    }
+  }
+  .ads-pagination-bottom {
+    display: flex;
+    justify-content: center;
+  }
+  .ads-page-content {
+    position: relative;
+    min-height: 565px;
+    .spin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .data-loading {
+      .no-ads {
+        width: 100%;
+        height: calc(100vh - 450px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .ad-container {
+        width: 940px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        padding-top: 10px;
+      }
+    }
+  }
+}

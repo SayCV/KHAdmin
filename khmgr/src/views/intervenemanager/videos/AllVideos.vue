@@ -6,21 +6,21 @@
       linkTo="/intervenemanager/videos/videopush"
       :isLoading="refresh"
     ></PageTitle>
-    <div class="spin" v-if="refresh">
-      <a-spin></a-spin>
-    </div>
-    <div class="data-loading" v-else>
-      <div class="videos-pagination" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
-        </div>
+    <div class="videos-pagination" v-if="showPagination">
+      <div class="pagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
       </div>
-      <div class="all-videos">
+    </div>
+    <div class="all-videos">
+      <div class="spin" v-if="refresh">
+        <a-spin></a-spin>
+      </div>
+      <div class="data-loading">
         <div class="no-videdos" v-if="NoVideoList">
           <Empty :image="image"></Empty>
         </div>
@@ -54,15 +54,15 @@
           </div>
         </div>
       </div>
-      <div class="videos-pagination-bottom" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
-        </div>
+    </div>
+    <div class="videos-pagination-bottom" v-if="showPagination">
+      <div class="pagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
       </div>
     </div>
   </div>
@@ -218,33 +218,36 @@ export default {
 .videoPpage {
   width: 100%;
   min-height: calc(100vh - 280px);
-  position: relative;
-  .spin {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+
+  .videos-pagination {
+    // bottom: 0;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 0.6rem;
+    height: 32px;
   }
-  .data-loading {
-    .videos-pagination {
-      // bottom: 0;
-      display: flex;
-      justify-content: flex-start;
-      margin-top: 0.6rem;
-      height: 32px;
+  .videos-pagination-bottom {
+    // bottom: 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.6rem;
+  }
+  .all-videos {
+    position: relative;
+    min-height: 550px;
+    .spin{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
     }
-    .videos-pagination-bottom {
-      // bottom: 0;
-      display: flex;
-      justify-content: center;
-      margin-top: 0.6rem;
-    }
-    .all-videos {
+    .data-loading {
       .video-container {
         width: 100%;
         display: flex;
         flex-direction: column;
         padding-top: 10px;
+
         .video-item {
           width: 940px;
           margin: 0 auto;

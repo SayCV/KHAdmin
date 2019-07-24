@@ -1,7 +1,5 @@
 <template>
-  <div class="page-header-index-wide">
-    <route-view></route-view>
-  </div>
+  <route-view></route-view>
 </template>
 
 <script>
