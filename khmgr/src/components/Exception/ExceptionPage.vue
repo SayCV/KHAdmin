@@ -1,13 +1,20 @@
 <template>
   <div class="exception">
-    <div class="img">
-      <img :src="config[type].img"/>
+    <div class="container">
+      <div class="content">
+        <h1>{{ config[type].title }}</h1>
+        <p class="desc">{{ config[type].desc }}</p>
+        <div class="floating">
+          <img class="img" :src="config[type].img" />
+        </div>
+        <div class="action">
+          <div class="btn" type="primary" @click="handleToHome">返回首页</div>
+        </div>
+      </div>
     </div>
-    <div class="content">
-      <h1>{{ config[type].title }}</h1>
-      <div class="desc">{{ config[type].desc }}</div>
-      <div class="action">
-        <a-button type="primary" @click="handleToHome">返回首页</a-button>
+    <div class="earth">
+      <div class="col">
+        <img class="earth" :src="imgUrl" alt />
       </div>
     </div>
   </div>
@@ -26,6 +33,7 @@ export default {
   },
   data () {
     return {
+      imgUrl: 'https://weareblend.la/wp-content/themes/blend-wp-theme/images/404/earth.png?d4c3eb&d4c3eb',
       config: types
     }
   },
@@ -38,51 +46,115 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .exception {
-    min-height: 500px;
-    height: 80%;
-    align-items: center;
-    text-align: center;
-    margin-top: 150px;
-    .img {
-      display: inline-block;
-      padding-right: 52px;
-      zoom: 1;
-      img {
-        height: 360px;
-        max-width: 430px;
-      }
-    }
+.exception {
+  position: relative;
+  min-height: 500px;
+  height: 80%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+
+  background: #000;
+  .container {
     .content {
-      display: inline-block;
-      flex: auto;
       h1 {
-        color: #434e59;
-        font-size: 72px;
-        font-weight: 600;
-        line-height: 72px;
-        margin-bottom: 24px;
+        font-size: 145px;
+        text-align: center;
+        color: #fff;
+        margin: 0;
+        margin-top: 6vh;
       }
       .desc {
-        color: rgba(0, 0, 0, .45);
-        font-size: 20px;
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
         line-height: 28px;
         margin-bottom: 16px;
       }
-    }
-  }
-
-  .mobile {
-    .exception {
-      margin-top: 30px;
-      .img {
-        padding-right: unset;
-
+      .floating {
+        display: flex;
+        justify-content: center;
+        height: 240px;
         img {
-          height: 40%;
-          max-width: 80%;
+          height: 180px;
+          max-width: 180px;
+          position: relative;
+          animation: mymove 5s infinite alternate;
+          animation-timing-function: ease-in-out;
+        }
+        @keyframes mymove {
+          from {
+            top: 0px;
+          }
+          to {
+            top: 30px;
+          }
+        }
+      }
+      .action {
+        display: flex;
+        justify-content: center;
+        .btn {
+          text-align: center;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+          -webkit-transition-property: color, background-color, border-color;
+          transition-property: color, background-color, border-color;
+          position: relative;
+          height: 45px;
+          width: 170px;
+          font-size: 16px;
+          font-weight: 600;
+          line-height: 45px;
+          color: #fff;
+          border: 1px solid #fff;
+        }
+        .btn:hover {
+          cursor: pointer;
+          text-align: center;
+          -webkit-transform: translateZ(0);
+          transform: translateZ(0);
+          -moz-osx-font-smoothing: grayscale;
+          -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+          -webkit-transition-property: color, background-color, border-color;
+          transition-property: color, background-color, border-color;
+          position: relative;
+          height: 45px;
+          width: 170px;
+          line-height: 45px;
+          color: #000;
+          background: #fff;
+          border: 1px solid rgba(255,255,255,0.9);
         }
       }
     }
   }
+  .earth {
+    height: 25%;
+    width: 100%;
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 0;
+  }
+}
+
+.mobile {
+  .exception {
+    margin-top: 30px;
+    .floating {
+      padding-right: unset;
+
+      img {
+        height: 40%;
+        max-width: 80%;
+      }
+    }
+  }
+}
 </style>

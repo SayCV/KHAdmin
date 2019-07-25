@@ -31,7 +31,7 @@ body {
     .g-content {
       padding: 24px 24px 0 24px;
       // overflow: auto;
-      
+
       .ant-layout-content {
         .content {
           margin: 24px 0 0;
@@ -146,7 +146,8 @@ body {
 
   .header,
   .top-nav-header-index {
-    .user-wrapper {
+    // .user-wrapper {
+    .global-header-wrapper {
       float: right;
       height: 100%;
 
@@ -174,10 +175,16 @@ body {
           padding: 4px;
         }
       }
+      .nickname {
+        user-select: none;
+      }
+      .global-lang {
+      }
     }
 
     &.dark {
-      .user-wrapper {
+      // .user-wrapper {
+      .global-header-wrapper {
         .action {
           color: rgba(255, 255, 255, 0.85);
           a {

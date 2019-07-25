@@ -7,7 +7,8 @@
     <div v-if="mode === 'sidemenu'" class="header">
       <a-icon v-if="device==='mobile'" class="trigger" :type="collapsed ? 'menu-fold' : 'menu-unfold'" @click="toggle"/>
       <a-icon v-else class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="toggle"/>
-      <user-menu></user-menu>
+      <!-- <user-menu></user-menu> -->
+      <head-menu></head-menu>
     </div>
     <div v-else :class="['top-nav-header-index', theme]">
       <div class="header-index-wide">
@@ -16,7 +17,10 @@
           <s-menu v-if="device !== 'mobile'" mode="horizontal" :menu="menus" :theme="theme" />
           <a-icon v-else class="trigger" :type="collapsed ? 'menu-fold' : 'menu-unfold'" @click="toggle" />
         </div>
-        <user-menu class="header-index-right"></user-menu>
+        <!-- <user-menu class="header-index-right"></user-menu> -->
+        <div class="header-index-right">
+          <head-menu></head-menu>
+        </div>
       </div>
     </div>
   </a-layout-header>
@@ -27,7 +31,7 @@
 import UserMenu from '../tools/UserMenu'
 import SMenu from '../Menu/'
 import Logo from '../tools/Logo'
-
+import HeadMenu from '../tools/HeadMenu'
 import { mixin } from '@/utils/mixin'
 import { handleScrollHeader } from '@/utils/util'
 
@@ -36,7 +40,8 @@ export default {
   components: {
     UserMenu,
     SMenu,
-    Logo
+    Logo,
+    HeadMenu
   },
   mixins: [mixin],
   props: {

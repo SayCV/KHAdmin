@@ -149,7 +149,7 @@ export const asyncRouterMap = [
           {
             path: '/record/livingData',
             name: 'LifeData',
-            component: () => import('@/views/record/livingData/Index'),
+            component: () => import('@/views/record/Index'),
             meta: { title: '生活数据', keepAlive: true, permission: ['table'] },
             hideChildrenInMenu: true,
             redirect: '/record/livingData/table',
@@ -185,10 +185,20 @@ export const asyncRouterMap = [
             ]
           },
           {
-            path: '/record/HealthTarget',
-            name: 'HealthTarget',
-            component: () => import('@/views/record/HealthTarget'),
-            meta: { title: '健康小目标', keepAlive: true, permission: ['table'] }
+            path: '/record/HealthGoal',
+            name: 'HealthGoal',
+            component: () => import('@/views/record/Index'),
+            meta: { title: '健康小目标', keepAlive: true, permission: ['table'] },
+            hideChildrenInMenu: true,
+            redirect: '/record/HealthGoal/table',
+            children: [
+              {
+                path: '/record/HealthGoal/table',
+                name: 'AimsTable',
+                component: () => import('@/views/record/healthgoal/AimsTable'),
+                meta: { title: '用户目标列表', keepAlive: true, hidden: true }
+              }
+            ]
           },
           {
             path: '/record/QuestionnaireScale',
@@ -609,5 +619,9 @@ export const constantRouterMap = [
   {
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+  },
+  {
+    path: '/500',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
   }
 ]

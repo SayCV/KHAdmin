@@ -23,11 +23,18 @@
                 <div class="spin" v-if="refresh">
                   <a-spin></a-spin>
                 </div>
-                <div v-else class="row" v-for="data in detailData" :key="data.label">
-                  <div class="value-item">{{ data.indicatorNameCN }}</div>
-                  <div class="value-item">{{ isToiletTime(data) }}</div>
-                  <div class="value-item">{{ referenceValue }}</div>
-                  <div class="value-item">{{ data.indicatorUnit }}</div>
+                <div class="data-loading" v-else>
+                  <div class="no-datas" v-if="noDatas">
+                    <Empty></Empty>
+                  </div>
+                  <div class="datas" v-else>
+                    <div class="row" v-for="data in detailData" :key="data.label">
+                      <div class="value-item">{{ data.indicatorNameCN }}</div>
+                      <div class="value-item">{{ isToiletTime(data) }}</div>
+                      <div class="value-item">{{ referenceValue }}</div>
+                      <div class="value-item">{{ data.indicatorUnit }}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -87,17 +94,19 @@
 import moment from 'moment'
 import { axios } from '@/utils/request'
 import ButtonBack from '@/components/Button/ButtonBack'
+import Empty from '@/components/Empty/Empty'
 
 export default {
-  // 生活数据
+  // 成员详细健康数据
   name: 'InfoData',
-  components: { ButtonBack },
+  components: { ButtonBack, Empty },
   data () {
     return {
       personId: this.$route.query.personId,
       refresh: false,
       form: this.$form.createForm(this),
       detailData: [],
+      noDatas: false,
       level: '',
       referenceValue: '暂无参考值'
     }
@@ -127,17 +136,26 @@ export default {
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
+      console.log('personId:', this.personId)
       this.refresh = true
       axios({
-        url: `/api/persons/${this.$route.query.personId}/indicators`,
-        // url: '/api/record/livingdata/info',
+        // url: `/api/persons/${this.personId}/indicators`,
+        url: '/api/persons/2/indicators',
         method: 'get'
 
       }).then(res => {
         console.log('生活数据详情:', res)
-        if (res) {
+        if (res.datas) {
           this.detailData = res.datas.list
           this.level = res.level
+        }
+        if (res.datas.total === 0) {
+          this.noDatas = true
+        }
+        this.refresh = false
+      }).catch(err => {
+        if (err) {
+          this.noDatas = true
         }
         this.refresh = false
       })
@@ -203,7 +221,7 @@ export default {
               }
             }
             .data {
-              flex: 2;
+              flex: 1;
               padding: 12px 24px;
               color: rgba(0, 0, 0, 0.65);
             }
@@ -256,28 +274,38 @@ export default {
               left: 50%;
               transform: translate(-50%, -50%);
             }
-            .row {
-              display: flex;
-              border-bottom: 1px solid #d9d9d9;
-              .value-item {
-                flex: 1;
-                padding: 12px 24px;
-                font-size: 14px;
-                color: rgba(0, 0, 0, 0.65);
-                border-right: 1px solid #d9d9d9;
-                &:first-child {
-                  background: #fafafa;
-                }
-                &:nth-child(2n + 1) {
-                  background: #fafafa;
-                  color: rgba(0, 0, 0, 0.85);
-                }
-                &:last-child {
-                  border-right: 0px solid #d9d9d9;
-                }
+            .data-loading {
+              .no-datas {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
               }
-              &:last-child {
-                border-bottom: 0px solid #d9d9d9;
+              .datas {
+                .row {
+                  display: flex;
+                  border-bottom: 1px solid #d9d9d9;
+                  .value-item {
+                    flex: 1;
+                    padding: 12px 24px;
+                    font-size: 14px;
+                    color: rgba(0, 0, 0, 0.65);
+                    border-right: 1px solid #d9d9d9;
+                    &:first-child {
+                      background: #fafafa;
+                    }
+                    &:nth-child(2n + 1) {
+                      background: #fafafa;
+                      color: rgba(0, 0, 0, 0.85);
+                    }
+                    &:last-child {
+                      border-right: 0px solid #d9d9d9;
+                    }
+                  }
+                  &:last-child {
+                    border-bottom: 0px solid #d9d9d9;
+                  }
+                }
               }
             }
           }

@@ -123,7 +123,7 @@ export default {
       // 查询参数
       queryParam: {},
       selectedRowKeys: [], // Check here to configure the default column
-      count: 33,
+      userId: this.$route.query.userId,
       data: {},
       persons: [],
       pagination: {},
@@ -169,8 +169,7 @@ export default {
       console.log('params:', params)
       this.loading = true
       axios({
-        url: '/api/admin/customers/2',
-        // url: '/api/users/2/persons/',
+        url: `/api/admin/customers/${this.userId}`,
         method: 'get'
       }).then(res => {
         console.log('res', res)
@@ -210,6 +209,7 @@ export default {
     },
     handleView (personId) {
       // 点击行进入详情页
+      console.log(' personId click! ', personId)
       this.$router.push({
         // path: '/basicdata/Healthmanager/info',
         path: '/record/livingData/person/data',

@@ -2,7 +2,7 @@
   <div class="logo">
     <router-link :to="{name:'dashboard'}">
       <LogoSvg alt="logo" />
-      <h1 v-if="showTitle">{{ title }}</h1>
+      <h1 v-if="showTitle">{{ $t('khmgr.name') }}</h1>
     </router-link>
   </div>
 </template>

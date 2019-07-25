@@ -12,11 +12,14 @@
        <a
         href="https://www.keephealthing.cn"
         target="_blank"
-      >健康护航首页</a> -->
+      >健康护航首页</a>-->
     </div>
     <div class="copyright">
       Copyright
-      <a-icon type="copyright" /> 2019-- <span></span> <span>  移动健康管理系统教育部工程研究中心 &cup; 健康未来</span>
+      <!-- <a-icon type="copyright" /> 2019-- <span></span> <span>  移动健康管理系统教育部工程研究中心 &cup; 健康未来</span> -->
+      <a-icon type="copyright" />2019--
+      <span></span>
+      <span>{{ $t('footer.name') }} &cup; {{ $t('footer.subName') }}</span>
     </div>
   </div>
 </template>

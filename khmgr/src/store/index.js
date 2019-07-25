@@ -14,23 +14,19 @@ export default new Vuex.Store({
     user,
     permission
   },
-  state: {
-
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  },
+  state: {},
+  mutations: {},
+  actions: {},
   getters,
-  plugins: [createPersistedState({
-    storage: window.localStorage,
-    reducer (val) {
-      return {
-        // 只储存state中的user
-        user: val.user
+  plugins: [
+    createPersistedState({
+      storage: window.localStorage,
+      reducer (val) {
+        return {
+          // 只储存state中的user
+          user: val.user
+        }
       }
-    }
-  })]
+    })
+  ]
 })

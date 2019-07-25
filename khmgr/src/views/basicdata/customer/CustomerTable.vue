@@ -98,6 +98,7 @@
           @click="() => handleView(record.userId)"
         >{{ text }}</a>
         <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+        <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
         <template slot="operation" slot-scope="text, record">
           <div class="editable-row-operations">
             <span slot="operation">
@@ -229,6 +230,16 @@ export default {
     }
   },
   methods: {
+    translateSex (key) {
+      switch (key) {
+        case 0:
+          return '男'
+        case 1:
+          return '女'
+        default:
+          return '未知'
+      }
+    },
     handleTableChange (pagination, filters, sorter) {
       console.log(pagination)
       const pager = {

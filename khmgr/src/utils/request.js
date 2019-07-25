@@ -7,15 +7,17 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 // 创建 axios 实例
 const service = axios.create({
-  // baseURL: 'http://yapi.sagaii.cn/mock/11', // /api base_url http://yapi.sagaii.cn/mock/11
   baseURL: 'http://172.31.214.104/khmsrv/', // /api base_url http://yapi.sagaii.cn/mock/11
   timeout: 6000 // 请求超时时间
 })
+
+axios.defaults.timeout = 6000
 
 const err = error => {
   if (error.response) {
     const data = error.response.data
     const token = Vue.ls.get(ACCESS_TOKEN)
+
     if (error.response.status === 403) {
       notification.error({
         message: 'Forbidden',
@@ -34,6 +36,11 @@ const err = error => {
           }, 1500)
         })
       }
+    }
+    if (error.response.status === 500) {
+      this.$route.push({
+        path: '/500'
+      })
     }
   }
   return Promise.reject(error)

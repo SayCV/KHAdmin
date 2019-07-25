@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="living-table-page">
+    <div class="aims-table-page">
       <div class="page-top">
         <div class="top-btns">
         </div>
@@ -13,8 +13,8 @@
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
-                <a-form-item label="电话">
-                  <a-input-number v-model="queryParam.phone" style="width: 100%" />
+                <a-form-item label="用户名">
+                  <a-input v-model="queryParam.userName" style="width: 100%" />
                 </a-form-item>
               </a-col>
               <a-col :md="8" :sm="24">
@@ -27,7 +27,7 @@
           </a-form>
         </div>
       </div>
-      <div class="living-table-container">
+      <div class="aims-table-container">
         <!-- 全选 -->
         <div style="margin-bottom: 16px">
           <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
@@ -94,13 +94,13 @@ const columns = [
     sorter: false
   },
   {
-    title: '电话',
+    title: '目标',
     align: 'center',
-    dataIndex: 'phone',
-    sorter: false
+    dataIndex: 'aims',
+    sorter: true
   },
   {
-    title: '创建时间',
+    title: '目标建立时间',
     align: 'center',
     dataIndex: 'createOn',
     sorter: true
@@ -114,8 +114,8 @@ const columns = [
 ]
 
 export default {
-  // 生活数据
-  name: 'LivingTable',
+  // 小目标
+  name: 'AimsTable',
   data () {
     return {
       // 高级搜索 展开/关闭
@@ -159,7 +159,8 @@ export default {
       console.log('params:', params)
       this.loading = true
       axios({
-        url: '/api/admin/customers',
+        // url: '/api/admin/customers',
+        url: '/api/aims',
         method: 'get'
       }).then(res => {
         console.log('res', res)
@@ -202,7 +203,7 @@ export default {
       console.log(' edit click! ', userId)
       this.$router.push({
         // path: '/basicdata/Healthmanager/info',
-        path: '/record/livingData/person',
+        path: '/record/aimsData/person',
         query: {
           userId: userId
         }
@@ -218,13 +219,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.living-table-page {
+.aims-table-page {
   .page-top {
-    .top-btns {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-    }
+
   }
 }
 </style>

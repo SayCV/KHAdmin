@@ -2,6 +2,7 @@ import Vue from 'vue'
 import { login, getInfo, logout } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
+import { loadLanguageAsync } from '@/lang'
 
 const user = {
   state: {
@@ -11,7 +12,8 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
+    lang: 'en-US'
   },
   mutations: {
     SET_TOKEN: (state, token) => {
@@ -32,12 +34,15 @@ const user = {
     },
     SET_USERID: (state, userId) => {
       state.userId = userId
+    },
+    SET_LANG: (state, lang) => {
+      state.lang = lang
     }
   },
   actions: {
     // 登录
     // selfAPI
-    Login ({ commit }, userInfo) {
+    Login ({ commit, dispatch }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo)
           .then(response => {
@@ -56,6 +61,8 @@ const user = {
             commit('SET_INFO', result.userInfo)
             // commit('SET_AVATAR', result.userInfo.avatar)
             commit('SET_AVATAR', result.userInfo.avatar)
+            // 设置界面语言
+            dispatch('SetLang', result.lang)
             // resolve()
             resolve(result)
           })
@@ -102,6 +109,15 @@ const user = {
           .catch(() => {
             resolve()
           })
+      })
+    },
+
+    // 设置界面语言
+    SetLang ({ commit }, lang) {
+      return new Promise(resolve => {
+        commit('SET_LANG', lang)
+        loadLanguageAsync(lang)
+        resolve()
       })
     }
   }
