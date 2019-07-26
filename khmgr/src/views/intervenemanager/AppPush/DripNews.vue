@@ -1,12 +1,7 @@
 <template>
   <a-card :bordered="false">
     <div class="newsPage">
-      <PageTitle
-        @toRefresh="fetch"
-        name="添加点滴"
-        linkTo="/intervenemanager/AppPush/add"
-        :isLoading="refresh"
-      ></PageTitle>
+      <PageTitle @toRefresh="fetch" name="添加点滴" :linkTo="addDripLink" :isLoading="refresh"></PageTitle>
       <div class="news-pagination" v-if="showPagination">
         <div class="pagination">
           <a-pagination
@@ -64,6 +59,7 @@ export default {
   components: { DripItem, Empty, PageTitle },
   data () {
     return {
+      addDripLink: '/intervenemanager/AppPush/add',
       refresh: false,
       NodripLists: false,
       dripLists: [],

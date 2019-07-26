@@ -96,7 +96,7 @@ import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   name: 'EditDrip',
-  components: { FooterToolBar, ButtonBack},
+  components: { FooterToolBar, ButtonBack },
   data () {
     return {
       newsId: this.$route.query.newsId, // 新闻id

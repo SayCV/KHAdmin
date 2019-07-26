@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import store from '@/store'
+
 import { VueAxios } from './axios'
 import notification from 'ant-design-vue/es/notification'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
@@ -38,7 +39,7 @@ const err = error => {
       }
     }
     if (error.response.status === 500) {
-      this.$route.push({
+      this.$router.push({
         path: '/500'
       })
     }

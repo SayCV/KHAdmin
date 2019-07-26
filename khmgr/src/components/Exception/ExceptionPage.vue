@@ -22,6 +22,7 @@
 
 <script>
 import types from './type'
+import { notFound } from '@/core/icons'
 
 export default {
   name: 'Exception',
@@ -33,7 +34,8 @@ export default {
   },
   data () {
     return {
-      imgUrl: 'https://weareblend.la/wp-content/themes/blend-wp-theme/images/404/earth.png?d4c3eb&d4c3eb',
+      // imgUrl: 'https://weareblend.la/wp-content/themes/blend-wp-theme/images/404/earth.png?d4c3eb&d4c3eb',
+      imgUrl: notFound,
       config: types
     }
   },
@@ -76,8 +78,8 @@ export default {
         justify-content: center;
         height: 240px;
         img {
-          height: 180px;
-          max-width: 180px;
+          height: 150px;
+          max-width: 150px;
           position: relative;
           animation: mymove 5s infinite alternate;
           animation-timing-function: ease-in-out;
@@ -128,7 +130,7 @@ export default {
           line-height: 45px;
           color: #000;
           background: #fff;
-          border: 1px solid rgba(255,255,255,0.9);
+          border: 1px solid rgba(255, 255, 255, 0.9);
         }
       }
     }

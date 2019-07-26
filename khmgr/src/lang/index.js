@@ -1,18 +1,19 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import enus from './locale/en-US'
+
+import zhcn from './locale/zh-CN'
 import axios from 'axios'
 
 Vue.use(VueI18n)
 
 const messages = {
-  'en-US': {
-    ...enus
+  'zh-CN': {
+    ...zhcn
   }
 }
 
 // 默认语言
-const defaultLanguage = 'zh-US'
+const defaultLanguage = 'zh-CN'
 
 const i18n = new VueI18n({
   locale: defaultLanguage,

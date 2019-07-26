@@ -116,6 +116,7 @@ const columns = [
 export default {
   // 小目标
   name: 'AimsTable',
+
   data () {
     return {
       // 高级搜索 展开/关闭
@@ -171,6 +172,10 @@ export default {
         this.loading = false
         this.data = res.list
         this.pagination = pagination
+      }).catch(err => {
+        if (err) {
+          console.log(err)
+        }
       })
     },
     start () {

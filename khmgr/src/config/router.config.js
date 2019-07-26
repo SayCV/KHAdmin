@@ -259,10 +259,32 @@ export const asyncRouterMap = [
         meta: { title: '干预管理', icon: 'profile', permission: ['profile'] },
         children: [
           {
-            path: '/intervenemanager/Healthgoals',
-            name: 'Healthgoals',
-            component: () => import('@/views/intervenemanager/Healthgoals/Healthgoals'),
-            meta: { title: '小目标设定策略', keepAlive: true, permission: ['profile'] }
+            path: '/intervenemanager/goalSet',
+            name: 'goalSet',
+            component: () => import('@/views/intervenemanager/goalSet/Index'),
+            meta: { title: '小目标设定策略', keepAlive: true, permission: ['profile'] },
+            redirect: '/intervenemanager/goalSet/list',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/intervenemanager/goalSet/list',
+                name: 'Healthgoals',
+                component: () => import('@/views/intervenemanager/goalSet/Healthgoals'),
+                meta: { title: '官方目标', keepAlive: true, hidden: true, permission: ['profile'] }
+              },
+              {
+                path: '/intervenemanager/goalSet/edit',
+                name: 'EditGoals',
+                component: () => import('@/views/intervenemanager/goalSet/EditGoals'),
+                meta: { title: '编辑目标', keepAlive: true, hidden: true, permission: ['profile'] }
+              },
+              {
+                path: '/intervenemanager/goalSet/add',
+                name: 'AddGoals',
+                component: () => import('@/views/intervenemanager/goalSet/AddGoals'),
+                meta: { title: '添加目标', keepAlive: true, hidden: true, permission: ['profile'] }
+              }
+            ]
           },
           {
             path: '/intervenemanager/Planandcourse',

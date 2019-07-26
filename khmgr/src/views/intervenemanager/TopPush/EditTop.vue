@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="true">
+  <a-card :bordered="false">
     <div class="create-container">
       <div class="create-top">
         <ButtonBack></ButtonBack>
@@ -35,7 +35,8 @@
               :label-col="{ span: 4 }"
               :wrapper-col="{ span: 16 }"
             >
-              <a-input v-decorator="[
+              <a-input
+                v-decorator="[
                   'author',
                   {rules: [{ required: true, message: 'Please input your author!' }], initialValue: data.author }
                 ]" />
@@ -290,7 +291,7 @@ export default {
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
     },
-    
+
     initFileList (data) {
       // 设置默认封面
       this.fileList = [{

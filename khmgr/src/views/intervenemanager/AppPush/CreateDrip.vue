@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card :bordered="true">
+    <a-card :bordered="false">
       <div class="create-container">
         <div class="create-top">
           <ButtonBack></ButtonBack>

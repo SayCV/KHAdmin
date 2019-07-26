@@ -2,8 +2,7 @@
   <div>
     <div class="living-table-page">
       <div class="page-top">
-        <div class="top-btns">
-        </div>
+        <div class="top-btns"></div>
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
             <a-row :gutter="48">

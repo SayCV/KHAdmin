@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-card :bordered="true">
+    <a-card :bordered="false">
       <div class="create-container">
         <div class="create-top">
           <ButtonBack></ButtonBack>
@@ -36,7 +36,8 @@
                 :label-col="{ span: 4 }"
                 :wrapper-col="{ span: 16 }"
               >
-                <a-input v-decorator="[
+                <a-input
+                  v-decorator="[
                     'author',
                     {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
                   ]" />

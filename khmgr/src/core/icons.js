@@ -7,5 +7,7 @@
  * 所有图标均从这里加载，方便管理
  */
 import bxAnaalyse from '@/assets/icons/bx-analyse.svg?inline' // path to your '*.svg?inline' file.
+import notFound from '@/assets/errorPage/earth.png'
+import notFoundFly from '@/assets/errorPage/fly.png'
 
-export { bxAnaalyse }
+export { bxAnaalyse, notFound, notFoundFly }
