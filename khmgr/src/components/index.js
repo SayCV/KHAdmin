@@ -26,13 +26,15 @@ import IconSelector from '@/components/IconSelector'
 import ExceptionPage from '@/components/Exception'
 
 // self components
-import TopItem from '@/components/News/TopItem'
-import DripItem from '@/components/News/DripItem'
+import TopItem from '@/components/Items/TopItem'
+import DripItem from '@/components/Items/DripItem'
 import Empty from '@/components/Empty/Empty'
 import ButtonRefresh from '@/components/Button/ButtonRefresh'
 import ButtonBack from '@/components/Button/ButtonBack'
 import PageTitle from '@/components/PageHeader/PageTitle'
 import PageName from '@/components/PageHeader/PageName'
+import AimItem from '@/components/Items/AimItem'
+import AdItem from '@/components/Items/AdItem'
 
 export {
   AvatarList,
@@ -67,5 +69,7 @@ export {
   ButtonRefresh,
   PageTitle,
   PageName,
-  ButtonBack
+  ButtonBack,
+  AimItem,
+  AdItem
 }

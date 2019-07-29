@@ -92,7 +92,7 @@ import { axios } from '@/utils/request'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
-import ButtonBack from '@/components/Button/ButtonBack'
+import { ButtonBack } from '@/components'
 
 export default {
   name: 'EditDrip',

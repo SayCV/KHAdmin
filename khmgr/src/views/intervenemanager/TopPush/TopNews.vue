@@ -53,10 +53,8 @@
 </template>
 
 <script>
-import TopItem from '@/components/News/TopItem'
-import Empty from '@/components/Empty/Empty'
-import PageTitle from '@/components/PageHeader/PageTitle'
 
+import { TopItem, Empty, PageTitle } from '@/components'
 import { axios } from '@/utils/request'
 
 export default {

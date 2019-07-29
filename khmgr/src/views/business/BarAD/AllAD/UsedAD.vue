@@ -57,9 +57,7 @@
 <script>
 import moment from 'moment'
 import { axios } from '@/utils/request'
-import AdItem from '@/components/AdItems/AdItem'
-import Empty from '@/components/Empty/Empty'
-import ButtonRefresh from '@/components/Button/ButtonRefresh'
+import { ButtonRefresh, Empty, AdItem } from '@/components'
 
 export default {
   name: 'UsedAD',
@@ -134,14 +132,6 @@ export default {
       }).finally(
         console.log('data loading done')
       )
-    },
-
-    handleToAddAD () {
-      // 点击行进入add页
-      this.$router.push({
-        path: '/business/BarAD/addAD'
-        // name: 'addAD'
-      })
     },
 
     handleEdit (item) {

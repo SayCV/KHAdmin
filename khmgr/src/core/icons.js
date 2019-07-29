@@ -9,5 +9,6 @@
 import bxAnaalyse from '@/assets/icons/bx-analyse.svg?inline' // path to your '*.svg?inline' file.
 import notFound from '@/assets/errorPage/earth.png'
 import notFoundFly from '@/assets/errorPage/fly.png'
+import imgFalse from '@/assets/icons/imgFalse.svg'
 
-export { bxAnaalyse, notFound, notFoundFly }
+export { bxAnaalyse, notFound, notFoundFly, imgFalse }

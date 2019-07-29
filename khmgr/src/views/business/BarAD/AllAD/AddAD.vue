@@ -107,8 +107,7 @@
 
 import { axios } from '@/utils/request'
 import FooterToolBar from '@/components/FooterToolbar'
-import PageName from '@/components/PageHeader/PageName'
-import ButtonBack from '@/components/Button/ButtonBack'
+import { PageName, ButtonBack } from '@/components'
 
 export default {
   name: 'AddAD',

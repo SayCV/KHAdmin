@@ -48,9 +48,7 @@
 </template>
 
 <script>
-import DripItem from '@/components/News/DripItem'
-import Empty from '@/components/Empty/Empty'
-import PageTitle from '@/components/PageHeader/PageTitle'
+import { DripItem, Empty, PageTitle } from '@/components'
 
 import { axios } from '@/utils/request'
 

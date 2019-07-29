@@ -1,7 +1,7 @@
 <template>
   <div class="goalPage">
     <div class="page-top">
-      <PageTitle name="新建目标" :linkTo="addGoalLink" :isLoading="dataIsLoading"></PageTitle>
+      <PageTitle name="新建目标" @toRefresh="fetch" :linkTo="addGoalLink" :isLoading="dataIsLoading"></PageTitle>
     </div>
     <div class="pagination"></div>
     <div class="page-content">
@@ -14,153 +14,125 @@
         </div>
         <div class="goal-container" v-else>
           <!-- 目标组件 -->
-          <div class="aim-item">
-            <div class="aim-inner">
-              <div class="aim-top">
-                <div class="img">
-                  <img
-                    src="http://172.31.214.104/khmsrv/api/resources/282967f73b0f40e19808ef6644b38eb0"
-                    alt="img"
-                  />
-                </div>
-                <div class="aim-info">
-                  <div class="label">
-                    <div class="icon">
-                      <a-icon type="github" />
-                    </div>
-                    <div class="title">Title Name</div>
-                  </div>
-                  <p
-                    class="desc"
-                  >Lorem ipsum dolor sit amet consectetur adipisicing elit. Modi unde saepe explicabo voluptatibus, provident fugiat ea vel optio quod natus tempora doloribus. Veniam earum, quod assumenda molestias eius in culpa.</p>
-                  <div class="remind">
-                    <div class="label">提醒时间&nbsp;:</div>
-                    <a-tag>20:00</a-tag>
-                  </div>
-                </div>
-              </div>
-              <div class="aim-content">
-                <div class="repeat-time">
-                  <div class="week" v-for="week in weeks" :key="week">
-                    <a-tag color="blue">{{ week }}</a-tag>
-                  </div>
-                </div>
-                <div class="aim-btns">
-                  <a-button-group>
-                    <a-button>编辑</a-button>
-                    <a-button type="danger">删除</a-button>
-                  </a-button-group>
-                </div>
-              </div>
-            </div>
+          <div v-for="item in goalList" :key="item.aimId">
+            <AimItem :aimItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete(item)"></AimItem>
           </div>
+          <!-- 目标组件 -->
         </div>
       </div>
     </div>
-    <div class="pagination-botton"></div>
+    <div class="pagination-bottom"></div>
   </div>
 </template>
 
 <script>
-import PageTitle from '@/components/PageHeader/PageTitle'
-import Empty from '@//components/Empty/Empty'
+import { PageTitle, Empty, AimItem } from '@/components'
+import { axios } from '@/utils/request'
 
 export default {
   name: 'Healthgoals',
-  components: { PageTitle, Empty },
+  components: { PageTitle, Empty, AimItem },
   data () {
     return {
       addGoalLink: '/intervenemanager/goalSet/add',
       dataIsLoading: false,
       noDataList: false,
-      goalList: [],
-      weeks: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+      goalList: []
     }
   },
   mounted () {
-
+    this.fetch()
   },
   methods: {
-
+    // 获取数据
+    fetch (params = {}) {
+      console.log('yahaha')
+      this.dataIsLoading = true
+      axios({
+        // url: `/api/admin/news/?pageSize=${this.pageSize}&pageNum=${this.current}`,
+        url: '/api/intervene/aims/', // mock
+        method: 'get',
+        params: {
+          ...params
+        }
+      }).then(res => {
+        console.log('获取点滴列表', res)
+        // 后台数据
+        if (res) {
+          this.noDataList = false
+          this.goalList = res.result.list
+        } else {
+          this.noDataList = true
+          this.goalList = []
+        }
+        this.dataIsLoading = false
+      }).catch(err => {
+        if (err) {
+          this.noDataList = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
+        }
+        this.dataIsLoading = false
+      })
+    },
+    handleEdit (item) {
+      console.log('click edit ', item.aimId)
+      // 点击行进入edit页
+      this.$router.push({
+        name: 'EditGoals',
+        query: {
+          aimId: item.aimId,
+          page: this.current,
+          data: item
+        }
+      })
+    },
+    handleDelete (item) {
+      console.log('click delete ', item.aimId)
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.aim-item {
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  width: 400px;
-  padding: 10px;
-  .aim-inner {
-    overflow: hidden;
-    .aim-top {
-      display: flex;
-      .img {
-        img {
-          width: 120px;
-          height: auto;
-        }
-      }
-      .aim-info {
-        flex: 1;
-        padding-left: 16px;
-        .label {
-          display: flex;
-          .icon {
-            margin-right: 8px;
-            font-size: 18px;
-          }
-          .title {
-            max-width: 300px;
-            font-size: 18px;
-            color: rgba(0, 0, 0, 0.85);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-        .desc {
-          margin-top: 4px;
-          min-height: 40px;
-          font-size: 15px;
-          color: rgba(0, 0, 0, 0.75);
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-          overflow: hidden;
-        }
-        .remind {
-          display: flex;
-          .label {
-            color: rgba(0, 0, 0, 0.85);
-            margin-right: 8px;
-          }
-        }
-      }
+.goalPage {
+  width: 100%;
+  min-height: calc(100vh - 280px);
+  .pagination {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 10px;
+    height: 32px;
+  }
+
+  .pagination-bottom {
+    display: flex;
+    justify-content: center;
+    // margin-top: 10px;
+  }
+  .page-content {
+    margin-top: 10px;
+    position: relative;
+    min-height: 550px;
+    .spin {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
-    .aim-content {
-      margin: 10px 0;
-      display: flex;
-      .repeat-time {
-        flex: 1;
-        border: 1px solid #e8e8e8;
-        border-radius: 4px;
-        background-color: #fafafa;
-        padding: 10px;
-        padding-bottom: 0px;
+    .data-loading {
+      .no-goalList {
+        width: 100%;
+        height: calc(100vh - 450px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .goal-container {
         display: flex;
         flex-wrap: wrap;
-        .week {
-          margin-bottom: 8px;
-        }
-      }
-      .aim-btns {
-        margin-left: 8px;
-        width: 130px;
-        display: flex;
-        justify-content: flex-end;
-        align-items: flex-end;
       }
     }
   }
