@@ -35,6 +35,7 @@ import PageTitle from '@/components/PageHeader/PageTitle'
 import PageName from '@/components/PageHeader/PageName'
 import AimItem from '@/components/Items/AimItem'
 import AdItem from '@/components/Items/AdItem'
+import VideoItem from '@/components/Items/VideoItem'
 
 export {
   AvatarList,
@@ -71,5 +72,6 @@ export {
   PageName,
   ButtonBack,
   AimItem,
-  AdItem
+  AdItem,
+  VideoItem
 }

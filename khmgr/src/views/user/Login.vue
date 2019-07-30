@@ -2,10 +2,7 @@
   <div class="main">
     <div class="top">
       <div class="header">
-        <a
-          href="/"
-          style
-        >
+        <a href="/" style>
           <span class="title">欢迎使用健康护航管理控制台</span>
         </a>
       </div>
@@ -13,10 +10,7 @@
     </div>
     <div class="login-pic">
       <div class="login-pic-child">
-        <img
-          src="./../../assets/login_pic.png"
-          alt
-        >
+        <img src="./../../assets/login_pic.png" alt />
       </div>
     </div>
     <a-form
@@ -31,11 +25,7 @@
         :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
         @change="handleTabClick"
       >
-        <a-tab-pane
-          key="tab1"
-          tab="账号密码登录"
-          class="input-part"
-        >
+        <a-tab-pane key="tab1" tab="账号密码登录" class="input-part">
           <a-form-item>
             <a-input
               size="large"
@@ -46,11 +36,7 @@
                 {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
-              <a-icon
-                slot="prefix"
-                type="user"
-                :style="{ color: 'rgba(0,0,0,.25)' }"
-              />
+              <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
 
@@ -65,18 +51,11 @@
                 {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
               ]"
             >
-              <a-icon
-                slot="prefix"
-                type="lock"
-                :style="{ color: 'rgba(0,0,0,.25)' }"
-              />
+              <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
         </a-tab-pane>
-        <a-tab-pane
-          key="tab2"
-          tab="手机号登录"
-        >
+        <a-tab-pane key="tab2" tab="手机号登录">
           <a-form-item>
             <a-input
               size="large"
@@ -84,19 +63,12 @@
               placeholder="手机号"
               v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]"
             >
-              <a-icon
-                slot="prefix"
-                type="mobile"
-                :style="{ color: 'rgba(0,0,0,.25)' }"
-              />
+              <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
           </a-form-item>
 
           <a-row :gutter="16">
-            <a-col
-              class="gutter-row"
-              :span="16"
-            >
+            <a-col class="gutter-row" :span="16">
               <a-form-item>
                 <a-input
                   size="large"
@@ -104,18 +76,11 @@
                   placeholder="验证码"
                   v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"
                 >
-                  <a-icon
-                    slot="prefix"
-                    type="mail"
-                    :style="{ color: 'rgba(0,0,0,.25)' }"
-                  />
+                  <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </a-input>
               </a-form-item>
             </a-col>
-            <a-col
-              class="gutter-row"
-              :span="8"
-            >
+            <a-col class="gutter-row" :span="8">
               <a-button
                 class="getCaptcha"
                 tabindex="-1"
@@ -138,10 +103,7 @@
         >确定</a-button>
       </a-form-item>
 
-      <a-form-item
-        class="label-row"
-        style="margin-bottom: 6px;"
-      >
+      <a-form-item class="label-row" style="margin-bottom: 6px;">
         <!-- <a-checkbox v-decorator="['rememberMe']">自动登录</a-checkbox> -->
         <router-link
           :to="{ name: 'login' }"
@@ -152,7 +114,7 @@
           class="register"
           :to="{ name: 'register' }"
         >注册账户</router-link>
-        <span style="float: right; margin-right:0.5rem;">还没有账号?</span> -->
+        <span style="float: right; margin-right:0.5rem;">还没有账号?</span>-->
       </a-form-item>
 
       <div class="user-login-other">
@@ -160,17 +122,10 @@
         <div class="middle-child">
           <div class="middle-a">
             <a>
-              <a-icon
-                class="item-icon"
-                type="alipay-circle"
-                style="margin-right:0.5rem;"
-              ></a-icon>
+              <a-icon class="item-icon" type="alipay-circle" style="margin-right:0.5rem;"></a-icon>
             </a>
             <a>
-              <a-icon
-                class="item-icon"
-                type="wechat"
-              ></a-icon>
+              <a-icon class="item-icon" type="wechat"></a-icon>
             </a>
           </div>
         </div>
@@ -270,9 +225,7 @@ export default {
           //   this.loginSuccess(res)
           // }
           Login(loginParams)
-            .then(res => {
-              this.loginSuccess(res)
-            })
+            .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))
             .finally(() => {
               state.loginBtn = false
@@ -333,10 +286,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      console.log('loginSuccess')
-      console.log(res)
       this.$router.push({ name: 'index' })
-
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({
@@ -347,9 +297,6 @@ export default {
     },
 
     requestFailed (err) {
-      console.log('requestFailed')
-      console.log(err)
-
       this.$notification['error']({
         message: '错误',
         description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',

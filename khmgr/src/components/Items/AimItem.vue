@@ -115,7 +115,8 @@ export default {
 .aim-item {
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-  width: 475px;
+  max-width: 575px;
+  min-width: 475px;
   padding: 10px;
   margin-right: 8px;
   margin-bottom: 8px;
@@ -126,8 +127,8 @@ export default {
       .img {
         overflow: hidden;
         img {
-          width: 120px;
-          height: 120px;
+          width: 140px;
+          height: 110px;
         }
       }
       .aim-info {
@@ -141,7 +142,7 @@ export default {
           justify-content: space-between;
           .title {
             max-width: 150px;
-            font-size: 18px;
+            font-size: 16px;
             color: rgba(0, 0, 0, 0.85);
             white-space: nowrap;
             overflow: hidden;
@@ -153,14 +154,14 @@ export default {
           align-items: center;
           .icon {
             margin-right: 8px;
-            font-size: 18px;
+
             img {
-              width: 20px;
-              height: 20px;
+              width: 18px;
+              height: 18px;
             }
           }
           .label {
-            color: rgba(0, 0, 0, 0.85);
+            color: rgba(0, 0, 0, 0.75);
             margin-right: 8px;
             .ant-tag {
               margin-left: 8px;
@@ -168,9 +169,9 @@ export default {
           }
         }
         .desc {
-          min-height: 40px;
-          font-size: 15px;
-          color: rgba(0, 0, 0, 0.75);
+          min-height: 30px;
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.7);
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;

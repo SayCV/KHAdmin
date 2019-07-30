@@ -89,11 +89,10 @@ export default {
 <style lang="less" scoped>
 .app-list {
   width: 940px;
-  height: 172px;
   overflow: hidden;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
-  padding: 20px;
+  padding: 12px 18px;
   display: flex;
   transition: all 0.3s ease;
   margin-bottom: 10px;
@@ -103,11 +102,9 @@ export default {
       overflow: hidden;
     }
     .list-info-img {
-      width: 180px;
-      height: 130px;
-      min-height: 130px;
-      border: 1px solid #d9d9d9;
-      border-radius: 2px;
+      width: 160px;
+      height: 110px;
+      min-height: 115px;
       background-position: center center;
       background-size: cover;
       transition: all 0.3s ease-in-out;
@@ -124,7 +121,7 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     .content-name {
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 10px;
       color: rgba(0, 0, 0, 0.85);
       padding-right: 30px;
@@ -150,10 +147,8 @@ export default {
     .content-desc {
       display: flex;
       flex-direction: row;
-      // justify-content: space-around;
       align-items: center;
       width: 220px;
-      padding: 10px 0;
       .desc-views {
         margin-left: 8px;
       }

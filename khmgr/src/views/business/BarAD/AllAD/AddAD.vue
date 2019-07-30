@@ -43,7 +43,7 @@
               </div>
               <a-upload
                 accept="image/*"
-                action="http://172.31.214.104/khmsrv/api/resources"
+                :action="upLoadAddress"
                 listType="picture-card"
                 :fileList="fileList"
                 @preview="handlePreview"
@@ -108,12 +108,14 @@
 import { axios } from '@/utils/request'
 import FooterToolBar from '@/components/FooterToolbar'
 import { PageName, ButtonBack } from '@/components'
+import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
 export default {
   name: 'AddAD',
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
+      upLoadAddress: upLoadAddress,
       disabled: false,
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
@@ -155,7 +157,7 @@ export default {
             const rangeValue = fieldsValue['range-picker']
             const values = {
               ...fieldsValue,
-              'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
+              'imageUrl': this.upLoadAddress + this.fileList[0].response,
               'startDate': rangeValue[0].format('YYYY-MM-DD'),
               'endDate': rangeValue[1].format('YYYY-MM-DD')
             }

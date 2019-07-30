@@ -1,55 +1,53 @@
 <template>
-  <a-card :bordered="false">
-    <div class="newsPage">
-      <PageTitle
-        @toRefresh="fetch"
-        name="添加头条"
-        linkTo="/intervenemanager/TopPush/add"
-        :isLoading="refresh"
-      ></PageTitle>
-      <div class="news-pagination" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
-        </div>
+  <div class="newsPage">
+    <PageTitle
+      @toRefresh="fetch"
+      name="添加头条"
+      linkTo="/intervenemanager/TopPush/add"
+      :isLoading="refresh"
+    ></PageTitle>
+    <div class="news-pagination" v-if="showPagination">
+      <div class="pagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
       </div>
-      <div class="news-container">
-        <div class="spin" v-if="refresh">
-          <a-spin></a-spin>
-        </div>
-        <div class="data-loading">
-          <div class="no-newsLists" v-if="NotopLists">
-            <Empty></Empty>
-          </div>
-          <div class="news-main" v-else>
-            <div v-for="Item in topLists" :key="Item.newsId">
-              <TopItem
-                ref="top"
-                :topItem="Item"
-                @update-topList="fetch()"
-                @toEdit="handleEdit"
-                @toDelete="handleDelete"
-              ></TopItem>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="news-container">
+      <div class="spin" v-if="refresh">
+        <a-spin></a-spin>
       </div>
-      <div class="news-pagination-bottom" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
+      <div class="data-loading">
+        <div class="no-newsLists" v-if="NotopLists">
+          <Empty></Empty>
+        </div>
+        <div class="news-main" v-else>
+          <div v-for="Item in topLists" :key="Item.newsId">
+            <TopItem
+              ref="top"
+              :topItem="Item"
+              @update-topList="fetch()"
+              @toEdit="handleEdit"
+              @toDelete="handleDelete"
+            ></TopItem>
+          </div>
         </div>
       </div>
     </div>
-  </a-card>
+    <div class="news-pagination-bottom" v-if="showPagination">
+      <div class="pagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -79,16 +77,6 @@ export default {
     if (this.$route.query.page) {
       this.current = this.$route.query.page
     } this.fetch()
-  },
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === '/intervenemanager/TopPush/list') {
-        console.log(' 进入头条列表页面')
-        if (this.$route.query.page) {
-          this.current = this.$route.query.page
-        } this.fetch()
-      }
-    }
   },
   computed: {
     showPagination () {
@@ -129,9 +117,7 @@ export default {
           })
         }
         this.refresh = false
-      }).finally(
-        console.log('data loading done')
-      )
+      })
     },
     handleEdit (newsId) {
       // 点击行进入edit页

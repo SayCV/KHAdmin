@@ -14,7 +14,7 @@
         </div>
         <div class="goal-container" v-else>
           <!-- 目标组件 -->
-          <div v-for="item in goalList" :key="item.aimId">
+          <div class="item" v-for="item in goalList" :key="item.aimId">
             <AimItem :aimItem="item" @toEdit="handleEdit(item)" @toDelete="handleDelete(item)"></AimItem>
           </div>
           <!-- 目标组件 -->
@@ -104,7 +104,6 @@ export default {
     display: flex;
     justify-content: flex-start;
     margin-top: 10px;
-    height: 32px;
   }
 
   .pagination-bottom {
@@ -133,6 +132,9 @@ export default {
       .goal-container {
         display: flex;
         flex-wrap: wrap;
+        .item {
+          // width: 25%;
+        }
       }
     }
   }

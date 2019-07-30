@@ -44,7 +44,7 @@
               </div>
               <a-upload
                 accept="image/*"
-                action="http://172.31.214.104/khmsrv/api/resources"
+                :action="upLoadAddress"
                 listType="picture-card"
                 :fileList="fileList"
                 @preview="handlePreview"
@@ -110,12 +110,14 @@ import moment from 'moment'
 import FooterToolBar from '@/components/FooterToolbar'
 import PageName from '@/components/PageHeader/PageName'
 import ButtonBack from '@/components/Button/ButtonBack'
+import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
 export default {
   name: 'EditAD',
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
+      upLoadAddress: upLoadAddress,
       dateFormat: 'YYYY-MM-DD',
       disabled: false,
       formLayout: 'horizontal',
@@ -132,7 +134,7 @@ export default {
   },
   watch: {
     '$route.path' (to, from) {
-      if (to === '/business/BarAD/editAD') {
+      if (to === this.$route.path) {
         console.log('进入广告编辑页面', to)
         this.adId = this.$route.query.adId
         this.data = this.$route.query.data
@@ -195,7 +197,7 @@ export default {
               this.cover = this.fileList[0].url
             } else {
               this.cover = null
-              this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+              this.cover = this.upLoadAddress + this.fileList[0].response
             }
             const rangeValue = fieldsValue['range-picker']
             const values = {

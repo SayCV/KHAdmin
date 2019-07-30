@@ -1,9 +1,7 @@
 <template>
-  <div class="page-header-index-wide">
-    <a-card>
-      <route-view></route-view>
-    </a-card>
-  </div>
+  <a-card :bordered="false">
+    <route-view></route-view>
+  </a-card>
 </template>
 
 <script>

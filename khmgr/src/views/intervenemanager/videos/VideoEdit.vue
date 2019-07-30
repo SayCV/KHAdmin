@@ -138,7 +138,7 @@ export default {
   },
   watch: {
     '$route.path' (to, from) {
-      if (to === '/intervenemanager/videos/videoedit') {
+      if (to === this.$route.path) {
         console.log('进入新闻编辑页面', to)
 
         this.getFormData()

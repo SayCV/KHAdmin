@@ -75,6 +75,15 @@ const aims = () => {
         reminderTime: '19:23',
         imgUrl: 'https://picsum.photos/120/121',
         arr: [{ week: 0 }, { week: 1 }, { week: 2 }, { week: 3 }, { week: 4 }, { week: 5 }]
+      },
+      {
+        aimId: 4,
+        title: '减脂',
+        desc: '体脂率要在三个月控制到17.5%',
+        icon: 'http://172.31.214.104/khmsrv/api/resources/4b574ef2cb914693a35cd3873fb7142c',
+        reminderTime: '9:00',
+        imgUrl: 'https://picsum.photos/121/121',
+        arr: [{ week: 0 }, { week: 1 }, { week: 2 }, { week: 3 }, { week: 4 }, { week: 5 }]
       }
     ]
   })

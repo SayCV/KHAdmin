@@ -43,7 +43,7 @@
               name="file"
               :fileList="videoList"
               :disabled="disabled"
-              action="http://172.31.214.104/khmsrv/api/resources"
+              :action="upLoadAddress"
               listType="text"
               @change="handleVideoChange"
             >
@@ -111,12 +111,14 @@ import { axios } from '@/utils/request'
 import FooterToolBar from '@/components/FooterToolbar'
 import PageName from '@/components/PageHeader/PageName'
 import ButtonBack from '@/components/Button/ButtonBack'
+import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
 export default {
   name: 'VideoPush',
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
+      upLoadAddress: upLoadAddress,
       selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
       options: [
         { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
@@ -135,7 +137,7 @@ export default {
   },
   watch: {
     '$route.path': function (to, from) {
-      if (to === '/intervenemanager/videos/videopush') {
+      if (to === this.$route.path) {
         console.log('再次进入新建video页且清空表单')
         this.clearFormData()
       }
@@ -192,8 +194,8 @@ export default {
             // 追加表单字段
             values = {
               ...values,
-              'imageUrl': `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`,
-              'videoUrl': `http://172.31.214.104/khmsrv/api/resources/${this.videoList[0].response}`,
+              'imageUrl': this.upLoadAddress + this.fileList[0].response,
+              'videoUrl': this.upLoadAddress + this.videoList[0].response,
               'pubType': this.selected
             }
             console.log('Received values of form: ', values)

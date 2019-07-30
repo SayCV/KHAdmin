@@ -1,50 +1,42 @@
 <template>
-  <a-card :bordered="false">
-    <div class="newsPage">
-      <PageTitle @toRefresh="fetch" name="添加点滴" :linkTo="addDripLink" :isLoading="refresh"></PageTitle>
-      <div class="news-pagination" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
-        </div>
+  <div class="newsPage">
+    <PageTitle @toRefresh="fetch" name="添加点滴" :linkTo="addDripLink" :isLoading="refresh"></PageTitle>
+    <div class="news-pagination" v-if="showPagination">
+      <div class="pagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
       </div>
-      <div class="news-container">
-        <div class="spin" v-if="refresh">
-          <a-spin></a-spin>
-        </div>
-        <div class="data-loading" v-else>
-          <div class="no-newsLists" v-if="NodripLists">
-            <Empty></Empty>
-          </div>
-          <div class="news-main" v-else>
-            <div v-for="Item in dripLists" :key="Item.newsId">
-              <DripItem
-                ref="drip"
-                :dripItem="Item"
-                @update-dripList="fetch()"
-                @toEdit="handleEdit"
-                @toDelete="handleDelete"
-              ></DripItem>
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="news-container">
+      <div class="spin" v-if="refresh">
+        <a-spin></a-spin>
       </div>
-      <div class="news-pagination-bottom" v-if="showPagination">
-        <div class="pagination">
-          <a-pagination
-            @change="handlePageChange"
-            v-model="current"
-            :pageSize="pageSize"
-            :total="totalCount"
-          />
+      <div class="data-loading" v-else>
+        <div class="no-newsLists" v-if="NodripLists">
+          <Empty></Empty>
+        </div>
+        <div class="news-main" v-else>
+          <div v-for="Item in dripLists" :key="Item.newsId">
+            <DripItem :dripItem="Item" @toEdit="handleEdit" @toDelete="handleDelete"></DripItem>
+          </div>
         </div>
       </div>
     </div>
-  </a-card>
+    <div class="news-pagination-bottom" v-if="showPagination">
+      <div class="pagination">
+        <a-pagination
+          @change="handlePageChange"
+          v-model="current"
+          :pageSize="pageSize"
+          :total="totalCount"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -74,16 +66,6 @@ export default {
     if (this.$route.query.page) {
       this.current = this.$route.query.page
     } this.fetch()
-  },
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === '/intervenemanager/AppPush/list') {
-        console.log(' 进入点滴列表页面')
-        if (this.$route.query.page) {
-          this.current = this.$route.query.page
-        } this.fetch()
-      }
-    }
   },
   computed: {
     showPagination () {

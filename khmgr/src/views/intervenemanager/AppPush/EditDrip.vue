@@ -1,90 +1,88 @@
 <template>
-  <a-card :bordered="true">
-    <div class="create-container">
-      <div class="create-top">
-        <ButtonBack></ButtonBack>
-      </div>
-      <div class="create-main">
-        <a-form :form="form" @submit="handleSubmit">
-          <div class="main-basic">
-            <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-              <a-input
-                v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]"
-              />
-            </a-form-item>
-            <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-              <a-textarea
-                rows="4"
-                v-decorator="[
-                  'summary',
-                  {rules: [{ required: true, message: '请填写摘要！' }],initialValue: data.summary}
-                ]"
-              />
-            </a-form-item>
-            <a-form-item label="作者" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-              <a-input
-                v-decorator="[
-                  'author',
-                  {rules: [{ required: true, message: 'Please input your author!' }], initialValue: data.author }
-                ]"
-              />
-            </a-form-item>
-            <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-              <div class="clearfix">
-                <a-upload
-                  action="http://172.31.214.104/khmsrv/api/resources"
-                  listType="picture-card"
-                  :fileList="fileList"
-                  @preview="handlePreview"
-                  @change="imgHandleChange"
-                  :beforeUpload="beforeUpload"
-                >
-                  <div v-if="fileList.length < 1">
-                    <a-icon type="plus" />
-                    <div class="ant-upload-text">上传视频封面</div>
-                  </div>
-                </a-upload>
-                <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                  <img alt="example" style="width: 100%" :src="previewImage" />
-                </a-modal>
-              </div>
-            </a-form-item>
-          </div>
-          <div class="main-content">
-            <a-form-item>
-              <div id="main" ref="myEditor">
-                <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
-              </div>
-            </a-form-item>
-          </div>
-          <!-- fixed footer toolbar -->
-          <footer-tool-bar>
-            <div>
-              <a-button type="primary" html-type="submit">提交</a-button>
-              <a-modal
-                :title="ModalTitle"
-                :visible="visible"
-                @ok="handleOk"
-                :confirmLoading="confirmLoading"
-                @cancel="handleCancel"
+  <div class="create-container">
+    <div class="create-top">
+      <ButtonBack></ButtonBack>
+    </div>
+    <div class="create-main">
+      <a-form :form="form" @submit="handleSubmit">
+        <div class="main-basic">
+          <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-input
+              v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]"
+            />
+          </a-form-item>
+          <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-textarea
+              rows="4"
+              v-decorator="[
+                'summary',
+                {rules: [{ required: true, message: '请填写摘要！' }],initialValue: data.summary}
+              ]"
+            />
+          </a-form-item>
+          <a-form-item label="作者" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-input
+              v-decorator="[
+                'author',
+                {rules: [{ required: true, message: 'Please input your author!' }], initialValue: data.author }
+              ]"
+            />
+          </a-form-item>
+          <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <div class="clearfix">
+              <a-upload
+                :action="upLoadAddress"
+                listType="picture-card"
+                :fileList="fileList"
+                @preview="handlePreview"
+                @change="imgHandleChange"
+                :beforeUpload="beforeUpload"
               >
-                <div class="model-content">
-                  <div class="title">{{ ModalText.title }}</div>
-                  <div class="desc">
-                    <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
-                    <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
-                  </div>
-                  <div class="content">
-                    <div v-html="previewMdHtml"></div>
-                  </div>
+                <div v-if="fileList.length < 1">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">上传视频封面</div>
                 </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
               </a-modal>
             </div>
-          </footer-tool-bar>
-        </a-form>
-      </div>
+          </a-form-item>
+        </div>
+        <div class="main-content">
+          <a-form-item>
+            <div id="main" ref="myEditor">
+              <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
+            </div>
+          </a-form-item>
+        </div>
+        <!-- fixed footer toolbar -->
+        <footer-tool-bar>
+          <div>
+            <a-button type="primary" html-type="submit">提交</a-button>
+            <a-modal
+              :title="ModalTitle"
+              :visible="visible"
+              @ok="handleOk"
+              :confirmLoading="confirmLoading"
+              @cancel="handleCancel"
+            >
+              <div class="model-content">
+                <div class="title">{{ ModalText.title }}</div>
+                <div class="desc">
+                  <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
+                  <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
+                </div>
+                <div class="content">
+                  <div v-html="previewMdHtml"></div>
+                </div>
+              </div>
+            </a-modal>
+          </div>
+        </footer-tool-bar>
+      </a-form>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
@@ -93,12 +91,14 @@ import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
 import { ButtonBack } from '@/components'
+import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
 export default {
   name: 'EditDrip',
   components: { FooterToolBar, ButtonBack },
   data () {
     return {
+      upLoadAddress: upLoadAddress, // 上传资源地址
       newsId: this.$route.query.newsId, // 新闻id
       data: {}, // 进入编辑页面填充表单的数据
       previewMdHtml: null, // 预览markdown的语法生成的html
@@ -117,7 +117,7 @@ export default {
   },
   watch: {
     '$route.path' (to, from) {
-      if (to === '/intervenemanager/AppPush/edit') {
+      if (to === this.$route.path) {
         console.log('进入点滴编辑页面', to)
         this.newsId = this.$route.query.newsId
         // this.data = this.$route.query.data
@@ -151,7 +151,7 @@ export default {
               this.cover = this.fileList[0].url
             } else {
               this.cover = null
-              this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+              this.cover = this.upLoadAddress + this.fileList[0].response
             }
             // $set给post的表单json数据追加字段
             values = {

@@ -1,129 +1,88 @@
 <template>
-  <div>
-    <a-card :bordered="false">
-      <div class="create-container">
-        <div class="create-top">
-          <ButtonBack></ButtonBack>
+  <div class="create-container">
+    <div class="create-top">
+      <ButtonBack></ButtonBack>
+    </div>
+    <div class="create-main">
+      <a-form :form="form" @submit="handleSubmit">
+        <div class="main-basic">
+          <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-input
+              v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]"
+            />
+          </a-form-item>
+          <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-textarea
+              rows="4"
+              v-decorator="[
+                'summary',
+                {rules: [{ required: true, message: '请填写摘要' }]}
+              ]"
+            />
+          </a-form-item>
+          <a-form-item label="作者" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <a-input
+              v-decorator="[
+                'author',
+                {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
+              ]"
+            />
+          </a-form-item>
+          <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+            <div class="clearfix">
+              <a-upload
+                accept="image/*"
+                :action="upLoadAddress"
+                listType="picture-card"
+                :fileList="fileList"
+                @preview="handlePreview"
+                @change="imgHandleChange"
+                :beforeUpload="beforeUpload"
+              >
+                <div v-if="fileList.length < 1">
+                  <a-icon type="plus" />
+                  <div class="ant-upload-text">上传视频封面</div>
+                </div>
+              </a-upload>
+              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+                <img alt="example" style="width: 100%" :src="previewImage" />
+              </a-modal>
+            </div>
+          </a-form-item>
         </div>
-        <div class="create-main">
-          <a-form
-            :form="form"
-            @submit="handleSubmit"
-          >
-            <div class="main-basic">
-              <a-form-item
-                label="标题"
-                :label-col="{ span: 4 }"
-                :wrapper-col="{ span: 16 }"
-              >
-                <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]" />
-              </a-form-item>
-              <a-form-item
-                label="摘要"
-                :label-col="{ span: 4 }"
-                :wrapper-col="{ span: 16 }"
-              >
-                <a-textarea
-                  rows="4"
-                  v-decorator="[
-                    'summary',
-                    {rules: [{ required: true, message: '请填写摘要' }]}
-                  ]"
-                />
-              </a-form-item>
-              <a-form-item
-                label="作者"
-                :label-col="{ span: 4 }"
-                :wrapper-col="{ span: 16 }"
-              >
-                <a-input
-                  v-decorator="[
-                    'author',
-                    {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
-                  ]" />
-              </a-form-item>
-              <a-form-item
-                label="封面"
-                :label-col="{ span: 4 }"
-                :wrapper-col="{ span: 16 }"
-              >
-                <div class="clearfix">
-                  <a-upload
-                    accept="image/*"
-                    action="http://172.31.214.104/khmsrv/api/resources"
-                    listType="picture-card"
-                    :fileList="fileList"
-                    @preview="handlePreview"
-                    @change="imgHandleChange"
-                    :beforeUpload="beforeUpload"
-                  >
-                    <div v-if="fileList.length < 1">
-                      <a-icon type="plus" />
-                      <div class="ant-upload-text">上传视频封面</div>
-                    </div>
-                  </a-upload>
-                  <a-modal
-                    :visible="previewVisible"
-                    :footer="null"
-                    @cancel="handleCancel"
-                  >
-                    <img
-                      alt="example"
-                      style="width: 100%"
-                      :src="previewImage"
-                    />
-                  </a-modal>
-                </div>
-              </a-form-item>
+        <div class="main-content">
+          <a-form-item>
+            <div id="main" ref="myEditor">
+              <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
             </div>
-            <div class="main-content">
-              <a-form-item>
-                <div
-                  id="main"
-                  ref="myEditor"
-                >
-                  <mavon-editor
-                    ref="md"
-                    v-model="editorContent"
-                    @imgAdd="$imgAdd"
-                  />
+          </a-form-item>
+        </div>
+        <!-- fixed footer toolbar -->
+        <footer-tool-bar>
+          <div>
+            <a-button type="primary" html-type="submit">提 交</a-button>
+            <a-modal
+              :title="ModalTitle"
+              :visible="visible"
+              @ok="handleOk"
+              :confirmLoading="confirmLoading"
+              @cancel="handleCancel"
+            >
+              <div class="model-content">
+                <div class="title">{{ ModalText.title }}</div>
+                <div class="desc">
+                  <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
+                  <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
                 </div>
-              </a-form-item>
-            </div>
-            <!-- fixed footer toolbar -->
-            <footer-tool-bar>
-              <div>
-                <a-button
-                  type="primary"
-                  html-type="submit"
-                >提 交</a-button>
-                <a-modal
-                  :title="ModalTitle"
-                  :visible="visible"
-                  @ok="handleOk"
-                  :confirmLoading="confirmLoading"
-                  @cancel="handleCancel"
-                >
-                  <div class="model-content">
-                    <div class="title">{{ ModalText.title }}</div>
-                    <div class="desc">
-                      <a-tag
-                        class="author"
-                        color="blue"
-                      >{{ ModalText.author }}</a-tag>
-                      <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
-                    </div>
-                    <div class="content">
-                      <div v-html="previewMdHtml"></div>
-                    </div>
-                  </div>
-                </a-modal>
+                <div class="content">
+                  <div v-html="previewMdHtml"></div>
+                </div>
               </div>
-            </footer-tool-bar>
-          </a-form>
-        </div>
-      </div>
-    </a-card>
+            </a-modal>
+          </div>
+        </footer-tool-bar>
+      </a-form>
+    </div>
   </div>
 </template>
 
@@ -133,12 +92,14 @@ import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
 import { ButtonBack } from '@/components'
+import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
 export default {
   name: 'CreateTop',
   components: { FooterToolBar, ButtonBack },
   data () {
     return {
+      upLoadAddress: upLoadAddress,
       previewMdHtml: null,
       ModalTitle: null,
       ModalText: {},
@@ -156,7 +117,7 @@ export default {
   },
   watch: {
     '$route.path': function (to, from) {
-      if (to === '/intervenemanager/TopPush/add') {
+      if (to === this.$route.path) {
         console.log('再次进入新建新闻页且清空表单')
         this.clearFormData()
       }
@@ -205,7 +166,7 @@ export default {
     appendForm (values) {
       // const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
       if (this.fileList[0]) {
-        this.cover = `http://172.31.214.104/khmsrv/api/resources/${this.fileList[0].response}`
+        this.cover = this.upLoadAddress + this.fileList[0].response
       } else {
         this.cover = ''
       }
