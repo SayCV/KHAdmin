@@ -27,7 +27,7 @@
             </div>
             <div class="label">
               提醒时间&nbsp;:
-              <a-tag>{{ aimItem.reminderTime }}</a-tag>
+              <a-tag>{{ aimItem.remindTime }}</a-tag>
             </div>
           </div>
           <div class="desc">{{ aimItem.desc }}</div>
@@ -41,7 +41,7 @@
             </div>
             <div class="container">
               <div class="week" v-for="item in weeks" :key="item.week">
-                <a-tag color="blue">{{ translateWeek(item.week) }}</a-tag>
+                <a-tag color="blue">{{ translateWeek(item) }}</a-tag>
               </div>
             </div>
           </div>

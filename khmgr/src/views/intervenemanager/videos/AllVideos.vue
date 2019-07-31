@@ -63,6 +63,13 @@ export default {
       pageSize: 4
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$route.query.page) {
+        vm.current = vm.$route.query.page
+      } vm.fetch()
+    })
+  },
   mounted () {
     if (this.$route.query.page) {
       this.current = this.$route.query.page

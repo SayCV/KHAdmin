@@ -123,7 +123,12 @@
             :labelCol="{md: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
           >
-            <a-switch @change="onSwitchChange" />
+            <a-switch
+              @change="onSwitchChange"
+              v-decorator="[
+                'hasValue', {rules: [{ required: false }] }
+              ]"
+            />
           </a-form-item>
           <a-form-item
             v-if="isAimsValue"

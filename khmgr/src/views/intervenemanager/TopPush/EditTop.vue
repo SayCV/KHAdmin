@@ -115,15 +115,12 @@ export default {
       cover: null // 封面的全局变量
     }
   },
-  watch: {
-    '$route.path' (to, from) {
-      if (to === this.$route.path) {
-        console.log('进入新闻编辑页面', to)
-        this.newsId = this.$route.query.newsId
-        // this.data = this.$route.query.data
-        this.getFormData(this.newsId)
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.newsId = vm.$route.query.newsId
+      // this.data = this.$route.query.data
+      vm.getFormData(vm.newsId)
+    })
   },
   mounted () {
     this.getFormData(this.newsId)

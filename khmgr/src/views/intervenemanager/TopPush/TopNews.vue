@@ -68,10 +68,12 @@ export default {
       pageSize: 4
     }
   },
-  updated () {
-    // 切换页面时滚动条自动滚动到顶部
-    console.log('置顶')
-    window.scrollTo(0, 0)
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$route.query.page) {
+        vm.current = vm.$route.query.page
+      } vm.fetch()
+    })
   },
   mounted () {
     if (this.$route.query.page) {

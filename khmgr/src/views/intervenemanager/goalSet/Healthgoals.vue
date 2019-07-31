@@ -40,6 +40,13 @@ export default {
       goalList: []
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$route.query.page) {
+        vm.current = vm.$route.query.page
+      } vm.fetch()
+    })
+  },
   mounted () {
     this.fetch()
   },

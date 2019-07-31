@@ -137,7 +137,7 @@ export default {
   watch: {
     '$route.path': function (to, from) {
       if (to === this.$route.path) {
-        console.log('再次进入新建点滴页且清空表单')
+        console.log('新建新闻页')
         this.clearFormData()
       }
     }

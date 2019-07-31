@@ -58,11 +58,14 @@ export default {
       pageSize: 4
     }
   },
-  updated () {
-    window.scrollTo(0, 0)
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$route.query.page) {
+        vm.current = vm.$route.query.page
+      } vm.fetch()
+    })
   },
   mounted () {
-    this.fetch()
     if (this.$route.query.page) {
       this.current = this.$route.query.page
     } this.fetch()
@@ -123,12 +126,6 @@ export default {
       this.fetch({
         results: this.pageSize,
         page: pagination
-      })
-    },
-    handleAdd () {
-      // 点击行进入add页
-      this.$router.push({
-        path: '/intervenemanager/AppPush/add'
       })
     },
     handleEdit (newsId) {

@@ -74,18 +74,24 @@ export default {
       pageSize: 4
     }
   },
-
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === '/business/BarAD/allAD/usedAD') {
-        console.log('再次进入已使用广告列表页')
-        window.scrollTo(0, 0)
-        if (this.$route.query.page) {
-          this.current = this.$route.query.page
-        } this.fetch()
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      if (vm.$route.query.page) {
+        vm.current = vm.$route.query.page
+      } vm.fetch()
+    })
   },
+  // watch: {
+  //   '$route.path': function (to, from) {
+  //     if (to === '/business/BarAD/allAD/usedAD') {
+  //       console.log('再次进入已使用广告列表页')
+  //       window.scrollTo(0, 0)
+  //       if (this.$route.query.page) {
+  //         this.current = this.$route.query.page
+  //       } this.fetch()
+  //     }
+  //   }
+  // },
   computed: {
     showPagination () {
       console.log('计算分页是否显示', this.pageSize < this.totalCount)

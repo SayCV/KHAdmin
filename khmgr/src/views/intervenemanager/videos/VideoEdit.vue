@@ -136,15 +136,20 @@ export default {
       videoId: this.$route.query.videoId
     }
   },
-  watch: {
-    '$route.path' (to, from) {
-      if (to === this.$route.path) {
-        console.log('进入新闻编辑页面', to)
-
-        this.getFormData()
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.getFormData()
+    })
   },
+  // watch: {
+  //   '$route.path' (to, from) {
+  //     if (to === this.$route.path) {
+  //       console.log('进入新闻编辑页面', to)
+
+  //       this.getFormData()
+  //     }
+  //   }
+  // },
   mounted () { this.getFormData() },
   methods: {
     moment,

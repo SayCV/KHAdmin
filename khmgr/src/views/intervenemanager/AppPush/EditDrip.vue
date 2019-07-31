@@ -31,6 +31,7 @@
           <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
             <div class="clearfix">
               <a-upload
+                accept="image/*"
                 :action="upLoadAddress"
                 listType="picture-card"
                 :fileList="fileList"
@@ -115,9 +116,16 @@ export default {
       cover: null // 封面的全局变量
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.newsId = vm.$route.query.newsId
+      // this.data = this.$route.query.data
+      vm.getFormData(vm.newsId)
+    })
+  },
   watch: {
-    '$route.path' (to, from) {
-      if (to === this.$route.path) {
+    '$route' (to, from) {
+      if (to.path === '/intervenemanager/AppPush/edit') {
         console.log('进入点滴编辑页面', to)
         this.newsId = this.$route.query.newsId
         // this.data = this.$route.query.data
@@ -174,7 +182,7 @@ export default {
         url: `/api/admin/news/${newsId}`,
         method: 'get'
       }).then(res => {
-        console.log('进入点滴详情页面时表单数据', res)
+        console.log('进入编辑页面时表单数据', res)
         this.data = res
         this.initFileList(this.data)
         this.editorContent = res.content
