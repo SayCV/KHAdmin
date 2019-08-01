@@ -1,9 +1,6 @@
 <template>
   <div>
-    <a-button
-      type="primary"
-      @click="() => handleBack()"
-    >
+    <a-button type="primary" @click="() => handleBack()">
       <a-icon type="left" />返回
     </a-button>
   </div>
@@ -28,17 +25,7 @@ export default {
   },
   data () {
     return {
-      isShow: false
-    }
-  },
-  watch: {
-    $route (now, old) { // 监控路由变换，控制返回按钮的显示
-      if (now.path === this.$route.path) {
-        console.log('url !!', this.$route.path)
-        this.isShow = false
-      } else {
-        this.isShow = true
-      }
+
     }
   },
   methods: {

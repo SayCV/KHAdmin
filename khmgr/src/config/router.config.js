@@ -255,37 +255,137 @@ export const asyncRouterMap = [
         path: '/intervenemanager',
         name: 'intervenemanager',
         component: PageView,
-        redirect: '/intervenemanager/Healthgoals',
+        redirect: '/intervenemanager/quantifGoal',
         meta: { title: '干预管理', icon: 'profile', permission: ['profile'] },
         children: [
           {
-            path: '/intervenemanager/goalSet',
-            name: 'goalSet',
+            path: '/intervenemanager/quantifGoal',
+            name: 'GoalStrategy',
             component: () => import('@/views/intervenemanager/goalSet/Index'),
             meta: { title: '小目标设定策略', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/goalSet/list',
+            redirect: '/intervenemanager/quantifGoal/q',
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/intervenemanager/goalSet/list',
-                name: 'Healthgoals',
-                component: () => import('@/views/intervenemanager/goalSet/Healthgoals'),
-                meta: { title: '官方目标', keepAlive: true, hidden: true, permission: ['profile'] }
+                path: '/intervenemanager/quantifGoal/q',
+                name: 'SetQuanGoal',
+                component: () => import('@/views/intervenemanager/goalSet/TagIndex'),
+                meta: { title: '指标类', keepAlive: true, permission: ['profile'] },
+                redirect: '/intervenemanager/quantifGoal/list',
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/intervenemanager/quantifGoal/list',
+                    name: 'QuantitativeGoal',
+                    component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
+                    meta: { title: '量化目标', keepAlive: true, hidden: true }
+                  },
+                  {
+                    path: '/intervenemanager/quantifGoal/edit',
+                    name: 'EditQuanGoal',
+                    component: () => import('@/views/intervenemanager/goalSet/Quantized/EditQuanGoal'),
+                    meta: { title: '编辑量化目标', keepAlive: true, hidden: true }
+                  }
+                  // {
+                  //   path: '/intervenemanager/quantifGoal/add',
+                  //   name: 'AddQuanGoal',
+                  //   component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
+                  //   meta: { title: '添加目标', keepAlive: true, hidden: true }
+                  // }
+                ]
               },
               {
-                path: '/intervenemanager/goalSet/edit',
-                name: 'EditGoals',
-                component: () => import('@/views/intervenemanager/goalSet/EditGoals'),
-                meta: { title: '编辑目标', keepAlive: true, hidden: true, permission: ['profile'] }
+                path: '/intervenemanager/addGoal',
+                name: 'AddGoal',
+                component: () => import('@/views/intervenemanager/goalSet/AddGoal'),
+                meta: { title: '添加目标', keepAlive: true, hidden: true }
               },
               {
-                path: '/intervenemanager/goalSet/add',
-                name: 'AddGoals',
-                component: () => import('@/views/intervenemanager/goalSet/AddGoals'),
-                meta: { title: '添加目标', keepAlive: true, hidden: true, permission: ['profile'] }
+                path: '/intervenemanager/unquantifGoal/uq',
+                name: 'SetUnquanGoal',
+                component: () => import('@/views/intervenemanager/goalSet/TagIndex'),
+                meta: { title: '生活习惯类', keepAlive: true, permission: ['profile'] },
+                redirect: '/intervenemanager/unquantifGoal/list',
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/intervenemanager/unquantifGoal/list',
+                    name: 'UnquantitativeGoal',
+                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
+                    meta: { title: '非量化目标', keepAlive: true, hidden: true }
+                  },
+                  {
+                    path: '/intervenemanager/unquantifGoal/edit',
+                    name: 'EditUnquanGoal',
+                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
+                    meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
+                  }
+                  // {
+                  //   path: '/intervenemanager/unquantifGoal/add',
+                  //   name: 'AddQuanGoal',
+                  //   component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
+                  //   meta: { title: '添加目标', keepAlive: true, hidden: true }
+                  // }
+                ]
               }
             ]
           },
+          // {
+          //   path: '/intervenemanager/quantifGoal',
+          //   name: 'SetQuanGoal',
+          //   component: () => import('@/views/intervenemanager/goalSet/Index'),
+          //   meta: { title: '量化目标设定策略', keepAlive: true, permission: ['profile'] },
+          //   redirect: '/intervenemanager/quantifGoal/list',
+          //   hideChildrenInMenu: true,
+          //   children: [
+          //     {
+          //       path: '/intervenemanager/quantifGoal/list',
+          //       name: 'QuantitativeGoal',
+          //       component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
+          //       meta: { title: '量化目标', keepAlive: true, hidden: true }
+          //     },
+          //     {
+          //       path: '/intervenemanager/quantifGoal/edit',
+          //       name: 'EditQuanGoal',
+          //       component: () => import('@/views/intervenemanager/goalSet/Quantized/EditQuanGoal'),
+          //       meta: { title: '编辑量化目标', keepAlive: true, hidden: true }
+          //     },
+          //     {
+          //       path: '/intervenemanager/quantifGoal/add',
+          //       name: 'AddQuanGoal',
+          //       component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
+          //       meta: { title: '添加量化目标', keepAlive: true, hidden: true }
+          //     }
+          //   ]
+          // },
+          // {
+          //   path: '/intervenemanager/unquantifGoal',
+          //   name: 'SetUnquanGoal',
+          //   component: () => import('@/views/intervenemanager/goalSet/Index'),
+          //   meta: { title: '非量化目标设定', keepAlive: true, permission: ['profile'] },
+          //   redirect: '/intervenemanager/unquantifGoal/list',
+          //   hideChildrenInMenu: true,
+          //   children: [
+          //     {
+          //       path: '/intervenemanager/unquantifGoal/list',
+          //       name: 'UnquantitativeGoal',
+          //       component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
+          //       meta: { title: '非量化目标', keepAlive: true, hidden: true }
+          //     },
+          //     {
+          //       path: '/intervenemanager/unquantifGoal/edit',
+          //       name: 'EditUnquanGoal',
+          //       component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
+          //       meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
+          //     },
+          //     {
+          //       path: '/intervenemanager/unquantifGoal/add',
+          //       name: 'AddUnquanGoal',
+          //       component: () => import('@/views/intervenemanager/goalSet/Unquantized/AddUnquanGoal'),
+          //       meta: { title: '添加非量化目标', keepAlive: true, hidden: true }
+          //     }
+          //   ]
+          // },
           {
             path: '/intervenemanager/Planandcourse',
             name: 'Planandcourse',

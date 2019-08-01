@@ -10,7 +10,7 @@
           <a-form-item
             label="目标名称"
             :labelCol="{md: {span: 4}, sm: {span: 4}}"
-            :wrapperCol="{md: {span: 8}, sm: {span: 8} }"
+            :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
           >
             <a-input
               v-decorator="[
@@ -119,29 +119,52 @@
             </div>
           </a-form-item>
           <a-form-item
+            label="目标类型"
+            :labelCol="{md: {span: 4}, sm: {span: 4}}"
+            :wrapperCol="{md: {span: 4}, sm: {span: 4} }"
+          >
+            <a-select v-model="typeSelected">
+              <a-select-option
+                v-for="option in selectedType"
+                :value="option.value"
+                :key="option.value"
+              >{{ option.text }}</a-select-option>
+            </a-select>
+          </a-form-item>
+          <a-form-item
             label="启用目标值"
             :labelCol="{md: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
           >
             <a-switch
               @change="onSwitchChange"
+              :checked="isChecked"
               v-decorator="[
                 'hasValue', {rules: [{ required: false }] }
               ]"
             />
           </a-form-item>
           <a-form-item
-            v-if="isAimsValue"
+            v-if="isChecked"
             label="目标值"
             :labelCol="{md: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{md: {span: 8}, sm: {span: 8} }"
           >
             <a-input
+              :addonAfter="unit"
               v-decorator="[
                 'goalValue',
                 {rules: [{ required: true, message: '请输入目标值' }] }
               ]"
-            />
+            >
+              <a-select slot="addonBefore" v-model="selected" style="width:9em;">
+                <a-select-option
+                  v-for="option in selectedValue"
+                  :value="option.name"
+                  :key="option.name"
+                >{{ option.displayName }}</a-select-option>
+              </a-select>
+            </a-input>
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
@@ -173,10 +196,17 @@ const defaultOptions = [
   0, 1, 2, 3, 4, 5, 6
 ]
 export default {
-  name: 'AddGoals',
+  name: 'AddGoal',
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
+      selected: null, // 比如想要默认选中为 Three 那么就把他设置为C
+      selectedValue: [],
+      typeSelected: 0,
+      selectedType: [
+        { text: '生活习惯类', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '指标类', value: 1 }
+      ],
       upLoadAddress: upLoadAddress,
       form: this.$form.createForm(this),
       previewVisible: false,
@@ -186,33 +216,39 @@ export default {
       loading: false,
       imgLoading: false,
       selectedItems: [],
-      isAimsValue: false,
+      isChecked: false,
       options,
       defaultOptions,
       value: defaultOptions
     }
   },
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === this.$route.path) {
-        this.clearFormData()
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.initFormData()
+    })
   },
   computed: {
-
+    unit: (vm) => {
+      const units = vm.selectedValue.filter((value, index, array) => {
+        return value.name === vm.selected
+      })
+      if (units.length < 1) {
+        return ''
+      }
+      return units[0].unit || ''
+    }
   },
   mounted () {
-
+    this.getTargetValueType()
   },
   methods: {
     moment,
-    clearFormData () {
+    initFormData () {
       // 清空表单内容
       this.form.resetFields()
       this.iconList = []
       this.imgList = []
-      console.log('clear from')
+      this.isChecked = false
     },
     handleImgChange (info) {
       console.log('img', info)
@@ -244,7 +280,20 @@ export default {
     },
     onSwitchChange (checked) {
       console.log(`a-switch to ${checked}`)
-      this.isAimsValue = !this.isAimsValue
+      this.isChecked = !this.isChecked
+    },
+    // 获取目标值类型
+    getTargetValueType () {
+      axios({
+        url: 'api/admin/targets/indicatortypes',
+        method: 'get'
+      }).then(res => {
+        console.log('type', res)
+        if (res) {
+          this.selectedValue = res
+          this.selected = res[0].name
+        }
+      })
     },
     // handler
     handleSubmit (e) {
@@ -256,7 +305,8 @@ export default {
           } else {
             fieldsValue = {
               ...fieldsValue,
-              hasValue: this.isAimsValue,
+              hasValue: this.isChecked,
+              valeuType: this.selected,
               remindTime: fieldsValue['time-picker'].format('HH:mm'),
               imgUrl: this.upLoadAddress + this.imgList[0].response,
               iconUrl: this.upLoadAddress + this.iconList[0].response
@@ -277,7 +327,7 @@ export default {
           data: formData,
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
-          console.log('广告提交了', res)
+          console.log('done', res)
           if (res.successed === true) {
             // this.$router.push({ path: '/business/BarAD/allAD/usedAD' })
             this.$router.push({ name: 'allAD' })
@@ -286,7 +336,7 @@ export default {
           if (err) {
             this.$notification['error']({
               message: '注意！注意！',
-              description: '广告投放失败.'
+              description: '添加目标失败.'
             })
           }
         })
@@ -299,6 +349,8 @@ export default {
 
  <style lang="less" scoped>
 .aimPage {
+  padding-top: 16px;
+  min-height: calc(100vh - 280px);
   .aim-page-top {
     display: flex;
     justify-content: space-between;

@@ -25,7 +25,7 @@
               目标值&nbsp;:
               <a-tag>{{ aimItem.value }}</a-tag>
             </div>
-            <div class="label">
+            <div class="label" v-if="aimItem.hasValue">
               提醒时间&nbsp;:
               <a-tag>{{ aimItem.remindTime }}</a-tag>
             </div>
@@ -40,7 +40,7 @@
               <div class="txt">重复时间&nbsp;:</div>
             </div>
             <div class="container">
-              <div class="week" v-for="item in weeks" :key="item.week">
+              <div class="week" v-for="item in repeatTime" :key="item.aimId">
                 <a-tag color="blue">{{ translateWeek(item) }}</a-tag>
               </div>
             </div>
@@ -71,21 +71,27 @@ export default {
   data () {
     return {
       icon: 'http://172.31.214.104/khmsrv/api/resources/4b574ef2cb914693a35cd3873fb7142c',
-      weeks: this.aimItem.arr
+      repeatTime: this.aimItem.arr
     }
   },
   methods: {
     moment,
     translateWeek (key) {
-      switch (key) {
-        case 0: return '星期一'
-        case 1: return '星期二'
-        case 2: return '星期三'
-        case 3: return '星期四'
-        case 4: return '星期五'
-        case 5: return '星期六'
-        case 6: return '星期日'
-        default: return '未知'
+      const keyType = Object.prototype.toString.call(key)
+      if (keyType.indexOf('Number') !== -1) {
+        // 周日 = 0
+        switch (key) {
+          case 0: return '星期日'
+          case 1: return '星期一'
+          case 2: return '星期二'
+          case 3: return '星期三'
+          case 4: return '星期四'
+          case 5: return '星期五'
+          case 6: return '星期六'
+          default: return '未知'
+        }
+      } else if (keyType.indexOf('String') !== -1) {
+        return '闹钟 : ' + key
       }
     },
     handleToEditAD (aimItem) {

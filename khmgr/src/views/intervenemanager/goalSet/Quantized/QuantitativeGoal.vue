@@ -30,11 +30,12 @@ import { PageTitle, Empty, AimItem } from '@/components'
 import { axios } from '@/utils/request'
 
 export default {
-  name: 'Healthgoals',
+  name: 'QuantitativeGoal',
   components: { PageTitle, Empty, AimItem },
   data () {
     return {
-      addGoalLink: '/intervenemanager/goalSet/add',
+      // addGoalLink: '/intervenemanager/goalSet/add',
+      addGoalLink: 'AddGoal',
       dataIsLoading: false,
       noDataList: false,
       goalList: []
@@ -53,17 +54,16 @@ export default {
   methods: {
     // 获取数据
     fetch (params = {}) {
-      console.log('yahaha')
       this.dataIsLoading = true
       axios({
         // url: `/api/admin/news/?pageSize=${this.pageSize}&pageNum=${this.current}`,
-        url: '/api/intervene/aims/', // mock
+        url: '/api/intervene/aimsQuan/', // mock
         method: 'get',
         params: {
           ...params
         }
       }).then(res => {
-        console.log('获取点滴列表', res)
+        console.log('list', res)
         // 后台数据
         if (res) {
           this.noDataList = false
@@ -88,7 +88,7 @@ export default {
       console.log('click edit ', item.aimId)
       // 点击行进入edit页
       this.$router.push({
-        name: 'EditGoals',
+        name: 'EditQuanGoal',
         query: {
           aimId: item.aimId,
           page: this.current,
@@ -106,7 +106,7 @@ export default {
 <style lang="less" scoped>
 .goalPage {
   width: 100%;
-  min-height: calc(100vh - 280px);
+  // min-height: calc(100vh - 280px);
   .pagination {
     display: flex;
     justify-content: flex-start;

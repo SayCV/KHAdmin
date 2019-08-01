@@ -39,10 +39,17 @@ export default {
   methods: {
     handleToAdd () {
       // 点击行进入add页
-      console.log('click me to add !!')
-      this.$router.push({
-        path: this.linkTo
-      })
+      if (this.linkTo.indexOf('/') !== -1) {
+        console.log('click me to add !!', this.linkTo)
+        this.$router.push({
+          path: this.linkTo
+        })
+      } else {
+        console.log('click me to add !!', this.linkTo)
+        this.$router.push({
+          name: this.linkTo
+        })
+      }
     },
     handleRefresh () {
       // 手动刷新数据

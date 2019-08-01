@@ -10,12 +10,12 @@
           <a-form-item
             label="目标名称"
             :labelCol="{md: {span: 4}, sm: {span: 4}}"
-            :wrapperCol="{md: {span: 8}, sm: {span: 8} }"
+            :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
           >
             <a-input
               v-decorator="[
                 'title',
-                { rules: [{ required: true, message: '请输入目标名称' }], initialValue: data.title }
+                {rules: [{ required: true, message: '请输入广告名称' }] }
               ]"
             />
           </a-form-item>
@@ -27,7 +27,7 @@
             <a-input
               v-decorator="[
                 'desc',
-                {rules: [{ required: true, message: '请输入目标描述' }], initialValue: data.desc }
+                {rules: [{ required: true, message: '请输入广告链接' }] }
               ]"
             />
           </a-form-item>
@@ -97,9 +97,8 @@
             :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
           >
             <a-time-picker
-              v-decorator="['time-picker', {rules: [{ required: true, message: '请选择重复时间' }],
-                                            initialValue: moment(data.remindTime, timeFormat) }]"
-              :format="timeFormat"
+              v-decorator="['time-picker', {rules: [{ required: true, message: '请选择重复时间' }] }]"
+              format="HH:mm"
             />
           </a-form-item>
           <a-form-item
@@ -111,7 +110,10 @@
               <a-checkbox-group
                 :options="options"
                 @change="onChange"
-                v-decorator="['weeks',{rules: [{ required: true, message: '请选择重复日期' }], initialValue: data.arr }
+                v-decorator="[
+                  'weeks',
+                  {rules: [{ required: true, message: '请选择重复日期' }],
+                   initialValue:defaultOptions }
                 ]"
               />
             </div>
@@ -124,6 +126,9 @@
             <a-switch
               @change="onSwitchChange"
               :checked="isChecked"
+              v-decorator="[
+                'hasValue', {rules: [{ required: false }] }
+              ]"
             />
           </a-form-item>
           <a-form-item
@@ -135,7 +140,7 @@
             <a-input
               v-decorator="[
                 'goalValue',
-                {rules: [{ required: true, message: '请输入目标值' }], initialValue: data.value }
+                {rules: [{ required: true, message: '请输入目标值' }] }
               ]"
             />
           </a-form-item>
@@ -169,11 +174,10 @@ const defaultOptions = [
   0, 1, 2, 3, 4, 5, 6
 ]
 export default {
-  name: 'EditGoals',
+  name: 'AddUnquanGoal',
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
-      timeFormat: 'HH:mm',
       upLoadAddress: upLoadAddress,
       form: this.$form.createForm(this),
       previewVisible: false,
@@ -186,56 +190,24 @@ export default {
       isChecked: false,
       options,
       defaultOptions,
-      value: defaultOptions,
-      aimId: this.$route.query.aimId,
-      data: {} // 进入编辑页面填充表单的数据
+      value: defaultOptions
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.getFormData()
-    })
+  watch: {
+    '$route.path': function (to, from) {
+      if (to === this.$route.path) {
+        this.clearFormData()
+      }
+    }
   },
   computed: {
 
   },
   mounted () {
-    this.getFormData()
+
   },
   methods: {
     moment,
-    getFormData (aimId) {
-      this.aimId = this.$route.query.aimId
-      this.data = this.$route.query.data
-      this.initFileList(this.data)
-      console.log('hasValue', this.$route.query.data.hasValue)
-      this.isChecked = this.$route.query.data.hasValue
-      console.log('isChecked', this.isChecked)
-      // this.isAimsValue = this.data.hasValue
-      // axios({
-      //   url: `/api/admin/aim/${aimId}`,
-      //   method: 'get'
-      // }).then(res => {
-      //   console.log('进入编辑页面时表单数据', res)
-      //   this.data = res
-      //   this.initFileList(this.data)
-      // })
-    },
-    initFileList (data) {
-      // 设置默认图片和图标
-      this.imgList = [{
-        uid: '-1',
-        name: 'default',
-        status: 'done',
-        url: data.imgUrl
-      }]
-      this.iconList = [{
-        uid: '-1',
-        name: 'default',
-        status: 'done',
-        url: data.icon
-      }]
-    },
     clearFormData () {
       // 清空表单内容
       this.form.resetFields()
@@ -305,7 +277,7 @@ export default {
           data: formData,
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
-          console.log('广告提交了', res)
+          console.log('done', res)
           if (res.successed === true) {
             // this.$router.push({ path: '/business/BarAD/allAD/usedAD' })
             this.$router.push({ name: 'allAD' })
@@ -314,7 +286,7 @@ export default {
           if (err) {
             this.$notification['error']({
               message: '注意！注意！',
-              description: '广告投放失败.'
+              description: '添加目标失败.'
             })
           }
         })
@@ -327,6 +299,7 @@ export default {
 
  <style lang="less" scoped>
 .aimPage {
+  min-height: calc(100vh - 280px);
   .aim-page-top {
     display: flex;
     justify-content: space-between;
