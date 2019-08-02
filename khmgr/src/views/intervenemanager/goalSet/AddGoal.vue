@@ -108,7 +108,7 @@
           >
             <div>
               <a-checkbox-group
-                :options="options"
+                :options="repeatTimeOptions"
                 @change="onChange"
                 v-decorator="[
                   'weeks',
@@ -157,7 +157,7 @@
                 {rules: [{ required: true, message: '请输入目标值' }] }
               ]"
             >
-              <a-select slot="addonBefore" v-model="selected" style="width:9em;">
+              <a-select slot="addonBefore" v-model="valueSelected" style="width:9em;">
                 <a-select-option
                   v-for="option in selectedValue"
                   :value="option.name"
@@ -168,7 +168,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提&nbsp;交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">提&nbsp;交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -183,7 +183,7 @@ import FooterToolBar from '@/components/FooterToolbar'
 import { PageName, ButtonBack } from '@/components'
 import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
-const options = [
+const repeatTimeOptions = [
   { label: '周一', value: 0 },
   { label: '周二', value: 1 },
   { label: '周三', value: 2 },
@@ -200,11 +200,11 @@ export default {
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
-      selected: null, // 比如想要默认选中为 Three 那么就把他设置为C
+      valueSelected: null, // 默认选中的目标值
       selectedValue: [],
       typeSelected: 0,
       selectedType: [
-        { text: '生活习惯类', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '生活习惯类', value: 0 },
         { text: '指标类', value: 1 }
       ],
       upLoadAddress: upLoadAddress,
@@ -217,9 +217,9 @@ export default {
       imgLoading: false,
       selectedItems: [],
       isChecked: false,
-      options,
+      repeatTimeOptions,
       defaultOptions,
-      value: defaultOptions
+      repeatTimeValue: defaultOptions
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -230,7 +230,7 @@ export default {
   computed: {
     unit: (vm) => {
       const units = vm.selectedValue.filter((value, index, array) => {
-        return value.name === vm.selected
+        return value.name === vm.valueSelected
       })
       if (units.length < 1) {
         return ''
@@ -274,9 +274,8 @@ export default {
     },
     onChange (checkedValues) {
       console.log('checked = ', checkedValues)
-      this.value = checkedValues
-      console.log(this.value instanceof Array)
-      console.log('value = ', this.value)
+      this.repeatTimeValue = checkedValues
+      console.log('repeatTimeValue = ', this.repeatTimeValue)
     },
     onSwitchChange (checked) {
       console.log(`a-switch to ${checked}`)
@@ -291,7 +290,7 @@ export default {
         console.log('type', res)
         if (res) {
           this.selectedValue = res
-          this.selected = res[0].name
+          this.valueSelected = res[0].name
         }
       })
     },
@@ -305,8 +304,9 @@ export default {
           } else {
             fieldsValue = {
               ...fieldsValue,
+              typeSelected: this.typeSelected,
               hasValue: this.isChecked,
-              valeuType: this.selected,
+              valueType: this.valueSelected,
               remindTime: fieldsValue['time-picker'].format('HH:mm'),
               imgUrl: this.upLoadAddress + this.imgList[0].response,
               iconUrl: this.upLoadAddress + this.iconList[0].response
@@ -318,19 +318,17 @@ export default {
     },
     adFormPost (formData) {
       // Post且跳转
-      console.log('提交的广告', formData)
       this.loading = true
       setTimeout(() => {
         axios({
-          url: '/api/admin/ad',
+          url: '/api/admin/',
           method: 'post',
           data: formData,
           headers: { 'Content-Type': 'application/json' }
         }).then(res => {
           console.log('done', res)
           if (res.successed === true) {
-            // this.$router.push({ path: '/business/BarAD/allAD/usedAD' })
-            this.$router.push({ name: 'allAD' })
+            this.$router.push({ name: '' })
           }
         }).catch(err => {
           if (err) {
@@ -349,7 +347,7 @@ export default {
 
  <style lang="less" scoped>
 .aimPage {
-  padding-top: 16px;
+  padding: 24px 32px;
   min-height: calc(100vh - 280px);
   .aim-page-top {
     display: flex;

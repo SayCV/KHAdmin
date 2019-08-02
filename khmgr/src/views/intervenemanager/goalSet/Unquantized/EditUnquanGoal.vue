@@ -141,7 +141,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提&nbsp;交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">提&nbsp;交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>

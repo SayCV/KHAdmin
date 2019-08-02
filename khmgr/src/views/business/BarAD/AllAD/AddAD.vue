@@ -95,7 +95,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提&nbsp;交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading" >提&nbsp;交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -116,7 +116,6 @@ export default {
   data () {
     return {
       upLoadAddress: upLoadAddress,
-      disabled: false,
       formLayout: 'horizontal',
       form: this.$form.createForm(this),
       previewVisible: false,
@@ -126,7 +125,17 @@ export default {
       imgLoading: false
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.clearFormData()
+    })
+  },
   methods: {
+    clearFormData () {
+      // 清空表单内容
+      this.form.resetFields()
+      this.fileList = []
+    },
     handleCoverChange (info) {
       console.log('cover', info)
       this.fileList = info.fileList

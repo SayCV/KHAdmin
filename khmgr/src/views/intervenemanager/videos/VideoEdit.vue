@@ -98,7 +98,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提 交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">提 交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -141,15 +141,7 @@ export default {
       vm.getFormData()
     })
   },
-  // watch: {
-  //   '$route.path' (to, from) {
-  //     if (to === this.$route.path) {
-  //       console.log('进入新闻编辑页面', to)
 
-  //       this.getFormData()
-  //     }
-  //   }
-  // },
   mounted () { this.getFormData() },
   methods: {
     moment,

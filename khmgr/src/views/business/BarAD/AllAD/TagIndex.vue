@@ -1,21 +1,21 @@
 <template>
-  <div class="main">
-    <div class="top">
+  <div class="ad-settings-info-main">
+    <div class="ad-settings-info-top">
       <a-menu
         mode="horizontal"
         v-model="openKeys"
         @openChange="onOpenChange"
       >
-        <a-menu-item key="QuantitativeGoal">
-          <router-link :to="{ name: 'QuantitativeGoal' }">指标类</router-link>
+        <a-menu-item key="UsedADList">
+          <router-link :to="{ name: 'UsedADList' }">已使用广告</router-link>
         </a-menu-item>
-        <a-menu-item key="UnquantitativeGoal">
-          <router-link :to="{ name: 'UnquantitativeGoal' }">生活习惯类</router-link>
+        <a-menu-item key="UnusedADList">
+          <router-link :to="{ name: 'UnusedADList' }">未使用广告</router-link>
         </a-menu-item>
       </a-menu>
     </div>
-    <div class="bottom">
-      <div class="view">
+    <div class="ad-settings-info-bottom">
+      <div class="ad-settings-info-view">
         <router-view></router-view>
       </div>
     </div>
@@ -37,7 +37,7 @@ export default {
       routeTarget: this.$route.path,
       route: this.$route.path,
       openKeys: [],
-      defaultSelectedKeys: []
+      defaultSelectedKeys: ['UsedAD']
     }
   },
   created () {
@@ -49,6 +49,7 @@ export default {
     },
     updateMenu () {
       const routes = this.$route.matched.concat()
+      // this.defaultSelectedKeys = [routes.pop().name]
       this.openKeys = [routes.pop().name]
       console.log('ALLAD route', this.openKeys)
     }
@@ -58,14 +59,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.main {
-  padding:0 32px 12px 32px;
-  .bottom {
-  min-height: calc(100vh - 300px);
-  .view{
-    margin-top: 16px;
-  }
-}
+.ad-settings-info-bottom{
+ min-height: calc(100vh - 290px);
 }
 
 </style>

@@ -134,13 +134,10 @@ export default {
       cover: null
     }
   },
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === this.$route.path) {
-        console.log('新建新闻页')
-        this.clearFormData()
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.clearFormData()
+    })
   },
   mounted () {
 

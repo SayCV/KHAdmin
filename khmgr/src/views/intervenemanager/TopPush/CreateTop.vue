@@ -115,13 +115,10 @@ export default {
       cover: null
     }
   },
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === this.$route.path) {
-        console.log('再次进入新建新闻页且清空表单')
-        this.clearFormData()
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.clearFormData()
+    })
   },
   mounted () {
 

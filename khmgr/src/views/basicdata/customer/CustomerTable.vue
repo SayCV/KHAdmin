@@ -1,115 +1,107 @@
 <template>
   <!-- 客户管理 -->
-  <div>
-    <a-card :bordered="false">
-      <a-row>
-        <div class="table-operator">
-          <a-button type="primary" icon="user-add" @click="handleAddCus">邀请用户</a-button>
-          <div
-            class="table-page-search-submitButtons"
-            :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
-          >
-            <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-            <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-            <a @click="toggleAdvanced" style="margin-left: 8px">
-              {{ advanced ? '收起' : '展开' }}
-              <a-icon :type="advanced ? 'up' : 'down'" />
-            </a>
-          </div>
-        </div>
-      </a-row>
-      <div class="table-page-search-wrapper">
-        <a-form layout="inline">
-          <a-row :gutter="48">
+  <div class="table-page">
+    <div class="table-operator">
+      <a-button type="primary" icon="user-add" @click="handleAddCus">邀请用户</a-button>
+      <div
+        class="table-page-search-submitButtons"
+        :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
+      >
+        <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+        <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+        <a @click="toggleAdvanced" style="margin-left: 8px">
+          {{ advanced ? '收起' : '展开' }}
+          <a-icon :type="advanced ? 'up' : 'down'" />
+        </a>
+      </div>
+    </div>
+    <div class="table-page-search-wrapper">
+      <a-form layout="inline">
+        <a-row :gutter="48">
+          <a-col :md="8" :sm="24">
+            <a-form-item label="健康号">
+              <a-input v-model="queryParam.id" placeholder style="width: 100%" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="姓名">
+              <a-input v-model="queryParam.name" style="width: 100%" />
+            </a-form-item>
+          </a-col>
+          <a-col :md="8" :sm="24">
+            <a-form-item label="健康评级">
+              <a-select default-value="0">
+                <a-select-option value="0">A</a-select-option>
+                <a-select-option value="1">B</a-select-option>
+                <a-select-option value="2">C</a-select-option>
+                <a-select-option value="3">D</a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+          <template v-if="advanced">
             <a-col :md="8" :sm="24">
-              <a-form-item label="健康号">
-                <a-input v-model="queryParam.id" placeholder style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="姓名">
+              <a-form-item label="人员ID">
                 <a-input v-model="queryParam.name" style="width: 100%" />
               </a-form-item>
             </a-col>
             <a-col :md="8" :sm="24">
-              <a-form-item label="健康评级">
-                <a-select default-value="0">
-                  <a-select-option value="0">A</a-select-option>
-                  <a-select-option value="1">B</a-select-option>
-                  <a-select-option value="2">C</a-select-option>
-                  <a-select-option value="3">D</a-select-option>
-                </a-select>
+              <a-form-item label="用户单位">
+                <a-input v-model="queryParam.name" style="width: 100%" />
               </a-form-item>
             </a-col>
-            <template v-if="advanced">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="人员ID">
-                  <a-input v-model="queryParam.name" style="width: 100%" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="用户单位">
-                  <a-input v-model="queryParam.name" style="width: 100%" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item>
-                  <a-input-group compact style="width: 100%;">
-                    <a-select defaultValue="0" style="width: 30%;">
-                      <a-select-option value="0">性别</a-select-option>
-                      <a-select-option value="1">邮箱地址</a-select-option>
-                      <a-select-option value="2">手机号码</a-select-option>
-                      <a-select-option value="3">固定电话</a-select-option>
-                    </a-select>
-                    <a-input style="width: 70%" defaultValue="input content" />
-                  </a-input-group>
-                </a-form-item>
-              </a-col>
-            </template>
-          </a-row>
-        </a-form>
-      </div>
-      <!-- 全选 -->
-      <div style="margin-bottom: 16px">
-        <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
-        <span style="margin-left: 8px;margin-right: 8px;">
-          <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
-        </span>
-      </div>
+            <a-col :md="8" :sm="24">
+              <a-form-item>
+                <a-input-group compact style="width: 100%;">
+                  <a-select defaultValue="0" style="width: 30%;">
+                    <a-select-option value="0">性别</a-select-option>
+                    <a-select-option value="1">邮箱地址</a-select-option>
+                    <a-select-option value="2">手机号码</a-select-option>
+                    <a-select-option value="3">固定电话</a-select-option>
+                  </a-select>
+                  <a-input style="width: 70%" defaultValue="input content" />
+                </a-input-group>
+              </a-form-item>
+            </a-col>
+          </template>
+        </a-row>
+      </a-form>
+    </div>
+    <!-- 全选 -->
+    <div style="margin-bottom: 16px">
+      <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
+      <span style="margin-left: 8px;margin-right: 8px;">
+        <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
+      </span>
+    </div>
 
-      <!-- 表格 -->
-      <a-table
-        ref="table"
-        size="default"
-        :columns="columns"
-        rowKey="userId"
-        :dataSource="data"
-        :pagination="pagination"
-        :loading="loading"
-        @change="handleTableChange"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        bordered
-      >
-        <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-        <span slot="sex" slot-scope="sex">{{ sex ? '男' : '女' }}</span>
-        <a
-          slot="userId"
-          slot-scope="text, record"
-          @click="() => handleView(record.userId)"
-        >{{ text }}</a>
-        <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
-        <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
-        <template slot="operation" slot-scope="text, record">
-          <div class="editable-row-operations">
-            <span slot="operation">
-              <a @click="() => handleEdit(record.userId)">编辑</a>
-              <a-divider type="vertical" />
-              <a @click="() => handleView(record.userId)">查看</a>
-            </span>
-          </div>
-        </template>
-      </a-table>
-    </a-card>
+    <!-- 表格 -->
+    <a-table
+      ref="table"
+      size="default"
+      :columns="columns"
+      rowKey="userId"
+      :dataSource="data"
+      :pagination="pagination"
+      :loading="loading"
+      @change="handleTableChange"
+      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+      bordered
+    >
+      <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
+      <span slot="sex" slot-scope="sex">{{ sex ? '男' : '女' }}</span>
+      <a slot="userId" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
+      <template slot="operation" slot-scope="text, record">
+        <div class="editable-row-operations">
+          <span slot="operation">
+            <a @click="() => handleEdit(record.userId)">编辑</a>
+            <a-divider type="vertical" />
+            <a @click="() => handleView(record.userId)">查看</a>
+          </span>
+        </div>
+      </template>
+    </a-table>
   </div>
 </template>
 
@@ -197,8 +189,6 @@ const columns = [
   }
 ]
 
-const data = []
-
 export default {
   name: 'CustomerTable',
   components: {
@@ -213,7 +203,7 @@ export default {
       queryParam: {},
       selectedRowKeys: [], // Check here to configure the default column
       count: 33,
-      data,
+      data: [],
       pagination: {},
       loading: false,
       // 表头
@@ -329,16 +319,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.table-operator {
-  margin-bottom: 1.6rem;
-  display: flex;
-  justify-content: space-between;
-}
-
-.table-operator .ant-btn {
-  margin-right: 10px;
-}
-@media screen and (max-width: 900px) {
-}
+<style lang='less' scoped>
+@import '../tablestyle.less';
 </style>

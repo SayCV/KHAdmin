@@ -1,9 +1,9 @@
 <template>
-  <div class="page-header-index-wide">
-    <a-card>
+  <a-card>
+    <div class="view">
       <router-view></router-view>
-    </a-card>
-  </div>
+    </div>
+  </a-card>
 </template>
 
 <script>
@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.page-header-index-wide {
-  min-height: calc(100vh - 220px);
+.view {
+  min-height: calc(100vh - 290px);
 }
 </style>

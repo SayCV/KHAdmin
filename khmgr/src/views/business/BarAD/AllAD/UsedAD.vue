@@ -20,7 +20,7 @@
           <ButtonRefresh
             @toRefresh="fetch"
             name="投放广告"
-            linkTo="/business/BarAD/addAD"
+            :linkTo="linkToAddress"
             :isLoading="refresh"
           ></ButtonRefresh>
         </div>
@@ -64,6 +64,7 @@ export default {
   components: { AdItem, Empty, ButtonRefresh },
   data () {
     return {
+      linkToAddress: '/business/BarAD/addAD',
       refresh: false,
       noAdDescription: '暂无广告',
       dateFormat: 'YYYY-MM-DD',
@@ -99,10 +100,10 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query.page) {
-      this.current = this.$route.query.page
-    } this.fetch()
-    console.log('current', this.current)
+    // if (this.$route.query.page) {
+    //   this.current = this.$route.query.page
+    // } this.fetch()
+    // console.log('current', this.current)
   },
   methods: {
     moment,

@@ -2,63 +2,56 @@
   <div>
     <div class="person-table-page">
       <div class="page-top">
-        <div class="top">
-          <ButtonBack></ButtonBack>
-        </div>
-        <div class="page-top-wrapper">
-          <div style="width:10%;">
-            <PageName name="基本信息"></PageName>
-          </div>
-          <table class="table">
-            <tbody>
-              <tr>
-                <td class="label">健康号</td>
-                <td>{{ data.userNo }}</td>
-                <td class="label">用户名</td>
-                <td>{{ data.userName }}</td>
-                <td class="label">电话</td>
-                <td>{{ data.phone }}</td>
-                <td class="label">邮箱</td>
-                <td>{{ data.email }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <ButtonBack></ButtonBack>
       </div>
-
-      <!-- 表格 -->
-      <div style="width:10%;">
-        <PageName></PageName>
+      <div class="page-top-wrapper">
+        <PageName name="基本信息" style="width:128px; margin-bottom:8px;"></PageName>
+        <table class="table">
+          <tbody>
+            <tr>
+              <td class="label">健康号</td>
+              <td>{{ data.userNo }}</td>
+              <td class="label">用户名</td>
+              <td>{{ data.userName }}</td>
+              <td class="label">电话</td>
+              <td>{{ data.phone }}</td>
+              <td class="label">邮箱</td>
+              <td>{{ data.email }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <PageName style="width:128px; margin-bottom:8px;"></PageName>
+        <!-- 表格 -->
+        <a-table
+          ref="table"
+          size="default"
+          :columns="columns"
+          rowKey="personId"
+          :dataSource="persons"
+          :pagination="pagination"
+          :loading="loading"
+          @change="handleTableChange"
+          :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+          bordered
+        >
+          <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
+          <a
+            slot="personId"
+            slot-scope="text, record"
+            @click="() => handleView(record.personId)"
+          >{{ text }}</a>
+          <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
+          <template slot="operation" slot-scope="text, record">
+            <div class="editable-row-operations">
+              <span slot="operation">
+                <a @click="() => handleView(record.personId)">查看</a>
+                <a-divider type="vertical" />
+                <a @click="() => handleDelete(record.personId)">删除</a>
+              </span>
+            </div>
+          </template>
+        </a-table>
       </div>
-      <a-table
-        ref="table"
-        size="default"
-        :columns="columns"
-        rowKey="personId"
-        :dataSource="persons"
-        :pagination="pagination"
-        :loading="loading"
-        @change="handleTableChange"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        bordered
-      >
-        <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-        <a
-          slot="personId"
-          slot-scope="text, record"
-          @click="() => handleView(record.personId)"
-        >{{ text }}</a>
-        <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
-        <template slot="operation" slot-scope="text, record">
-          <div class="editable-row-operations">
-            <span slot="operation">
-              <a @click="() => handleView(record.personId)">查看</a>
-              <a-divider type="vertical" />
-              <a @click="() => handleDelete(record.personId)">删除</a>
-            </span>
-          </div>
-        </template>
-      </a-table>
     </div>
   </div>
 </template>
@@ -230,14 +223,13 @@ export default {
 <style lang="less" scoped>
 .person-table-page {
   .page-top {
-    .top {
-      margin-bottom: 40px;
-    }
+    display: flex;
+    justify-content: flex-end;
   }
   .page-top-wrapper {
     .table {
-      width: 100%;
-      margin-bottom: 80px;
+      width: 80%;
+      margin-bottom: 60px;
       & tr {
         border: 1px solid #d9d9d9;
         & .img {

@@ -106,7 +106,6 @@ export default {
 <style lang="less" scoped>
 .goalPage {
   width: 100%;
-  // min-height: calc(100vh - 280px);
   .pagination {
     display: flex;
     justify-content: flex-start;

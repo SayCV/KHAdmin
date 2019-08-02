@@ -96,7 +96,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提&nbsp;交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading" >提&nbsp;交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -132,16 +132,20 @@ export default {
       current: 1
     }
   },
-  watch: {
-    '$route.path' (to, from) {
-      if (to === this.$route.path) {
-        console.log('进入广告编辑页面', to)
-        this.adId = this.$route.query.adId
-        this.data = this.$route.query.data
-        this.getFormData(this.adId)
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.getFormData()
+    })
   },
+  // watch: {
+  //   '$route.path' (to, from) {
+  //     if (to === this.$route.path) {
+  //       console.log('进入广告编辑页面', to)
+
+  //       this.getFormData(this.adId)
+  //     }
+  //   }
+  // },
   mounted () {
     this.getFormData(this.adId)
   },
@@ -169,6 +173,7 @@ export default {
     },
     getFormData (newsId) {
       // 进入广告编辑页面时表单填入数据
+      this.adId = this.$route.query.adId
       this.data = this.$route.query.data
       console.log('元素数据:', this.data)
       this.initFileList(this.data)

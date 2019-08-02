@@ -277,7 +277,8 @@ export const asyncRouterMap = [
                   {
                     path: '/intervenemanager/quantifGoal/list',
                     name: 'QuantitativeGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
+                    component: () =>
+                             import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
                     meta: { title: '量化目标', keepAlive: true, hidden: true }
                   },
                   {
@@ -311,13 +312,15 @@ export const asyncRouterMap = [
                   {
                     path: '/intervenemanager/unquantifGoal/list',
                     name: 'UnquantitativeGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
+                    component: () =>
+                             import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
                     meta: { title: '非量化目标', keepAlive: true, hidden: true }
                   },
                   {
                     path: '/intervenemanager/unquantifGoal/edit',
                     name: 'EditUnquanGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
+                    component: () =>
+                             import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
                     meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
                   }
                   // {
@@ -330,62 +333,6 @@ export const asyncRouterMap = [
               }
             ]
           },
-          // {
-          //   path: '/intervenemanager/quantifGoal',
-          //   name: 'SetQuanGoal',
-          //   component: () => import('@/views/intervenemanager/goalSet/Index'),
-          //   meta: { title: '量化目标设定策略', keepAlive: true, permission: ['profile'] },
-          //   redirect: '/intervenemanager/quantifGoal/list',
-          //   hideChildrenInMenu: true,
-          //   children: [
-          //     {
-          //       path: '/intervenemanager/quantifGoal/list',
-          //       name: 'QuantitativeGoal',
-          //       component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
-          //       meta: { title: '量化目标', keepAlive: true, hidden: true }
-          //     },
-          //     {
-          //       path: '/intervenemanager/quantifGoal/edit',
-          //       name: 'EditQuanGoal',
-          //       component: () => import('@/views/intervenemanager/goalSet/Quantized/EditQuanGoal'),
-          //       meta: { title: '编辑量化目标', keepAlive: true, hidden: true }
-          //     },
-          //     {
-          //       path: '/intervenemanager/quantifGoal/add',
-          //       name: 'AddQuanGoal',
-          //       component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
-          //       meta: { title: '添加量化目标', keepAlive: true, hidden: true }
-          //     }
-          //   ]
-          // },
-          // {
-          //   path: '/intervenemanager/unquantifGoal',
-          //   name: 'SetUnquanGoal',
-          //   component: () => import('@/views/intervenemanager/goalSet/Index'),
-          //   meta: { title: '非量化目标设定', keepAlive: true, permission: ['profile'] },
-          //   redirect: '/intervenemanager/unquantifGoal/list',
-          //   hideChildrenInMenu: true,
-          //   children: [
-          //     {
-          //       path: '/intervenemanager/unquantifGoal/list',
-          //       name: 'UnquantitativeGoal',
-          //       component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
-          //       meta: { title: '非量化目标', keepAlive: true, hidden: true }
-          //     },
-          //     {
-          //       path: '/intervenemanager/unquantifGoal/edit',
-          //       name: 'EditUnquanGoal',
-          //       component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
-          //       meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
-          //     },
-          //     {
-          //       path: '/intervenemanager/unquantifGoal/add',
-          //       name: 'AddUnquanGoal',
-          //       component: () => import('@/views/intervenemanager/goalSet/Unquantized/AddUnquanGoal'),
-          //       meta: { title: '添加非量化目标', keepAlive: true, hidden: true }
-          //     }
-          //   ]
-          // },
           {
             path: '/intervenemanager/Planandcourse',
             name: 'Planandcourse',
@@ -489,7 +436,7 @@ export const asyncRouterMap = [
         path: '/business',
         name: 'business',
         component: PageView,
-        redirect: '/business/success',
+        redirect: '/business/IntegralManage',
         meta: { title: '商城业务', icon: 'check-circle-o', permission: ['profile'] },
         children: [
           {
@@ -498,82 +445,35 @@ export const asyncRouterMap = [
             component: () => import('@/views/business/IntegralManage'),
             meta: { title: '健康积分管理', keepAlive: true, permission: ['profile'] }
           },
-
-          // {
-          //   path: '/business/BarAD',
-          //   name: 'BarAD',
-          //   component: () => import('@/views/business/BarAD/Index'),
-          //   meta: { title: 'Bar宣传广告', keepAlive: true },
-          //   redirect: '/businsss/BarAD/allAD',
-          //   hideChildrenInMenu: true,
-          //   children: [
-          //     {
-          //       path: '/businsss/BarAD/allAD',
-          //       name: 'allAD',
-          //       component: () => import('@/views/business/BarAD/AllAD/Index'),
-          //       meta: { title: '全部广告', hideHeader: true, hidden: true },
-          //       redirect: '/business/BarAD/allAD/usedAD',
-          //       hideChildrenInMenu: false,
-          //       hidden: false,
-          //       children: [
-          //         {
-          //           path: '/business/BarAD/allAD/usedAD',
-          //           name: 'usedAD',
-          //           component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
-          //           meta: { title: '已使用广告', hidden: true },
-          //           hidden: true
-          //         },
-          //         {
-          //           path: '/business/BarAD/allAD/unusedAD',
-          //           name: 'unusedAD',
-          //           component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
-          //           meta: { title: '未使用广告', hidden: true },
-          //           hidden: true
-          //         },
-          //         {
-          //           path: '/business/BarAD/addAD',
-          //           name: 'addAD',
-          //           component: () => import('@/views/business/BarAD/AddAD'),
-          //           meta: { title: '新建广告', keepAlive: true },
-          //           hidden: true
-          //         },
-          //         {
-          //           path: '/business/BarAD/editAD',
-          //           name: 'editAD',
-          //           component: () => import('@/views/business/BarAD/EditAD'),
-          //           meta: { title: '编辑广告', keepAlive: true },
-          //           hidden: true
-          //         }
-          //       ]
-          //     }
-          //   ]
-          // },
           {
-            path: '/businsss/BarAD/allAD',
+            path: '/businsss/BarAD',
             name: 'allAD',
-            component: () => import('@/views/business/BarAD/AllAD/Index'),
+            component: () => import('@/views/business/BarAD/Index'),
             meta: { title: 'Bar宣传广告', hideHeader: true, hidden: true },
-            redirect: '/business/BarAD/allAD/usedAD',
+            redirect: '/business/BarAD/usedAD',
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/business/BarAD/allAD/usedAD',
-                name: 'usedAD',
-                component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
-                meta: { title: '已使用广告', hidden: true }
-              },
-              {
-                path: '/business/BarAD/allAD/unusedAD',
-                name: 'unusedAD',
-                component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
-                meta: { title: '未使用广告', hidden: true }
+                path: '/business/BarAD/usedAD',
+                name: 'UsedAD',
+                component: () => import('@/views/business/BarAD/AllAD/TagIndex'),
+                meta: { title: '全部广告', hidden: true, permission: ['profile'] },
+                redirect: '/business/BarAD/usedAD/list',
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/business/BarAD/usedAD/list',
+                    name: 'UsedADList',
+                    component: () => import('@/views/business/BarAD/AllAD/UsedAD'),
+                    meta: { title: '已使用广告', hidden: true, permission: ['profile'] }
+                  }
+                ]
               },
               {
                 path: '/business/BarAD/addAD',
                 name: 'addAD',
                 component: () => import('@/views/business/BarAD/AllAD/AddAD'),
-                meta: { title: '新建广告', keepAlive: true },
-                hidden: true
+                meta: { title: '新建广告', keepAlive: true, hidden: true }
               },
               {
                 path: '/business/BarAD/editAD',
@@ -581,6 +481,29 @@ export const asyncRouterMap = [
                 component: () => import('@/views/business/BarAD/AllAD/EditAD'),
                 meta: { title: '编辑广告', keepAlive: true, hidden: true },
                 hidden: true
+              },
+              {
+                path: '/business/BarAD/UnusedAD',
+                name: 'UnusedAD',
+                component: () => import('@/views/business/BarAD/AllAD/TagIndex'),
+                meta: { title: '全部广告', hidden: true, permission: ['profile'] },
+                redirect: '/business/BarAD/UnusedAD/list',
+                hideChildrenInMenu: true,
+                children: [
+                  {
+                    path: '/business/BarAD/UnusedAD/list',
+                    name: 'UnusedADList',
+                    component: () => import('@/views/business/BarAD/AllAD/UnusedAD'),
+                    meta: { title: '未使用广告', hidden: true, permission: ['profile'] }
+                  }
+                  // {
+                  //   path: '/business/BarAD/UnusedAD/edit',
+                  //   name: 'editUnusedAD',
+                  //   component: () => import('@/views/business/BarAD/AllAD/EditAD'),
+                  //   meta: { title: '编辑广告', keepAlive: true, hidden: true },
+                  //   hidden: true
+                  // }
+                ]
               }
             ]
           }

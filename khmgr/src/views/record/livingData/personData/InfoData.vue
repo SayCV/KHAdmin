@@ -1,9 +1,9 @@
 <template>
   <div>
-    <ButtonBack></ButtonBack>
     <div class="living-data-info">
       <div class="data-info">
         <div class="info-top">
+          <ButtonBack class="btn-back"></ButtonBack>
           <div class="title">
             <a-icon type="profile" theme="twoTone" />
             <span>成员详细指标数据</span>
@@ -171,7 +171,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .living-data-info {
-  padding: 16px 0;
   .data-info {
     border: 1px solid #d9d9d9;
     border-radius: 4px;
@@ -181,6 +180,13 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+      .btn-back {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        transform: translateY(-50%);
+      }
       .title {
         font-size: 22px;
         font-weight: 500;

@@ -109,12 +109,25 @@
           >
             <div>
               <a-checkbox-group
-                :options="options"
+                :options="repeatTimeOptions"
                 @change="onChange"
                 v-decorator="['weeks',{rules: [{ required: true, message: '请选择重复日期' }], initialValue: data.arr }
                 ]"
               />
             </div>
+          </a-form-item>
+          <a-form-item
+            label="目标类型"
+            :labelCol="{md: {span: 4}, sm: {span: 4}}"
+            :wrapperCol="{md: {span: 4}, sm: {span: 4} }"
+          >
+            <a-select v-model="typeSelected">
+              <a-select-option
+                v-for="option in selectedType"
+                :value="option.value"
+                :key="option.value"
+              >{{ option.text }}</a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item
             label="启用目标值"
@@ -124,6 +137,9 @@
             <a-switch
               @change="onSwitchChange"
               :checked="isChecked"
+              v-decorator="[
+                'hasValue', {rules: [{ required: false }] }
+              ]"
             />
           </a-form-item>
           <a-form-item
@@ -133,15 +149,29 @@
             :wrapperCol="{md: {span: 8}, sm: {span: 8} }"
           >
             <a-input
+              :addonAfter="unit"
               v-decorator="[
                 'goalValue',
-                {rules: [{ required: true, message: '请输入目标值' }], initialValue: data.value }
+                {rules: [{ required: true, message: '请输入目标值' }] }
               ]"
-            />
+            >
+              <a-select slot="addonBefore" v-model="valueSelected" style="width:9em;">
+                <a-select-option
+                  v-for="option in selectedValue"
+                  :value="option.name"
+                  :key="option.name"
+                >{{ option.displayName }}</a-select-option>
+              </a-select>
+            </a-input>
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提&nbsp;交</a-button>
+            <a-button
+              type="primary"
+              html-type="submit"
+              :loading="loading"
+              :disabled="loading"
+            >提&nbsp;交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -156,7 +186,7 @@ import FooterToolBar from '@/components/FooterToolbar'
 import { PageName, ButtonBack } from '@/components'
 import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
-const options = [
+const repeatTimeOptions = [
   { label: '周一', value: 0 },
   { label: '周二', value: 1 },
   { label: '周三', value: 2 },
@@ -173,6 +203,13 @@ export default {
   components: { FooterToolBar, PageName, ButtonBack },
   data () {
     return {
+      valueSelected: null, // 默认选中的目标值
+      selectedValue: [],
+      typeSelected: 0,
+      selectedType: [
+        { text: '生活习惯类', value: 0 },
+        { text: '指标类', value: 1 }
+      ],
       timeFormat: 'HH:mm',
       upLoadAddress: upLoadAddress,
       form: this.$form.createForm(this),
@@ -184,9 +221,9 @@ export default {
       imgLoading: false,
       selectedItems: [],
       isChecked: false,
-      options,
+      repeatTimeOptions,
       defaultOptions,
-      value: defaultOptions,
+      repeatTimevalue: defaultOptions,
       aimId: this.$route.query.aimId,
       data: {} // 进入编辑页面填充表单的数据
     }
@@ -197,10 +234,19 @@ export default {
     })
   },
   computed: {
-
+    unit: (vm) => {
+      const units = vm.selectedValue.filter((value, index, array) => {
+        return value.name === vm.valueSelected
+      })
+      if (units.length < 1) {
+        return ''
+      }
+      return units[0].unit || ''
+    }
   },
   mounted () {
     this.getFormData()
+    this.getTargetValueType()
   },
   methods: {
     moment,
@@ -264,13 +310,26 @@ export default {
     },
     onChange (checkedValues) {
       console.log('checked = ', checkedValues)
-      this.value = checkedValues
+      this.repeatTimevalue = checkedValues
       console.log(this.value instanceof Array)
-      console.log('value = ', this.value)
+      console.log('value = ', this.repeatTimevalue)
     },
     onSwitchChange (checked) {
       console.log(`a-switch to ${checked}`)
       this.isChecked = !this.isChecked
+    },
+    // 获取目标值类型
+    getTargetValueType () {
+      axios({
+        url: 'api/admin/targets/indicatortypes',
+        method: 'get'
+      }).then(res => {
+        console.log('type', res)
+        if (res) {
+          this.selectedValue = res
+          this.valueSelected = res[0].name
+        }
+      })
     },
     // handler
     handleSubmit (e) {

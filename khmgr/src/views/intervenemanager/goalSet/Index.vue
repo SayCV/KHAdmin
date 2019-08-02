@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false" :bodyStyle="{ padding: '0px 16px 16px 16px ' }">
+  <a-card :bordered="false" :bodyStyle="{ padding: '0px' }">
     <route-view></route-view>
   </a-card>
 </template>

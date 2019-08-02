@@ -1,70 +1,64 @@
 <template>
-  <div>
-    <div class="living-table-page">
-      <div class="page-top">
-        <div class="top-btns"></div>
-        <div class="table-page-search-wrapper">
-          <a-form layout="inline">
-            <a-row :gutter="48">
-              <a-col :md="8" :sm="24">
-                <a-form-item label="健康号">
-                  <a-input-number v-model="queryParam.userNo" placeholder style="width: 100%" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item label="电话">
-                  <a-input-number v-model="queryParam.phone" style="width: 100%" />
-                </a-form-item>
-              </a-col>
-              <a-col :md="8" :sm="24">
-                <a-form-item>
-                  <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                  <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </div>
+  <div class="living-table-page">
+    <div class="page-top">
+      <div class="top-btns"></div>
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="健康号">
+                <a-input-number v-model="queryParam.userNo" placeholder style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="电话">
+                <a-input-number v-model="queryParam.phone" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item>
+                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+                <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-form>
       </div>
-      <div class="living-table-container">
-        <!-- 全选 -->
-        <div style="margin-bottom: 16px">
-          <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
-          <span style="margin-left: 8px;margin-right: 8px;">
-            <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
+    </div>
+    <div class="living-table-container">
+      <!-- 全选 -->
+      <div style="margin-bottom: 16px">
+        <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
+        <span style="margin-left: 8px;margin-right: 8px;">
+          <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
+        </span>
+      </div>
+    </div>
+    <!-- 表格 -->
+    <a-table
+      ref="table"
+      size="default"
+      :columns="columns"
+      rowKey="userId"
+      :dataSource="data"
+      :pagination="pagination"
+      :loading="loading"
+      @change="handleTableChange"
+      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+      bordered
+    >
+      <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
+      <a slot="userNo" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <template slot="operation" slot-scope="text, record">
+        <div class="editable-row-operations">
+          <span slot="operation">
+            <a @click="() => handleView(record.userId)">查看</a>
+            <a-divider type="vertical" />
+            <a @click="() => handleDelete(record.userId)">删除</a>
           </span>
         </div>
-      </div>
-      <!-- 表格 -->
-      <a-table
-        ref="table"
-        size="default"
-        :columns="columns"
-        rowKey="userId"
-        :dataSource="data"
-        :pagination="pagination"
-        :loading="loading"
-        @change="handleTableChange"
-        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-        bordered
-      >
-        <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-        <a
-          slot="userNo"
-          slot-scope="text, record"
-          @click="() => handleView(record.userId)"
-        >{{ text }}</a>
-        <template slot="operation" slot-scope="text, record">
-          <div class="editable-row-operations">
-            <span slot="operation">
-              <a @click="() => handleView(record.userId)">查看</a>
-              <a-divider type="vertical" />
-              <a @click="() => handleDelete(record.userId)">删除</a>
-            </span>
-          </div>
-        </template>
-      </a-table>
-    </div>
+      </template>
+    </a-table>
   </div>
 </template>
 
@@ -218,11 +212,12 @@ export default {
 </script>
 <style lang="less" scoped>
 .living-table-page {
+  min-height: calc(100vh - 290px);
   .page-top {
     .top-btns {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 20px;
+      // margin-bottom: 20px;
     }
   }
 }

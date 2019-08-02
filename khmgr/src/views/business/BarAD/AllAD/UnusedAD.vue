@@ -103,10 +103,10 @@ export default {
     }
   },
   mounted () {
-    if (this.$route.query.page) {
-      this.current = this.$route.query.page
-    } this.fetch()
-    console.log('current', this.current)
+    // if (this.$route.query.page) {
+    //   this.current = this.$route.query.page
+    // } this.fetch()
+    // console.log('current', this.current)
   },
   methods: {
     moment,

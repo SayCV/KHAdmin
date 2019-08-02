@@ -98,7 +98,7 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading">提 交</a-button>
+            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">提 交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>
@@ -135,13 +135,10 @@ export default {
       imgLoading: false
     }
   },
-  watch: {
-    '$route.path': function (to, from) {
-      if (to === this.$route.path) {
-        console.log('再次进入新建video页且清空表单')
-        this.clearFormData()
-      }
-    }
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.clearFormData()
+    })
   },
   methods: {
     clearFormData () {
