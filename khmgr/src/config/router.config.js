@@ -233,19 +233,63 @@ export const asyncRouterMap = [
         name: 'report',
         component: PageView,
         redirect: '/report/HealthReport',
-        meta: { title: '健康报告', icon: 'table', permission: ['from'] },
+        meta: { title: '健康报告', icon: 'table', permission: ['table'] },
         children: [
           {
             path: '/report/HealthReport',
             name: 'HealthReport',
-            component: () => import('@/views/report/HealthReport'),
-            meta: { title: '多维健康报告', keepAlive: true, permission: ['from'] }
+            component: () => import('@/views/report/Index'),
+            meta: { title: '多维健康报告', keepAlive: true, permission: ['table'] },
+            redirect: '/report/HealthReport/table',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/report/HealthReport/table',
+                name: 'HealthReportTable',
+                component: () => import('@/views/report/HealthReport/HealthReport'),
+                meta: { title: '健康报告表', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/report/HealthReport/edit',
+                name: 'HealthReportEdit',
+                component: () => import('@/views/report/HealthReport/HREdit'),
+                meta: { title: '编辑健康报告', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/report/HealthReport/info',
+                name: 'HealthReportInfo',
+                component: () => import('@/views/report/HealthReport/HRInfo'),
+                meta: { title: '健康报告详情', keepAlive: true, hidden: true, permission: ['table'] }
+              }
+            ]
           },
           {
-            path: '/report/Weeklyummary',
-            name: 'Weeklyummary',
-            component: () => import('@/views/report/Weeklyummary'),
-            meta: { title: '每周小结', keepAlive: true, permission: ['from'] }
+            path: '/report/WeeklySummary',
+            name: 'WeeklySummary',
+            component: () => import('@/views/report/Index'),
+            meta: { title: '每周小结', keepAlive: true, permission: ['table'] },
+            redirect: '/report/WeeklySummary/table',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/report/WeeklySummary/table',
+                name: 'WeeklySummaryTable',
+                component: () => import('@/views/report/WeeklySummary/WeeklySummary'),
+                meta: { title: '每周小结表', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/report/WeeklySummary/edit',
+                name: 'WeeklySummaryEdit',
+                component: () => import('@/views/report/WeeklySummary/WSEdit'),
+                meta: { title: '编辑每周小结', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/report/WeeklySummary/info',
+                name: 'WeeklySummaryInfo',
+                component: () => import('@/views/report/WeeklySummary/WSInfo'),
+                meta: { title: '每周小结详情', keepAlive: true, hidden: true, permission: ['table'] }
+              }
+            ]
           }
         ]
       },

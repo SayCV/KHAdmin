@@ -1,18 +1,10 @@
 <template>
-  <!-- 客户管理 -->
   <div class="table-page">
     <div class="table-operator">
-      <a-button type="primary" icon="user-add" @click="handleAddCus">邀请用户</a-button>
-      <div
-        class="table-page-search-submitButtons"
-        :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
-      >
-        <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+      <PageName></PageName>
+      <div class="table-page-search-submitButtons">
+        <a-button type="primary" @click="this.$refs.table.refresh(true)">查询</a-button>
         <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-        <a @click="toggleAdvanced" style="margin-left: 8px">
-          {{ advanced ? '收起' : '展开' }}
-          <a-icon :type="advanced ? 'up' : 'down'" />
-        </a>
       </div>
     </div>
     <div class="table-page-search-wrapper">
@@ -38,31 +30,6 @@
               </a-select>
             </a-form-item>
           </a-col>
-          <template v-if="advanced">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="人员ID">
-                <a-input v-model="queryParam.name" style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="用户单位">
-                <a-input v-model="queryParam.name" style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item>
-                <a-input-group compact style="width: 100%;">
-                  <a-select defaultValue="0" style="width: 30%;">
-                    <a-select-option value="0">性别</a-select-option>
-                    <a-select-option value="1">邮箱地址</a-select-option>
-                    <a-select-option value="2">手机号码</a-select-option>
-                    <a-select-option value="3">固定电话</a-select-option>
-                  </a-select>
-                  <a-input style="width: 70%" defaultValue="input content" />
-                </a-input-group>
-              </a-form-item>
-            </a-col>
-          </template>
         </a-row>
       </a-form>
     </div>
@@ -88,16 +55,18 @@
       bordered
     >
       <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-      <span slot="sex" slot-scope="sex">{{ sex ? '男' : '女' }}</span>
-      <a slot="userId" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <a slot="userNo" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
       <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <span slot="file" slot-scope="text, record">
+        <a @click="() => handleView(record.userId)">查看</a>
+      </span>
       <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
       <template slot="operation" slot-scope="text, record">
         <div class="editable-row-operations">
           <span slot="operation">
             <a @click="() => handleEdit(record.userId)">编辑</a>
             <a-divider type="vertical" />
-            <a @click="() => handleView(record.userId)">查看</a>
+            <a @click="() => handleDelete(record.userId)">删除</a>
           </span>
         </div>
       </template>
@@ -106,8 +75,8 @@
 </template>
 
 <script>
-import { STable } from '@/components'
 import { axios } from '@/utils/request'
+import { PageName } from '@/components'
 
 const columns = [
   {
@@ -118,24 +87,12 @@ const columns = [
     }
   },
   {
-    title: '用户号',
-    align: 'center',
-    dataIndex: 'userId',
-    scopedSlots: {
-      customRender: 'userId'
-    },
-    sorter: true
-  },
-  {
     title: '健康号',
     align: 'center',
     dataIndex: 'userNo',
-    sorter: true
-  },
-  {
-    title: '用户组',
-    align: 'center',
-    dataIndex: 'group',
+    scopedSlots: {
+      customRender: 'userNo'
+    },
     sorter: true
   },
   {
@@ -173,10 +130,12 @@ const columns = [
     sorter: true
   },
   {
-    title: '创建时间',
+    title: '健康档案',
     align: 'center',
-    dataIndex: 'createOn',
-    sorter: true
+    dataIndex: 'file',
+    scopedSlots: {
+      customRender: 'file'
+    }
   },
 
   {
@@ -188,17 +147,12 @@ const columns = [
     }
   }
 ]
-
 export default {
-  name: 'CustomerTable',
-  components: {
-    STable
-  },
+  // WeeklySummary
+  name: 'WeeklySummary',
+  components: { PageName },
   data () {
-    // this.cacheData = data.map(item => ({ ...item }))
     return {
-      // 高级搜索 展开/关闭
-      advanced: false,
       // 查询参数
       queryParam: {},
       selectedRowKeys: [], // Check here to configure the default column
@@ -290,7 +244,7 @@ export default {
     handleEdit (userId) {
       // 点击行进入详情页
       this.$router.push({
-        path: '/basicdata/Customermanage/edit',
+        path: '/report/WeeklySummary/edit',
         query: {
           userId: userId
         }
@@ -299,20 +253,14 @@ export default {
     handleView (userId) {
       // 点击行进入详情页
       this.$router.push({
-        path: '/basicdata/Customermanage/info',
+        path: '/report/WeeklySummary/info',
         query: {
           userId: userId
         }
       })
     },
-    handleAddCus () {
-      // 点击行进入邀请客户页
-      this.$router.push({
-        path: '/basicdata/Customermanage/add'
-      })
-    },
-    toggleAdvanced () {
-      this.advanced = !this.advanced
+    handleDelete () {
+
     }
   }
 }
