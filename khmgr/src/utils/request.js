@@ -44,11 +44,12 @@ const err = error => {
         })
       }
     }
-    if (error.response.status === 500) {
-      this.$router.push({
-        path: '/500'
-      })
-    }
+    // if (error.response.status === 500) {
+    //   notification.error({
+    //     message: 'Internal Server Error',
+    //     description: data.message
+    //   })
+    // }
   }
   return Promise.reject(error)
 }

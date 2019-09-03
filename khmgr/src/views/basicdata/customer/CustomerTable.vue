@@ -253,7 +253,6 @@ export default {
         url: '/api/admin/customers',
         method: 'get',
         params: {
-          results: 10,
           ...params
         }
       }).then(res => {

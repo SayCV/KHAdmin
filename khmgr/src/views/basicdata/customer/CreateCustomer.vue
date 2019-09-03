@@ -1,68 +1,66 @@
 <template>
-  <a-card>
-    <div class="create-cus-page">
-      <div class="create-container">
-        <div class="page-top">
-          <ButtonBack></ButtonBack>
+  <div class="create-cus-page">
+    <div class="create-container">
+      <div class="page-top">
+        <ButtonBack></ButtonBack>
+      </div>
+      <div class="top">
+        <div class="title">
+          <a-icon type="user-add" />
+          <span>添加客户</span>
         </div>
-        <div class="top">
-          <div class="title">
-            <a-icon type="user-add" />
-            <span>添加客户</span>
-          </div>
+      </div>
+      <div class="content">
+        <div class="query-form">
+          <a-form :form="form" @submit="handleSearch">
+            <a-form-item label="健康号" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+              <a-input
+                v-decorator="[ 'userNo', {rules: [{ required: true, message: '请输入您要查询的健康号!' }]} ]"
+              ></a-input>
+            </a-form-item>
+            <div class="search-btn">
+              <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">查询</a-button>
+              <a-button :style="{ marginLeft: '8px' }" @click="handleReset">清空</a-button>
+            </div>
+          </a-form>
         </div>
-        <div class="content">
-          <div class="query-form">
-            <a-form :form="form" @submit="handleSearch">
-              <a-form-item label="健康号" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-                <a-input
-                  v-decorator="[ 'userNo', {rules: [{ required: true, message: '请输入您要查询的健康号!' }]} ]"
-                ></a-input>
-              </a-form-item>
-              <div class="search-btn">
-                <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">查询</a-button>
-                <a-button :style="{ marginLeft: '8px' }" @click="handleReset">清空</a-button>
+        <div class="return-list">
+          <a-card
+            :bordered="false"
+            :bodyStyle="{ padding: '0px', height: '100%' }"
+            :style="{ height: '100%' }"
+          >
+            <div class="user-item" v-if="showResult">
+              <div class="avatar">
+                <a-avatar :size="75" icon="user" :src="data.avatar" />
               </div>
-            </a-form>
-          </div>
-          <div class="return-list">
-            <a-card
-              :bordered="false"
-              :bodyStyle="{ padding: '0px', height: '100%' }"
-              :style="{ height: '100%' }"
-            >
-              <div class="user-item" v-if="showResult">
-                <div class="avatar">
-                  <a-avatar :size="75" icon="user" :src="data.avatar" />
-                </div>
-                <div class="info">
-                  <div class="nickname">{{ data.name }}</div>
-                  <div class="name_id">
-                    <div>
-                      昵称&nbsp;:
-                      <span>{{ data.userName }}</span>
-                    </div>
-                    <div>
-                      健康号&nbsp;:
-                      <span>{{ data.userNo }}</span>
-                    </div>
+              <div class="info">
+                <div class="nickname">{{ data.name }}</div>
+                <div class="name_id">
+                  <div>
+                    昵称&nbsp;:
+                    <span>{{ data.userName }}</span>
                   </div>
-                  <div class="tag">
-                    <a-tag color="blue">客户</a-tag>
+                  <div>
+                    健康号&nbsp;:
+                    <span>{{ data.userNo }}</span>
                   </div>
                 </div>
-                <div class="btn">
-                  <a-button type="primary" icon="user-add">邀请用户</a-button>
+                <div class="tag">
+                  <a-tag color="blue">客户</a-tag>
                 </div>
               </div>
-              <div class="nofind-user-item" v-else-if="notFound">{{ notFoundUser }}</div>
-              <div class="no-user-item" v-else>{{ noData }}</div>
-            </a-card>
-          </div>
+              <div class="btn">
+                <a-button type="primary" icon="user-add">邀请用户</a-button>
+              </div>
+            </div>
+            <div class="nofind-user-item" v-else-if="notFound">{{ notFoundUser }}</div>
+            <div class="no-user-item" v-else>{{ noData }}</div>
+          </a-card>
         </div>
       </div>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
@@ -147,7 +145,7 @@ export default {
     background: #fbfbfb;
     border: 1px solid #d9d9d9;
     border-radius: 6px;
-    width: 61.8%;
+    width: 51.8%;
     height: 50vh;
     .page-top {
       display: flex;

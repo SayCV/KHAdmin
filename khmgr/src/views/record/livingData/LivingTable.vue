@@ -163,6 +163,11 @@ export default {
         this.loading = false
         this.data = res.list
         this.pagination = pagination
+      }).catch(err => {
+        if (err) {
+          console.log(err)
+          this.loading = false
+        }
       })
     },
     start () {

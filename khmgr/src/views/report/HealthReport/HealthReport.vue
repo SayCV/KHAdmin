@@ -207,7 +207,6 @@ export default {
         url: '/api/admin/customers',
         method: 'get',
         params: {
-          results: 10,
           ...params
         }
       }).then(res => {
@@ -223,7 +222,7 @@ export default {
         this.pagination = pagination
       }).catch(err => {
         if (err) {
-          console.log(err)
+          console.log('yahaha', err)
           this.loading = false
         }
       })

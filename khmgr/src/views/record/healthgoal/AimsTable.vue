@@ -2,8 +2,7 @@
   <div>
     <div class="aims-table-page">
       <div class="page-top">
-        <div class="top-btns">
-        </div>
+        <div class="top-btns"></div>
         <div class="table-page-search-wrapper">
           <a-form layout="inline">
             <a-row :gutter="48">
@@ -175,6 +174,7 @@ export default {
       }).catch(err => {
         if (err) {
           console.log(err)
+          this.loading = false
         }
       })
     },
@@ -226,7 +226,6 @@ export default {
 <style lang="less" scoped>
 .aims-table-page {
   .page-top {
-
   }
 }
 </style>
