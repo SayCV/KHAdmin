@@ -8,13 +8,9 @@ export const asyncRouterMap = [
     path: '/',
     name: 'index',
     component: BasicLayout,
-    meta: {
-      title: '首页',
-      requireAuth: true // 添加该字段，表示进入这个路由是需要登录的
-    },
+    meta: { title: '首页' },
     redirect: '/dashboard/workplace',
     children: [
-      // 右侧sidebar里的导航路由
       // dashboard
       {
         path: '/dashboard',
@@ -321,8 +317,7 @@ export const asyncRouterMap = [
                   {
                     path: '/intervenemanager/quantifGoal/list',
                     name: 'QuantitativeGoal',
-                    component: () =>
-                             import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
+                    component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
                     meta: { title: '量化目标', keepAlive: true, hidden: true }
                   },
                   {
@@ -356,15 +351,13 @@ export const asyncRouterMap = [
                   {
                     path: '/intervenemanager/unquantifGoal/list',
                     name: 'UnquantitativeGoal',
-                    component: () =>
-                             import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
+                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
                     meta: { title: '非量化目标', keepAlive: true, hidden: true }
                   },
                   {
                     path: '/intervenemanager/unquantifGoal/edit',
                     name: 'EditUnquanGoal',
-                    component: () =>
-                             import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
+                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
                     meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
                   }
                   // {
@@ -381,7 +374,7 @@ export const asyncRouterMap = [
             path: '/intervenemanager/Planandcourse',
             name: 'Planandcourse',
             component: () => import('@/views/intervenemanager/PlanAndCourse/PlanAndCourse'),
-            meta: { title: '干预计划与课程', keepAlive: true, permission: ['profile'] }
+            meta: { title: '课程安排', keepAlive: true, permission: ['profile'] }
           },
           {
             path: '/intervenemanager/AppPush',

@@ -8,7 +8,12 @@
         </div>
         <div class="aim-info">
           <div class="label">
-            <div class="title">{{ aimItem.title }}</div>
+            <div class="title">
+              <span class="name">{{ aimItem.title }}</span>
+              <a-divider type="vertical" />
+              <!-- <span class="divider"></span> -->
+              <span class="plan">{{ aimItem.plan }}</span>
+            </div>
             <div class="aim-btns">
               <a-button-group>
                 <a-button @click="() => handleToEditAD(aimItem)">编辑</a-button>
@@ -122,7 +127,7 @@ export default {
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   max-width: 575px;
-  min-width: 475px;
+  min-width: 500px;
   padding: 10px;
   margin-right: 8px;
   margin-bottom: 8px;
@@ -147,8 +152,8 @@ export default {
           display: flex;
           justify-content: space-between;
           .title {
-            max-width: 150px;
-            font-size: 16px;
+            max-width: 250px;
+            font-size: 15px;
             color: rgba(0, 0, 0, 0.85);
             white-space: nowrap;
             overflow: hidden;

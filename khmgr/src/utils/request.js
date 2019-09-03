@@ -6,11 +6,17 @@ import { VueAxios } from './axios'
 import notification from 'ant-design-vue/es/notification'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 
-// 创建 axios 实例
+// 创建 axios 实例 开发域名
 const service = axios.create({
-  baseURL: 'http://172.31.214.104/khmsrv/', // /api base_url http://yapi.sagaii.cn/mock/11
+  baseURL: 'http://172.31.231.91/khsrv/',
   timeout: 6000 // 请求超时时间
 })
+
+// 创建 axios 实例 公网域名
+// const service = axios.create({
+//   baseURL: 'http://172.31.231.100/khsrv/swagger/',
+//   timeout: 6000 // 请求超时时间
+// })
 
 axios.defaults.timeout = 6000
 

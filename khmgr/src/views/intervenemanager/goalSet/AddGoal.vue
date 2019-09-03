@@ -15,7 +15,7 @@
             <a-input
               v-decorator="[
                 'title',
-                {rules: [{ required: true, message: '请输入广告名称' }] }
+                {rules: [{ required: true, message: '请输入小目标名称' }] }
               ]"
             />
           </a-form-item>
@@ -27,7 +27,19 @@
             <a-input
               v-decorator="[
                 'desc',
-                {rules: [{ required: true, message: '请输入广告链接' }] }
+                {rules: [{ required: true, message: '请输入小目标描述' }] }
+              ]"
+            />
+          </a-form-item>
+          <a-form-item
+            label="推荐计划"
+            :labelCol="{md: {span: 4}, sm: {span: 4}}"
+            :wrapperCol="{md: {span: 16}, sm: {span: 16} }"
+          >
+            <a-input
+              v-decorator="[
+                'plan',
+                {rules: [{ required: true, message: '请填写推荐计划' }] }
               ]"
             />
           </a-form-item>
@@ -168,7 +180,12 @@
           </a-form-item>
           <!-- fixed footer toolbar -->
           <footer-tool-bar>
-            <a-button type="primary" html-type="submit" :loading="loading" :disabled="loading">提&nbsp;交</a-button>
+            <a-button
+              type="primary"
+              html-type="submit"
+              :loading="loading"
+              :disabled="loading"
+            >提&nbsp;交</a-button>
           </footer-tool-bar>
         </a-form>
       </div>

@@ -92,13 +92,9 @@ module.exports = {
     proxy: {
       '/api': {
         // 后端接口地址
-        target: 'http://172.31.214.104/khmsrv/',
-        // target: 'http://172.22.21.3:5000',
+        target: 'http://172.31.231.91/khsrv/',
         ws: false,
-        changeOrigin: true, // 是否允许跨越
-        pathRewrite: {
-          '^/api': '/api' // 重写,
-        }
+        changeOrigin: true // 是否允许跨越
       },
       '/imgs': {
         target: 'http://localhost:8000',
