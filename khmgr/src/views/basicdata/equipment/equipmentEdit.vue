@@ -1,198 +1,195 @@
 <template>
   <div class="equipment-edit-container">
-    <a-card :bordered="true">
-      <div class="back">
-        <div class="equipment-table-title">
-          <h1>
-            设备编辑页
-            <span>{{ equipmentId }}</span>
-          </h1>
-        </div>
-        <a-button type="primary" @click="handleBtnBack">
-          返回
-          <a-icon type="rollback" />
-        </a-button>
+    <div class="back">
+      <ButtonBack></ButtonBack>
+      <div class="equipment-table-title">
+        <h2>
+          设备编辑页
+          <span>{{ equipmentId }}</span>
+        </h2>
       </div>
-      <div class="equipment-edit-table">
-        <div class="equipment-table-body">
-          <a-form @submit="handleSubmit" :form="form">
-            <div class="basic-info">
-              <a-form-item
-                label="设备类型"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="['category', {
-                    rules: [{ required: true, message: '请输入设备类型' }],
-                    initialValue: data.category
-                  }]"
-                  name="category"
-                />
-              </a-form-item>
-              <a-form-item
-                label="设备ID"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="['equipmentId', {
-                    rules: [{ required: true, message: '请输入设备ID' }],
-                    initialValue: data.equipmentId
-                  }]"
-                  name="equipmentId"
-                />
-              </a-form-item>
-              <a-form-item
-                label="绑定账号"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="['bindAccountId', {
-                    rules: [{ required: true, message: '请输入绑定账号' }],
-                    initialValue: data.bindAccountId
-                  }]"
-                  name="bindAccountId"
-                />
-              </a-form-item>
+    </div>
+    <div class="equipment-edit-table">
+      <div class="equipment-table-body">
+        <a-form @submit="handleSubmit" :form="form">
+          <div class="basic-info">
+            <a-form-item
+              label="设备类型"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="['category', {
+                  rules: [{ required: true, message: '请输入设备类型' }],
+                  initialValue: data.category
+                }]"
+                name="category"
+              />
+            </a-form-item>
+            <a-form-item
+              label="设备ID"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="['equipmentId', {
+                  rules: [{ required: true, message: '请输入设备ID' }],
+                  initialValue: data.equipmentId
+                }]"
+                name="equipmentId"
+              />
+            </a-form-item>
+            <a-form-item
+              label="绑定账号"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="['bindAccountId', {
+                  rules: [{ required: true, message: '请输入绑定账号' }],
+                  initialValue: data.bindAccountId
+                }]"
+                name="bindAccountId"
+              />
+            </a-form-item>
 
-              <a-form-item
-                label="设备状态"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="[
-                    'status',
-                    {rules: [{ required: true, message: '请输入设备状态' }],
-                     initialValue: data.status}
-                  ]"
-                  name="status"
-                />
-              </a-form-item>
-              <a-form-item
-                label="设备型号"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="[
-                    'untiType',
-                    {rules: [{ required: true, message: '请输入设备型号' }],
-                     initialValue: data.untiType}
-                  ]"
-                  name="untiType"
-                />
-              </a-form-item>
-              <a-form-item
-                label="启动时间"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-date-picker
-                  :format="dateFormat"
-                  name="createdTime"
-                  style="width: 100%"
-                  v-decorator="[
-                    'createdTime',
-                    {rules: [{ required: true, message: '请选择启动时间' }],
-                     initialValue: moment(data.createdTime, dateFormat)
-                    }
-                  ]"
-                />
-              </a-form-item>
-            </div>
+            <a-form-item
+              label="设备状态"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'status',
+                  {rules: [{ required: true, message: '请输入设备状态' }],
+                   initialValue: data.status}
+                ]"
+                name="status"
+              />
+            </a-form-item>
+            <a-form-item
+              label="设备型号"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'untiType',
+                  {rules: [{ required: true, message: '请输入设备型号' }],
+                   initialValue: data.untiType}
+                ]"
+                name="untiType"
+              />
+            </a-form-item>
+            <a-form-item
+              label="启动时间"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-date-picker
+                :format="dateFormat"
+                name="createdTime"
+                style="width: 100%"
+                v-decorator="[
+                  'createdTime',
+                  {rules: [{ required: true, message: '请选择启动时间' }],
+                   initialValue: moment(data.createdTime, dateFormat)
+                  }
+                ]"
+              />
+            </a-form-item>
+          </div>
 
-            <div class="other-info">
-              <a-form-item
-                label="IP地址"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="[
-                    'IP',
-                    {rules: [{ required: true, message: '请输入IP地址' }],
-                     initialValue: data.IP}
-                  ]"
-                  name="IP"
-                />
-              </a-form-item>
-              <a-form-item
-                label="在线时间"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="[
-                    'countTime',
-                    {rules: [{ required: true, message: '请输入在线时间' }],
-                     initialValue: data.countTime}
-                  ]"
-                  name="countTime"
-                />
-              </a-form-item>
-              <a-form-item
-                label="生产商"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="[
-                    'producer',
-                    {rules: [{ required: true, message: '请输入生产商' }],
-                     initialValue: data.producer}
-                  ]"
-                  name="producer"
-                />
-              </a-form-item>
-              <a-form-item
-                label="联系电话"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-input
-                  v-decorator="[
-                    'phone',
-                    {rules: [{ required: true, message: '请输入联系电话' }],
-                     initialValue: data.phone}
-                  ]"
-                  name="phone"
-                />
-              </a-form-item>
-              <a-form-item
-                label="安装区域"
-                :labelCol="{lg: {span: 6}, sm: {span: 6}}"
-                :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
-              >
-                <a-textarea
-                  rows="4"
-                  v-decorator="[
-                    'address',
-                    {rules: [{ required: true, message: '请填写安装地址' }],
-                     initialValue: data.address}
-                  ]"
-                />
-              </a-form-item>
-            </div>
-            <div class="from-option" style="text-align: center">
-              <a-button htmlType="submit" type="primary">提交</a-button>
-              <a-button style="margin-left: 8px">保存</a-button>
-            </div>
-          </a-form>
-        </div>
+          <div class="other-info">
+            <a-form-item
+              label="IP地址"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'IP',
+                  {rules: [{ required: true, message: '请输入IP地址' }],
+                   initialValue: data.IP}
+                ]"
+                name="IP"
+              />
+            </a-form-item>
+            <a-form-item
+              label="在线时间"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'countTime',
+                  {rules: [{ required: true, message: '请输入在线时间' }],
+                   initialValue: data.countTime}
+                ]"
+                name="countTime"
+              />
+            </a-form-item>
+            <a-form-item
+              label="生产商"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'producer',
+                  {rules: [{ required: true, message: '请输入生产商' }],
+                   initialValue: data.producer}
+                ]"
+                name="producer"
+              />
+            </a-form-item>
+            <a-form-item
+              label="联系电话"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-input
+                v-decorator="[
+                  'phone',
+                  {rules: [{ required: true, message: '请输入联系电话' }],
+                   initialValue: data.phone}
+                ]"
+                name="phone"
+              />
+            </a-form-item>
+            <a-form-item
+              label="安装区域"
+              :labelCol="{lg: {span: 6}, sm: {span: 6}}"
+              :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
+            >
+              <a-textarea
+                rows="4"
+                v-decorator="[
+                  'address',
+                  {rules: [{ required: true, message: '请填写安装地址' }],
+                   initialValue: data.address}
+                ]"
+              />
+            </a-form-item>
+          </div>
+          <div class="from-option" style="text-align: center">
+            <a-button htmlType="submit" type="primary">提交</a-button>
+            <a-button style="margin-left: 8px">保存</a-button>
+          </div>
+        </a-form>
       </div>
-    </a-card>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   name: 'EquipmentEdit',
+  components: { ButtonBack },
   data () {
     return {
       dateFormat: 'YYYY-MM-DD',

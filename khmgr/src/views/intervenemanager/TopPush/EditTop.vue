@@ -123,7 +123,7 @@ export default {
     })
   },
   mounted () {
-    this.getFormData(this.newsId)
+    // this.getFormData(this.newsId)
   },
   methods: {
     moment,

@@ -94,7 +94,8 @@
 <script>
 // import { STable } from '@/components'
 
-import axios from 'axios'
+// import axios from 'axios'
+import { axios } from '@/utils/request'
 
 const columns = [
   {
@@ -202,14 +203,13 @@ export default {
           ...params
         }
       }).then(res => {
-        console.log('res')
-        console.log(res)
+        console.log('健管师列表', res)
         const pagination = { ...this.pagination }
         // Read total count from server
-        pagination.total = res.data.result.totalCount
+        pagination.total = res.result.totalCount
         // pagination.total = 20;
         this.loading = false
-        this.data = res.data.result.data
+        this.data = res.result.data
         this.pagination = pagination
       })
     },

@@ -1,16 +1,13 @@
 <template>
-  <a-card>
+  <div>
     <div class="back">
+      <ButtonBack></ButtonBack>
       <div class="edit-table-title">
-        <h1>
+        <h2>
           健管师信息
           <span>{{ accountId }}</span>
-        </h1>
+        </h2>
       </div>
-      <a-button type="primary" @click="handleBtnBack">
-        返回
-        <a-icon type="rollback" />
-      </a-button>
     </div>
     <div class="customer-container">
       <a-form @submit="handleSubmit" :form="form">
@@ -152,16 +149,18 @@
         </div>
       </a-form>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
 import axios from 'axios'
 import moment from 'moment'
+import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
   // 健管师管理
   name: 'KhManagerEdit',
+  components: { ButtonBack },
   data () {
     return {
       dateFormat: 'YYYY-MM-DD',

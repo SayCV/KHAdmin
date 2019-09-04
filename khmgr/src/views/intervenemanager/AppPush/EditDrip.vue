@@ -123,18 +123,8 @@ export default {
       vm.getFormData(vm.newsId)
     })
   },
-  watch: {
-    '$route' (to, from) {
-      if (to.path === '/intervenemanager/AppPush/edit') {
-        console.log('进入点滴编辑页面', to)
-        this.newsId = this.$route.query.newsId
-        // this.data = this.$route.query.data
-        this.getFormData(this.newsId)
-      }
-    }
-  },
   mounted () {
-    this.getFormData(this.newsId)
+    // this.getFormData(this.newsId)
   },
   methods: {
     moment,

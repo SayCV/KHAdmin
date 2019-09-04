@@ -114,7 +114,7 @@ export const asyncRouterMap = [
               {
                 path: '/basicdata/Equipmentmanager/table',
                 name: 'EquipmentmanagerTable',
-                component: () => import('@/views/basicdata/equipment/Equipmentmanager'),
+                component: () => import('@/views/basicdata/equipment/EquipmentTable'),
                 meta: { title: '设备信息表', keepAlive: true, hidden: true, permission: ['table'] }
               },
               {

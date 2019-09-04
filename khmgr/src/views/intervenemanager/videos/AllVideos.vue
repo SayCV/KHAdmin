@@ -67,13 +67,15 @@ export default {
     next(vm => {
       if (vm.$route.query.page) {
         vm.current = vm.$route.query.page
-      } vm.fetch()
+      }
+      vm.fetch()
     })
   },
   mounted () {
-    if (this.$route.query.page) {
-      this.current = this.$route.query.page
-    } this.fetch()
+    // if (this.$route.query.page) {
+    //   this.current = this.$route.query.page
+    // }
+    // this.fetch()
   },
   computed: {
     showPagination () {
@@ -90,7 +92,7 @@ export default {
         // url: '/api/admin/videos',
         method: 'get'
       }).then(res => {
-        console.log('video', res)
+        console.log('HD视频列表', res)
         if (res.list.length === 0) {
           this.NoVideoList = true
           this.videoList = []
@@ -105,10 +107,10 @@ export default {
       }).catch(err => {
         if (err) {
           this.NoVideoList = true
-          this.$notification['error']({
-            message: '注意！注意！',
-            description: '网络链接中断...'
-          })
+          // this.$notification['error']({
+          //   message: '注意！注意！',
+          //   description: '网络链接中断...'
+          // })
         }
         this.refresh = false
       })

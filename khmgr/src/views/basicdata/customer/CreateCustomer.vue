@@ -145,7 +145,7 @@ export default {
     background: #fbfbfb;
     border: 1px solid #d9d9d9;
     border-radius: 6px;
-    width: 51.8%;
+    width: 60%;
     height: 50vh;
     .page-top {
       display: flex;

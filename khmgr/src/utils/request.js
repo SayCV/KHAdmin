@@ -9,16 +9,19 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 // 创建 axios 实例 开发域名
 const service = axios.create({
   baseURL: 'http://172.31.231.91/khsrv/',
-  timeout: 6000 // 请求超时时间
+  timeout: 6000, // 请求超时时间
+  headers: {
+    'Content-Type': 'application/json; charset=utf-8'
+  }
 })
 
 // 创建 axios 实例 公网域名
 // const service = axios.create({
-//   baseURL: 'http://172.31.231.100/khsrv/swagger/',
+//   baseURL: 'http://172.31.231.100/khsrv/',
 //   timeout: 6000 // 请求超时时间
 // })
 
-axios.defaults.timeout = 6000
+// axios.defaults.timeout = 6000
 
 const err = error => {
   if (error.response) {

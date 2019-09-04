@@ -53,8 +53,6 @@
         <div class="editable-row-operations">
           <span slot="operation">
             <a @click="() => handleView(record.userId)">查看</a>
-            <a-divider type="vertical" />
-            <a @click="() => handleDelete(record.userId)">删除</a>
           </span>
         </div>
       </template>
@@ -191,10 +189,7 @@ export default {
         this.data = newData
       }
     },
-    handleDelete (userId) {
-      // 点击行进入edit页
-      console.log(' 点击删除 ', userId)
-    },
+
     handleView (userId) {
       // 点击行进入详情页
       console.log(' edit click! ', userId)
