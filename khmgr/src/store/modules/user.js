@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { login, getInfo } from '@/api/login'
+import { login } from '@/api/login'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 import { loadLanguageAsync } from '@/lang'
@@ -71,30 +71,7 @@ const user = {
           })
       })
     },
-    // Fake
-    GetInfo ({ commit }) {
-      return new Promise((resolve, reject) => {
-        getInfo()
-          .then(response => {
-            const result = response.result
-            console.log('get userinfo', response)
-            if (result.role && result.role.permissions.length > 0) {
-              const role = result.role
-              role.permissions = result.role.permissions
-              role.permissionList = role.permissions.map(permission => {
-                return permission.permissionId
-              })
-              commit('SET_ROLES', result.role)
-            } else {
-              reject(new Error('getInfo: roles must be a non-null array !'))
-            }
-            resolve(response)
-          })
-          .catch(error => {
-            reject(error)
-          })
-      })
-    },
+
     // 登出
     // Logout({ commit, state }) {
     //   return new Promise(resolve => {
