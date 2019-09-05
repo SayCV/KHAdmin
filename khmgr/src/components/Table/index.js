@@ -68,7 +68,7 @@ export default {
       this.$router.push({
         name: this.$route.name,
         params: Object.assign({}, this.$route.params, {
-          pageNo: val
+          pageNum: val
         })
       })
     },
@@ -89,11 +89,13 @@ export default {
     }
   },
   created () {
-    this.localPagination = ['auto', true].includes(this.showPagination) && Object.assign({}, this.localPagination, {
-      current: this.pageNum,
-      pageSize: this.pageSize,
-      showSizeChanger: this.showSizeChanger
-    })
+    this.localPagination =
+      ['auto', true].includes(this.showPagination) &&
+      Object.assign({}, this.localPagination, {
+        current: this.pageNum,
+        pageSize: this.pageSize,
+        showSizeChanger: this.showSizeChanger
+      })
     this.needTotalList = this.initTotalList(this.columns)
     this.loadData()
   },
@@ -104,72 +106,82 @@ export default {
      * @param Boolean bool
      */
     refresh (bool = false) {
-      bool && (this.localPagination = Object.assign({}, {
-        current: 1, pageSize: this.pageSize
-      }))
+      bool &&
+        (this.localPagination = Object.assign(
+          {},
+          {
+            current: 1,
+            pageSize: this.pageSize
+          }
+        ))
       this.loadData()
     },
     /**
      * 加载数据方法
      * @param {Object} pagination 分页选项器
      * @param {Object} filters 过滤条件
-     * @param {Object} sorter 排序条件
+     * @param {Object} sorter 排序条件pageNum
      */
     loadData (pagination, filters, sorter) {
       this.localLoading = true
-      const parameter = Object.assign({
-        pageNo: (pagination && pagination.current) ||
-            this.localPagination.current || this.pageNum,
-        pageSize: (pagination && pagination.pageSize) ||
-            this.localPagination.pageSize || this.pageSize
-      },
-      (sorter && sorter.field && {
-        sortField: sorter.field
-      }) || {},
-      (sorter && sorter.order && {
-        sortOrder: sorter.order
-      }) || {}, {
-        ...filters
-      }
+      const parameter = Object.assign(
+        {
+          pageNum: (pagination && pagination.current) || this.localPagination.current || this.pageNum,
+          pageSize: (pagination && pagination.pageSize) || this.localPagination.pageSize || this.pageSize
+        },
+        (sorter &&
+          sorter.field && {
+          sortField: sorter.field
+        }) ||
+          {},
+        (sorter &&
+          sorter.order && {
+          sortOrder: sorter.order
+        }) ||
+          {},
+        {
+          ...filters
+        }
       )
       const result = this.data(parameter)
-      // 对接自己的通用数据接口需要修改下方代码中的 r.pageNo, r.totalCount, r.data
+      // 对接自己的通用数据接口需要修改下方代码中的 r.pageNum, r.total, r.list
       // eslint-disable-next-line
       if ((typeof result === 'object' || typeof result === 'function') && typeof result.then === 'function') {
         result.then(r => {
           this.localPagination = Object.assign({}, this.localPagination, {
-            current: r.pageNo, // 返回结果中的当前分页数
-            total: r.totalCount, // 返回结果中的总记录数
+            current: r.pageNum, // 返回结果中的当前分页数
+            total: r.total, // 返回结果中的总记录数
             showSizeChanger: this.showSizeChanger,
-            pageSize: (pagination && pagination.pageSize) ||
-              this.localPagination.pageSize
+            pageSize: (pagination && pagination.pageSize) || this.localPagination.pageSize
           })
           // 为防止删除数据后导致页面当前页面数据长度为 0 ,自动翻页到上一页
-          if (r.data.length === 0 && this.localPagination.current !== 1) {
+          if (r.list.length === 0 && this.localPagination.current !== 1) {
             this.localPagination.current--
             this.loadData()
             return
           }
 
-          // 这里用于判断接口是否有返回 r.totalCount 或 this.showPagination = false
+          // 这里用于判断接口是否有返回 r.total 或 this.showPagination = false
           // 当情况满足时，表示数据不满足分页大小，关闭 table 分页功能
 
-          (!this.showPagination || !r.totalCount && this.showPagination === 'auto') && (this.localPagination = false)
-          this.localDataSource = r.data // 返回结果中的数组数据
+          ;(!this.showPagination || (!r.total && this.showPagination === 'auto')) && (this.localPagination = false)
+          this.localDataSource = r.list // 返回结果中的数组数据
           this.localLoading = false
         })
       }
     },
     initTotalList (columns) {
       const totalList = []
-      columns && columns instanceof Array && columns.forEach(column => {
-        if (column.needTotal) {
-          totalList.push({
-            ...column,
-            total: 0
-          })
-        }
-      })
+      columns &&
+        columns instanceof Array &&
+        columns.forEach(column => {
+          if (column.needTotal) {
+            totalList.push({
+              ...column,
+              total: 0
+            })
+          }
+        })
       return totalList
     },
     /**
@@ -208,32 +220,43 @@ export default {
     renderClear (callback) {
       if (this.selectedRowKeys.length <= 0) return null
       return (
-        <a style="margin-left: 24px" onClick={() => {
-          callback()
-          this.clearSelected()
-        }}>清空</a>
+        <a
+          style="margin-left: 24px"
+          onClick={() => {
+            callback()
+            this.clearSelected()
+          }}
+        >
+          清空
+        </a>
       )
     },
     renderAlert () {
       // 绘制统计列数据
-      const needTotalItems = this.needTotalList.map((item) => {
-        return (<span style="margin-right: 12px">
-          {item.title}总计 <a style="font-weight: 600">{!item.customRender ? item.total : item.customRender(item.total)}</a>
-        </span>)
+      const needTotalItems = this.needTotalList.map(item => {
+        return (
+          <span style="margin-right: 12px">
+            {item.title}总计{' '}
+            <a style="font-weight: 600">{!item.customRender ? item.total : item.customRender(item.total)}</a>
+          </span>
+        )
       })
 
       // 绘制 清空 按钮
-      const clearItem = (typeof this.alert.clear === 'boolean' && this.alert.clear) ? (
-        this.renderClear(this.clearSelected)
-      ) : (this.alert !== null && typeof this.alert.clear === 'function') ? (
-        this.renderClear(this.alert.clear)
-      ) : null
+      const clearItem =
+        typeof this.alert.clear === 'boolean' && this.alert.clear
+          ? this.renderClear(this.clearSelected)
+          : this.alert !== null && typeof this.alert.clear === 'function'
+            ? this.renderClear(this.alert.clear)
+            : null
 
       // 绘制 alert 组件
       return (
         <a-alert showIcon={true} style="margin-bottom: 16px">
           <template slot="message">
-            <span style="margin-right: 12px">已选择: <a style="font-weight: 600">{this.selectedRows.length}</a></span>
+            <span style="margin-right: 12px">
+              已选择: <a style="font-weight: 600">{this.selectedRows.length}</a>
+            </span>
             {needTotalItems}
             {clearItem}
           </template>
@@ -245,7 +268,12 @@ export default {
   render () {
     const props = {}
     const localKeys = Object.keys(this.$data)
-    const showAlert = (typeof this.alert === 'object' && this.alert !== null && this.alert.show) && typeof this.rowSelection.selectedRowKeys !== 'undefined' || this.alert
+    const showAlert =
+      (typeof this.alert === 'object' &&
+        this.alert !== null &&
+        this.alert.show &&
+        typeof this.rowSelection.selectedRowKeys !== 'undefined') ||
+      this.alert
 
     Object.keys(T.props).forEach(k => {
       const localKey = `local${k.substring(0, 1).toUpperCase()}${k.substring(1)}`
@@ -276,14 +304,16 @@ export default {
     })
     const table = (
       <a-table {...{ props, scopedSlots: { ...this.$scopedSlots } }} onChange={this.loadData}>
-        { Object.keys(this.$slots).map(name => (<template slot={name}>{this.$slots[name]}</template>)) }
+        {Object.keys(this.$slots).map(name => (
+          <template slot={name}>{this.$slots[name]}</template>
+        ))}
       </a-table>
     )
 
     return (
       <div class="table-wrapper">
-        { showAlert ? this.renderAlert() : null }
-        { table }
+        {showAlert ? this.renderAlert() : null}
+        {table}
       </div>
     )
   }

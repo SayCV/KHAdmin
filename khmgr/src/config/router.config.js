@@ -57,9 +57,15 @@ export const asyncRouterMap = [
               },
               {
                 path: '/basicdata/Customermanage/add',
+                name: 'AddCustomer',
+                component: () => import('@/views/basicdata/customer/AddCustomer'),
+                meta: { title: '添加客户页', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/basicdata/Customermanage/create',
                 name: 'CreateCustomer',
                 component: () => import('@/views/basicdata/customer/CreateCustomer'),
-                meta: { title: '添加客户页', keepAlive: true, hidden: true, permission: ['table'] }
+                meta: { title: '创建客户', keepAlive: true, hidden: true, permission: ['table'] }
               },
               {
                 path: '/basicdata/Customermanage/info',

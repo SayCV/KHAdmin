@@ -2,12 +2,17 @@
   <!-- 客户管理 -->
   <div class="table-page">
     <div class="table-operator">
-      <a-button type="primary" icon="user-add" @click="handleAddCus">邀请用户</a-button>
+      <div class="operator-btns">
+        <a-button type="primary" icon="user-add" @click="handleAddCus">邀请用户</a-button>
+        <a-button type="primary" @click="handleToCreateCustomer">创建用户</a-button>
+        <a-button type="primary">编辑</a-button>
+        <a-button type="primary">删除</a-button>
+      </div>
       <div
         class="table-page-search-submitButtons"
         :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
       >
-        <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
+        <a-button type="primary" @click="this.$refs.table.refresh(true)">查询</a-button>
         <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
         <a @click="toggleAdvanced" style="margin-left: 8px">
           {{ advanced ? '收起' : '展开' }}
@@ -66,31 +71,18 @@
         </a-row>
       </a-form>
     </div>
-    <!-- 全选 -->
-    <div style="margin-bottom: 16px">
-      <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
-      <span style="margin-left: 8px;margin-right: 8px;">
-        <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
-      </span>
-    </div>
 
-    <!-- 表格 -->
-    <a-table
+    <!-- STable 组件-->
+    <s-table
       ref="table"
       size="default"
+      :rowKey="(record) => record.userId"
       :columns="columns"
-      rowKey="userId"
-      :dataSource="data"
-      :pagination="pagination"
-      :loading="loading"
-      @change="handleTableChange"
-      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+      :data="loadData"
+      :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
       bordered
     >
-      <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-      <span slot="sex" slot-scope="sex">{{ sex ? '男' : '女' }}</span>
-      <a slot="userId" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
-      <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <a slot="userNo" slot-scope="text, record" @click="() => handleView(record.userNo)">{{ text }}</a>
       <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
       <template slot="operation" slot-scope="text, record">
         <div class="editable-row-operations">
@@ -101,51 +93,39 @@
           </span>
         </div>
       </template>
-    </a-table>
+    </s-table>
   </div>
 </template>
 
 <script>
-import { STable } from '@/components'
+
 import { axios } from '@/utils/request'
+import { STable } from '@/components'
+import { getCustomerList } from '@/api/manage'
 
 const columns = [
-  {
-    title: '#',
-    align: 'center',
-    scopedSlots: {
-      customRender: 'serial'
-    }
-  },
-  {
-    title: '用户号',
-    align: 'center',
-    dataIndex: 'userId',
-    scopedSlots: {
-      customRender: 'userId'
-    },
-    sorter: true
-  },
   {
     title: '健康号',
     align: 'center',
     dataIndex: 'userNo',
-    sorter: true
-  },
-  {
-    title: '用户组',
-    align: 'center',
-    dataIndex: 'group',
-    sorter: true
-  },
-  {
-    title: '姓名',
-    align: 'center',
-    dataIndex: 'name',
     scopedSlots: {
-      customRender: 'name'
+      customRender: 'userNo'
     },
     sorter: true
+  },
+  {
+    title: '用户名',
+    align: 'center',
+    dataIndex: 'userName',
+    scopedSlots: {
+      customRender: 'userName'
+    },
+    sorter: true
+  },
+  {
+    title: '电话',
+    align: 'center',
+    dataIndex: 'phone'
   },
   {
     title: '性别',
@@ -199,19 +179,22 @@ export default {
     return {
       // 高级搜索 展开/关闭
       advanced: false,
+      // 表头
+      columns,
       // 查询参数
       queryParam: {},
-      selectedRowKeys: [], // Check here to configure the default column
-      count: 33,
-      data: [],
-      pagination: {},
-      loading: false,
-      // 表头
-      columns
+      // 加载数据方法 必须为 Promise 对象
+      loadData: parameter => {
+        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
+          return res
+        })
+      },
+      selectedRowKeys: [],
+      selectedRows: []
     }
   },
   mounted () {
-    this.fetch()
+    // this.fetch()
   },
   computed: {
     hasSelected () {
@@ -229,22 +212,7 @@ export default {
           return '未知'
       }
     },
-    handleTableChange (pagination, filters, sorter) {
-      console.log(pagination)
-      const pager = {
-        ...this.pagination
-      }
-      console.log('pager', pager)
-      pager.current = pagination.current
-      this.pagination = pager
-      this.fetch({
-        results: pagination.pageSize,
-        page: pagination.current,
-        sortField: sorter.field,
-        sortOrder: sorter.order,
-        ...filters
-      })
-    },
+
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
@@ -308,6 +276,12 @@ export default {
       // 点击行进入邀请客户页
       this.$router.push({
         path: '/basicdata/Customermanage/add'
+      })
+    },
+    handleToCreateCustomer () {
+      // 点击行进入创建客户页
+      this.$router.push({
+        path: '/basicdata/Customermanage/create'
       })
     },
     toggleAdvanced () {

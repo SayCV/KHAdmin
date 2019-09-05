@@ -12,7 +12,7 @@ const customerInfoTable = () => {
         key: 1,
         name: '李黑帅',
         age: '12',
-        sex: '男',
+        sex: '0',
         group: '普通用户',
         workplace: '阿里巴巴',
         healthRate: 'A',
@@ -28,7 +28,7 @@ const customerInfoTable = () => {
         key: 1,
         name: '强啊强',
         age: '12',
-        sex: '女',
+        sex: '1',
         group: '一星用户',
         workplace: '阿里巴巴',
         healthRate: 'D',
@@ -44,7 +44,7 @@ const customerInfoTable = () => {
         key: 1,
         name: '强啊强',
         age: '65',
-        sex: '女',
+        sex: '1',
         group: '普通用户',
         workplace: '阿里巴巴',
         healthRate: 'A',
@@ -60,7 +60,7 @@ const customerInfoTable = () => {
         key: 1,
         name: '强啊强',
         age: '65',
-        sex: '男',
+        sex: '0',
         group: '普通用户',
         workplace: '海康威视',
         healthRate: 'A',
@@ -179,7 +179,7 @@ const accountInfo = () => {
       key: 66666,
       name: '李栓蛋',
       age: '22',
-      sex: '男',
+      sex: '0',
       workplace: '阿里巴巴',
       healthRate: 'A',
       report: '无',
@@ -231,42 +231,42 @@ const healthReportTable = () => {
       {
         accountId: '1001',
         name: '李栓蛋',
-        sex: '女',
+        sex: '1',
         healthRate: 'A',
         record: '有'
       },
       {
         accountId: '1002',
         name: '王花花',
-        sex: '女',
+        sex: '1',
         healthRate: 'B',
         record: '有'
       },
       {
         accountId: '1003',
         name: '王花花',
-        sex: '女',
+        sex: '1',
         healthRate: 'B',
         record: '有'
       },
       {
         accountId: '1004',
         name: '王花花',
-        sex: '女',
+        sex: '1',
         healthRate: 'C',
         record: '有'
       },
       {
         accountId: '1005',
         name: '王花花',
-        sex: '女',
+        sex: '1',
         healthRate: 'B',
         record: '有'
       },
       {
         accountId: '1006',
         name: '王花花',
-        sex: '女',
+        sex: '1',
         healthRate: 'B',
         record: '有'
       }
@@ -285,7 +285,7 @@ const livingDataTable = () => {
         userId: '1001',
         personId: '1',
         name: '李栓蛋',
-        sex: '女',
+        sex: '1',
         age: '22',
         lastTime: '2019-7-11 15:25',
         lastEquipmentId: '10000001'
@@ -294,7 +294,7 @@ const livingDataTable = () => {
         userId: '1002',
         personId: '2',
         name: '王花花',
-        sex: '女',
+        sex: '1',
         age: '22',
         lastTime: '2019-7-11 15:25',
         lastEquipmentId: '10000001'
@@ -303,7 +303,7 @@ const livingDataTable = () => {
         userId: '1003',
         personId: '3',
         name: '强啊强',
-        sex: '女',
+        sex: '1',
         age: '22',
         lastTime: '2019-7-11 15:25',
         lastEquipmentId: '10000001'
@@ -312,7 +312,7 @@ const livingDataTable = () => {
         userId: '1004',
         personId: '4',
         name: '豪啊豪',
-        sex: '女',
+        sex: '1',
         age: '22',
         lastTime: '2019-7-11 15:25',
         lastEquipmentId: '10000001'
@@ -321,7 +321,7 @@ const livingDataTable = () => {
         userId: '1005',
         personId: '5',
         name: '悦啊悦',
-        sex: '女',
+        sex: '1',
         age: '22',
         lastTime: '2019-7-11 15:25',
         lastEquipmentId: '10000001'
@@ -330,7 +330,7 @@ const livingDataTable = () => {
         userId: '1006',
         personId: '6',
         name: '雨啊雨',
-        sex: '女',
+        sex: '1',
         age: '22',
         lastTime: '2019-7-11 15:25',
         lastEquipmentId: '10000001'

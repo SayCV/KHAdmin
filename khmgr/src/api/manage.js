@@ -8,15 +8,23 @@ const api = {
   permission: '/permission',
   permissionNoPager: '/permission/no-pager',
   orgTree: '/org/tree',
-  basedatauserlist: '/basedata/userlist'
-
+  customerlist: '/api/admin/customers',
+  customerdetailinfo: '/api/admin/customers/'
 }
 
 export default api
 
-export function getBaseDataUserList (parameter) {
+export function getCustomerList (parameter) {
   return axios({
-    url: '/basedata/userlist',
+    url: api.customerlist,
+    method: 'get',
+    params: parameter
+  })
+}
+
+export function getCustomerDetailInfo (parameter) {
+  return axios({
+    url: api.customerdetailinfo + `${parameter}`,
     method: 'get',
     params: parameter
   })

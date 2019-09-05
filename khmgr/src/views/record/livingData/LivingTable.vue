@@ -1,7 +1,7 @@
 <template>
   <div class="living-table-page">
     <div class="page-top">
-      <div class="top-btns"></div>
+      <div class="operator-btns"></div>
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
@@ -25,50 +25,37 @@
         </a-form>
       </div>
     </div>
-    <div class="living-table-container">
-      <!-- 全选 -->
-      <div style="margin-bottom: 16px">
-        <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
-        <span style="margin-left: 8px;margin-right: 8px;">
-          <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
-        </span>
-      </div>
-    </div>
-    <!-- 表格 -->
-    <a-table
+    <div class="living-table-container"></div>
+    <!-- STable 组件-->
+    <s-table
       ref="table"
       size="default"
+      :rowKey="(record) => record.userId"
       :columns="columns"
-      rowKey="userId"
-      :dataSource="data"
-      :pagination="pagination"
-      :loading="loading"
-      @change="handleTableChange"
-      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+      :data="loadData"
+      :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
       bordered
     >
-      <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
       <a slot="userNo" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
+      <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
       <template slot="operation" slot-scope="text, record">
         <div class="editable-row-operations">
           <span slot="operation">
+            <a @click="() => handleEdit(record.userId)">编辑</a>
+            <a-divider type="vertical" />
             <a @click="() => handleView(record.userId)">查看</a>
           </span>
         </div>
       </template>
-    </a-table>
+    </s-table>
   </div>
 </template>
 
 <script>
 import { axios } from '@/utils/request'
-
+import { STable } from '@/components'
+import { getCustomerList } from '@/api/manage'
 const columns = [
-  {
-    title: '#',
-    align: 'center',
-    scopedSlots: { customRender: 'serial' }
-  },
   {
     title: '健康号',
     align: 'center',
@@ -107,23 +94,29 @@ const columns = [
 export default {
   // 生活数据
   name: 'LivingTable',
+  components: {
+    STable
+  },
   data () {
     return {
       // 高级搜索 展开/关闭
       advanced: false,
+      // 表头
+      columns,
       // 查询参数
       queryParam: {},
-      selectedRowKeys: [], // Check here to configure the default column
-
-      data: [],
-      pagination: {},
-      loading: false,
-      // 表头
-      columns
+      // 加载数据方法 必须为 Promise 对象
+      loadData: parameter => {
+        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
+          return res
+        })
+      },
+      selectedRowKeys: [],
+      selectedRows: []
     }
   },
   mounted () {
-    this.fetch()
+    // this.fetch()
   },
   computed: {
     hasSelected () {

@@ -62,8 +62,8 @@ export default {
             .Logout({})
             .then(() => {
               window.location.reload()
-              that.$router.push({ name: 'login' })
             })
+            .then(() => { that.$router.push({ name: 'login' }) })
             .catch(err => {
               that.$message.error({
                 title: '错误',
