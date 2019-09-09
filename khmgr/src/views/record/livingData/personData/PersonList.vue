@@ -4,7 +4,8 @@
       <ButtonBack></ButtonBack>
     </div>
     <div class="page-top-wrapper">
-      <description-list title="基本信息" size="large">
+      <a-divider orientation="left">基本信息</a-divider>
+      <description-list size="large">
         <description-list-item term="健康号">{{ data.userNo }}</description-list-item>
         <description-list-item term="用户名">{{ data.userName }}</description-list-item>
         <description-list-item term="电话">{{ data.phone }}</description-list-item>
@@ -12,7 +13,7 @@
       </description-list>
     </div>
     <!-- 表格 -->
-    <PageName style="width:128px; margin-bottom:8px;"></PageName>
+    <a-divider orientation="left">成员列表</a-divider>
     <a-table
       ref="table"
       size="default"
@@ -46,7 +47,6 @@
 <script>
 import { axios } from '@/utils/request'
 
-import PageName from '@/components/PageHeader/PageName'
 import ButtonBack from '@/components/Button/ButtonBack'
 import { DescriptionList } from '@/components'
 const DescriptionListItem = DescriptionList.Item
@@ -99,7 +99,7 @@ export default {
   // PersonList
   name: 'PersonList',
   components: {
-    PageName,
+
     ButtonBack,
     DescriptionList,
     DescriptionListItem
@@ -115,8 +115,8 @@ export default {
       loading: false
     }
   },
-  created () {
-    this.fetch()
+  mounted () {
+    this.fetch(this.userId)
   },
   computed: {
     hasSelected () {
@@ -138,10 +138,10 @@ export default {
     fetch (params = {}) {
       this.loading = true
       axios({
-        url: `/api/admin/customers/${this.userId}`,
+        url: `/api/admin/customers/${params}`,
         method: 'get'
       }).then(res => {
-        console.log('customers detail info', res)
+        console.log('customers detail', res)
         this.data = res
         this.persons = res.personArray
         this.loading = false

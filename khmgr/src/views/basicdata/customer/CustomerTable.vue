@@ -12,7 +12,7 @@
         class="table-page-search-submitButtons"
         :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
       >
-        <a-button type="primary" @click="this.$refs.table.refresh(true)">查询</a-button>
+        <a-button type="primary" @click="refresh()">查询</a-button>
         <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
         <a @click="toggleAdvanced" style="margin-left: 8px">
           {{ advanced ? '收起' : '展开' }}
@@ -241,19 +241,15 @@ export default {
         }
       })
     },
-    start () {
-      this.loading = true
-      // ajax request after empty completing
-      setTimeout(() => {
-        this.loading = false
-        this.selectedRowKeys = []
-      }, 1000)
-    },
+
     onSelectChange (selectedRowKeys) {
       console.log('selectedRowKeys changed: ', selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
     },
-
+    refresh () {
+      // 刷新表格
+      this.$refs.table.refresh(true)
+    },
     handleEdit (userId) {
       // 点击行进入详情页
       this.$router.push({
@@ -283,6 +279,7 @@ export default {
       this.$router.push({
         path: '/basicdata/Customermanage/create'
       })
+      // handleToTargetPage()
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
