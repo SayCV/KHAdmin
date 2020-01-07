@@ -286,7 +286,7 @@ export default {
       })
     },
     loginSuccess (res) {
-      this.$router.push({ name: 'index' })
+      this.$router.push({ name: 'rootHomePage' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {
         this.$notification.success({

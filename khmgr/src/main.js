@@ -19,7 +19,6 @@ import './core/use'
 import './permission' // permission control
 import './utils/filter' // global filter
 // import { ACCESS_TOKEN } from '@/store/mutation-types'
-// import axios from 'axios'
 
 // use mavonEditor
 Vue.use(mavonEditor)

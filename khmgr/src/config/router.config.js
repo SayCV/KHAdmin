@@ -690,7 +690,11 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  {
+    path: '/rootHomePage',
+    name: 'rootHomePage',
+    component: () => import('@/views/rootHomePage/homePage')
+  },
   {
     path: '/test',
     component: BlankLayout,
@@ -703,7 +707,6 @@ export const constantRouterMap = [
       }
     ]
   },
-
   {
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')

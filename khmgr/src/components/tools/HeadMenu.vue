@@ -92,3 +92,32 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.global-header-wrapper{
+  .action{
+    cursor: pointer;
+    padding: 0 12px;
+    display: inline-block;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+    height: 100%;
+    color: rgba(0,0,0,.65);
+     &:hover {
+          background: rgba(0, 0, 0, 0.025);
+        }
+
+        .avatar {
+          margin: 20px 8px 20px 0;
+          color: #1890ff;
+          background: hsla(0, 0%, 100%, 0.85);
+          vertical-align: middle;
+        }
+
+        .icon {
+          font-size: 16px;
+          padding: 4px;
+        }
+  }
+}
+</style>

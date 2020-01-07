@@ -1,6 +1,6 @@
 <template>
   <div class="logo">
-    <router-link :to="{name:'dashboard'}">
+    <router-link :to="{ name: 'homePage' }">
       <LogoSvg alt="logo" />
       <h1 v-if="showTitle">{{ $t('khmgr.name') }}</h1>
     </router-link>
