@@ -1,6 +1,6 @@
 <template>
   <div class="logo">
-    <router-link :to="{ name: 'homePage' }">
+    <router-link :to="{ name: 'rootHomePage' }">
       <LogoSvg alt="logo" />
       <h1 v-if="showTitle">{{ $t('khmgr.name') }}</h1>
     </router-link>
@@ -29,3 +29,10 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.logo {
+  display: flex;
+  justify-content: center;
+}
+</style>

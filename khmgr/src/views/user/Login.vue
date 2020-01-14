@@ -293,7 +293,7 @@ export default {
           message: '欢迎',
           description: `${timeFix()}，欢迎回来`
         })
-      }, 1000)
+      }, 2000)
     },
 
     requestFailed (err) {

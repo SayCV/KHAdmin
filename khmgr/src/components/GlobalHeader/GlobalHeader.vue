@@ -4,22 +4,53 @@
     :class="[fixedHeader && 'ant-header-fixedHeader', sidebarOpened ? 'ant-header-side-opened' : 'ant-header-side-closed', ]"
     :style="{ padding: '0' }"
   >
-    <div v-if="mode === 'sidemenu'" class="header">
-      <a-icon v-if="device==='mobile'" class="trigger" :type="collapsed ? 'menu-fold' : 'menu-unfold'" @click="toggle"/>
-      <a-icon v-else class="trigger" :type="collapsed ? 'menu-unfold' : 'menu-fold'" @click="toggle"/>
+    <div
+      v-if="mode === 'sidemenu'"
+      class="header"
+    >
+      <a-icon
+        v-if="device==='mobile'"
+        class="trigger"
+        :type="collapsed ? 'menu-fold' : 'menu-unfold'"
+        @click="toggle"
+      />
+      <a-icon
+        v-else
+        class="trigger"
+        :type="collapsed ? 'menu-unfold' : 'menu-fold'"
+        @click="toggle"
+      />
       <!-- <user-menu></user-menu> -->
-      <head-menu></head-menu>
+      <!-- <head-menu></head-menu> -->
+      <GoBackButton />
     </div>
-    <div v-else :class="['top-nav-header-index', theme]">
+    <div
+      v-else
+      :class="['top-nav-header-index', theme]"
+    >
       <div class="header-index-wide">
         <div class="header-index-left">
-          <logo class="top-nav-header" :show-title="device !== 'mobile'"/>
-          <s-menu v-if="device !== 'mobile'" mode="horizontal" :menu="menus" :theme="theme" />
-          <a-icon v-else class="trigger" :type="collapsed ? 'menu-fold' : 'menu-unfold'" @click="toggle" />
+          <logo
+            class="top-nav-header"
+            :show-title="device !== 'mobile'"
+          />
+          <s-menu
+            v-if="device !== 'mobile'"
+            mode="horizontal"
+            :menu="menus"
+            :theme="theme"
+          />
+          <a-icon
+            v-else
+            class="trigger"
+            :type="collapsed ? 'menu-fold' : 'menu-unfold'"
+            @click="toggle"
+          />
         </div>
         <!-- <user-menu class="header-index-right"></user-menu> -->
         <div class="header-index-right">
-          <head-menu></head-menu>
+          <!-- <head-menu></head-menu> -->
+          <GoBackButton />
         </div>
       </div>
     </div>
@@ -34,6 +65,7 @@ import Logo from '../tools/Logo'
 import HeadMenu from '../tools/HeadMenu'
 import { mixin } from '@/utils/mixin'
 import { handleScrollHeader } from '@/utils/util'
+import GoBackButton from '@/components/tools/goBackButton'
 
 export default {
   name: 'GlobalHeader',
@@ -41,7 +73,8 @@ export default {
     UserMenu,
     SMenu,
     Logo,
-    HeadMenu
+    HeadMenu,
+    GoBackButton
   },
   mixins: [mixin],
   props: {

@@ -1,65 +1,122 @@
 <template>
-  <div class="living-table-page">
-    <div class="page-top">
-      <div class="operator-btns"></div>
-      <div class="table-page-search-wrapper">
-        <a-form layout="inline">
-          <a-row :gutter="48">
-            <a-col :md="8" :sm="24">
-              <a-form-item label="健康号">
-                <a-input-number v-model="queryParam.userNo" placeholder style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item label="电话">
-                <a-input-number v-model="queryParam.phone" style="width: 100%" />
-              </a-form-item>
-            </a-col>
-            <a-col :md="8" :sm="24">
-              <a-form-item>
-                <a-button type="primary" @click="$refs.table.refresh(true)">查询</a-button>
-                <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
-              </a-form-item>
-            </a-col>
-          </a-row>
-        </a-form>
-      </div>
-    </div>
-    <div class="living-table-container"></div>
-    <!-- STable 组件-->
-    <s-table
-      ref="table"
-      size="default"
-      :rowKey="(record) => record.userId"
-      :columns="columns"
-      :data="loadData"
-      :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-      bordered
+  <div>
+    <div
+      v-if="$route.name === 'LivingUserTable'"
+      class="living-table-page"
     >
-      <a slot="userNo" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
-      <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
-      <template slot="operation" slot-scope="text, record">
-        <div class="editable-row-operations">
-          <span slot="operation">
-            <a @click="() => handleEdit(record.userId)">编辑</a>
-            <a-divider type="vertical" />
-            <a @click="() => handleView(record.userId)">查看</a>
-          </span>
+      <div class="page-top">
+        <div class="operator-btns"></div>
+        <div class="table-page-search-wrapper">
+          <a-form layout="inline">
+            <a-row :gutter="48">
+              <a-col
+                :md="8"
+                :sm="24"
+              >
+                <a-form-item label="健康号">
+                  <a-input-number
+                    v-model="queryParam.userNo"
+                    placeholder
+                    style="width: 100%"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col
+                :md="8"
+                :sm="24"
+              >
+                <a-form-item label="电话">
+                  <a-input-number
+                    v-model="queryParam.phone"
+                    style="width: 100%"
+                  />
+                </a-form-item>
+              </a-col>
+              <a-col
+                :md="8"
+                :sm="24"
+              >
+                <a-form-item>
+                  <a-button type="primary">查询</a-button>
+                  <a-button style="margin-left: 8px">重置</a-button>
+                </a-form-item>
+              </a-col>
+            </a-row>
+          </a-form>
         </div>
-      </template>
-    </s-table>
+      </div>
+      <div class="living-table-container"></div>
+      <a-table
+        ref="table"
+        size="default"
+        :rowKey="(record) => record.userId"
+        :loading="loading"
+        :columns="columns"
+        :dataSource="data"
+        :pagination="pagination"
+        @change="handleTableChange"
+        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        bordered
+      >
+        <a
+          slot="userNo"
+          slot-scope="text, record"
+          @click="() => handleView(record.userId)"
+        >{{ text }}</a>
+        <template
+          slot="operation"
+          slot-scope="text, record"
+        >
+          <div class="editable-row-operations">
+            <span slot="operation">
+              <a @click="() => showModalForm(record)">编辑</a>
+              <a-divider type="vertical" />
+              <a @click="() => handleView(record.userId)">查看</a>
+            </span>
+          </div>
+        </template>
+      </a-table>
+    </div>
+    <router-view v-else />
+    <a-modal
+      centered
+      :visible="visible"
+      title="编辑用户"
+      @cancel="handleCancel"
+      @ok="handleEditSubmit"
+    >
+      <a-form
+        layout="vertical"
+        :form="form"
+      >
+        <a-form-item
+          label="用户名"
+          key="username"
+        >
+          <a-input v-decorator="['username',{rules: [{ required: true, message: 'Please input the username of collection!' }], initialValue:formValues.userName||'--' }]" />
+        </a-form-item>
+        <a-form-item
+          label="电话"
+          key="phone"
+        >
+          <a-input v-decorator="['phone',{rules: [{ required: true, message: 'Please input the phone of collection!' }], initialValue:formValues.phone ||'--' }]" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 
 <script>
-import { axios } from '@/utils/request'
+
 import { STable } from '@/components'
-import { getCustomerList } from '@/api/manage'
+import { getUserList } from '@/api/livingData'
+
 const columns = [
   {
     title: '健康号',
     align: 'center',
     dataIndex: 'userNo',
+    key: 'userNo',
     scopedSlots: { customRender: 'userNo' },
     sorter: false
   },
@@ -68,19 +125,23 @@ const columns = [
     title: '用户名',
     align: 'center',
     dataIndex: 'userName',
+    key: 'emaiuserNamel',
     scopedSlots: { customRender: 'userName' },
     sorter: false
   },
+
   {
     title: '电话',
     align: 'center',
     dataIndex: 'phone',
+    key: 'phone',
     sorter: false
   },
   {
     title: '创建时间',
     align: 'center',
     dataIndex: 'createOn',
+    key: 'phcreateOnone',
     sorter: true
   },
   {
@@ -105,18 +166,25 @@ export default {
       columns,
       // 查询参数
       queryParam: {},
-      // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res
-        })
+      data: [],
+      pagination: {
+        current: 1,
+        pageSize: 10,
+        total: 0
       },
+      loading: false,
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+      visible: false,
+      form: this.$form.createForm(this, { name: 'edit-user-form' }),
+      formValues: {}
     }
   },
   mounted () {
-    // this.fetch()
+    this.fetch({
+      pageSize: this.pagination.pageSize,
+      pageNum: this.pagination.current
+    })
   },
   computed: {
     hasSelected () {
@@ -124,15 +192,13 @@ export default {
     }
   },
   methods: {
-
     handleTableChange (pagination, filters, sorter) {
-      console.log(pagination)
       const pager = { ...this.pagination }
       pager.current = pagination.current
       this.pagination = pager
       this.fetch({
-        results: pagination.pageSize,
-        page: pagination.current,
+        pageSize: pagination.pageSize,
+        pageNum: pagination.current,
         sortField: sorter.field,
         sortOrder: sorter.order,
         ...filters
@@ -140,55 +206,23 @@ export default {
     },
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
       this.loading = true
-      axios({
-        url: '/api/admin/customers',
-        method: 'get'
-      }).then(res => {
-        console.log('res', res)
+      getUserList(params).then(res => {
+        console.log('userList res =>', res)
+        this.loading = false
         const pagination = { ...this.pagination }
-        // Read total count from server
-        pagination.total = res.total
-        // pagination.total = 20;
-        this.loading = false
-        this.data = res.list
+        pagination.total = res.total || 0
+        this.data = res.list || []
         this.pagination = pagination
-      }).catch(err => {
-        if (err) {
-          console.log(err)
-          this.loading = false
-        }
-      })
-    },
-    start () {
-      this.loading = true
-      // ajax request after empty completing
-      setTimeout(() => {
-        this.loading = false
-        this.selectedRowKeys = []
-      }, 1000)
+      }).catch(() => { this.loading = false })
     },
     onSelectChange (selectedRowKeys) {
-      console.log('selectedRowKeys changed: ', selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
     },
-
-    handleChange (value, key, column) {
-      const newData = [...this.data]
-      const target = newData.filter(item => key === item.key)[0]
-      if (target) {
-        target[column] = value
-        this.data = newData
-      }
-    },
-
     handleView (userId) {
       // 点击行进入详情页
-      console.log(' edit click! ', userId)
       this.$router.push({
-        // path: '/basicdata/Healthmanager/info',
-        path: '/record/livingData/person',
+        path: '/livingData/userTable/person/list',
         query: {
           userId: userId
         }
@@ -197,8 +231,21 @@ export default {
     toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    tableRefresh () {
-      this.$refs.table.refresh()
+    showModalForm (record) {
+      this.visible = true
+      this.formValues = { ...record }
+      console.log('form =>', { ...record })
+    },
+    handleCancel () {
+      this.visible = false
+    },
+    handleEditSubmit (e) {
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log('Received values of form: ', values)
+        }
+      })
     }
   }
 }

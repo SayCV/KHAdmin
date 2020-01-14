@@ -1,40 +1,56 @@
 <template>
   <div class="global-header-wrapper">
-    <a href="https://www.keephealthing.cn/docs/getting-started" target="_blank">
+    <a
+      href="https://www.keephealthing.cn/docs/getting-started"
+      target="_blank"
+    >
       <span class="action">
         <a-icon type="question-circle-o"></a-icon>
       </span>
     </a>
-    <notice-icon class="action"/>
+    <notice-icon class="action" />
     <a-dropdown>
       <span class="action ant-dropdown-link user-dropdown-menu">
-        <a-avatar class="avatar" size="small" :src="avatar()"/>
+        <a-avatar
+          class="avatar"
+          size="small"
+          :src="avatar()"
+        />
         <span class="nickname">{{ nickname() }}</span>
       </span>
-      <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
+      <a-menu
+        slot="overlay"
+        class="user-dropdown-menu-wrapper"
+      >
         <a-menu-item key="0">
           <router-link :to="{ name: 'center' }">
-            <a-icon type="user"/>
+            <a-icon type="user" />
             <!-- <span>个人中心</span> -->
             <span>{{ $t('header.HeadMenu.center') }}</span>
           </router-link>
         </a-menu-item>
         <a-menu-item key="1">
           <router-link :to="{ name: 'settings' }">
-            <a-icon type="setting"/>
+            <a-icon type="setting" />
             <!-- <span>账户设置</span> -->
             <span>{{ $t('header.HeadMenu.settings') }}</span>
           </router-link>
         </a-menu-item>
-        <a-menu-item key="2" disabled>
-          <a-icon type="setting"/>
+        <a-menu-item
+          key="2"
+          disabled
+        >
+          <a-icon type="setting" />
           <!-- <span>测试</span> -->
           <span>{{ $t('header.HeadMenu.test') }}</span>
         </a-menu-item>
-        <a-menu-divider/>
+        <a-menu-divider />
         <a-menu-item key="3">
-          <a href="javascript:;" @click="handleLogout">
-            <a-icon type="logout"/>
+          <a
+            href="javascript:;"
+            @click="handleLogout"
+          >
+            <a-icon type="logout" />
             <!-- <span>退出登录</span> -->
             <span>{{ $t('header.HeadMenu.logout') }}</span>
           </a>
@@ -86,7 +102,7 @@ export default {
               })
             })
         },
-        onCancel () {}
+        onCancel () { }
       })
     }
   }
@@ -94,30 +110,28 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.global-header-wrapper{
-  .action{
+.global-header-wrapper {
+  .action {
     cursor: pointer;
     padding: 0 12px;
     display: inline-block;
-    -webkit-transition: all .2s;
-    transition: all .2s;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
     height: 100%;
-    color: rgba(0,0,0,.65);
-     &:hover {
-          background: rgba(0, 0, 0, 0.025);
-        }
-
-        .avatar {
-          margin: 20px 8px 20px 0;
-          color: #1890ff;
-          background: hsla(0, 0%, 100%, 0.85);
-          vertical-align: middle;
-        }
-
-        .icon {
-          font-size: 16px;
-          padding: 4px;
-        }
+    color: rgba(0, 0, 0, 0.65);
+    &:hover {
+      background: rgba(0, 0, 0, 0.025);
+    }
+    .avatar {
+      margin: 20px 8px 20px 0;
+      color: #1890ff;
+      background: hsla(0, 0%, 100%, 0.85);
+      vertical-align: middle;
+    }
+    .icon {
+      font-size: 16px;
+      padding: 4px;
+    }
   }
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <a-card>
     <div class="view">
-      <router-view></router-view>
+      <router-view />
     </div>
   </a-card>
 </template>

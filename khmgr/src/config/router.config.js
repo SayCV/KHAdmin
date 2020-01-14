@@ -9,15 +9,60 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: '首页' },
-    redirect: '/dashboard/workplace',
+    // redirect: '/dashboard/workplace',
     children: [
+      // 客户管理
+      {
+        path: '/customerManager',
+        name: 'CustomerManager',
+        component: () => import('@/views/basicdata/Index'),
+        meta: { title: '客户管理', keepAlive: true, icon: 'table', permission: ['table'] },
+        redirect: '/customerManager/table',
+        children: [
+          {
+            path: '/customerManager/table',
+            name: 'CustomerTable',
+            component: () => import('@/views/basicdata/customer/CustomerTable'),
+            meta: { title: '客户列表', keepAlive: true, hidden: true, permission: ['table'] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/customerManager/table/info',
+                name: 'CustomerInfo',
+                component: () => import('@/views/basicdata/customer/CustomerInfo'),
+                hidden: true,
+                meta: { title: '客户详情页', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/customerManager/table/edit',
+                name: 'CustomerEditInfo',
+                component: () => import('@/views/basicdata/customer/EditCusInfo'),
+                hidden: true,
+                meta: { title: '客户编辑页', keepAlive: true, hidden: true, permission: ['table'] }
+              }
+            ]
+          },
+          {
+            path: '/customerManager/add',
+            name: 'AddCustomer',
+            component: () => import('@/views/basicdata/customer/AddCustomer'),
+            meta: { title: '添加客户', keepAlive: true, hidden: true, permission: ['table'] }
+          },
+          {
+            path: '/customerManager/create',
+            name: 'CreateCustomer',
+            component: () => import('@/views/basicdata/customer/CreateCustomer'),
+            meta: { title: '新增客户', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
       // dashboard
       {
         path: '/dashboard',
         name: 'dashboard',
         redirect: '/dashboard/workplace',
         component: RouteView,
-        meta: { title: '管理首页', keepAlive: true, icon: bxAnaalyse, permission: ['dashboard'] },
+        meta: { title: '健康管理仪表盘', keepAlive: true, icon: bxAnaalyse, permission: ['dashboard'] },
         children: [
           {
             path: '/dashboard/workplace',
@@ -27,125 +72,157 @@ export const asyncRouterMap = [
           },
           {
             path: '/dashboard/analysis',
-            name: 'Analysis',
+            name: 'analysis',
             component: () => import('@/views/dashboard/Analysis'),
             meta: { title: '日报分析', keepAlive: false, permission: ['dashboard'] }
           }
         ]
       },
-      // basicdata 基础数据
       {
-        path: '/basicdata',
-        name: 'basicdata',
-        redirect: '/basicdata/Customermanage',
-        component: PageView,
-        meta: { title: '基础数据', icon: 'table', permission: ['table'] },
+        path: '/livingData',
+        name: 'LivingData',
+        component: () => import('@/views/record/Index'),
+        meta: { title: '用户生活数据', keepAlive: true, permission: ['table'] },
+        redirect: '/livingData/userTable',
         children: [
           {
-            path: '/basicdata/Customermanage',
-            name: 'Customermanage',
-            component: () => import('@/views/basicdata/Index'),
-            meta: { title: '客户管理', keepAlive: true, hideHeader: true, permission: ['table'] },
-            redirect: '/basicdata/Customermanage/table',
+            path: '/livingData/userTable',
+            name: 'LivingUserTable',
+            component: () => import('@/views/record/livingData/LivingTable'),
+            meta: { title: '用户列表', keepAlive: true, hidden: false },
             hideChildrenInMenu: true,
             children: [
               {
-                path: '/basicdata/Customermanage/table',
-                name: 'CustomerTable',
-                component: () => import('@/views/basicdata/customer/CustomerTable'),
-                meta: { title: '客户信息表', keepAlive: true, hidden: true, permission: ['table'] }
+                path: '/livingData/userTable/person/list',
+                name: 'PersonList',
+                component: () => import('@/views/record/livingData/personData/PersonList'),
+                meta: { title: '成员列表', keepAlive: true, hidden: true }
               },
               {
-                path: '/basicdata/Customermanage/add',
-                name: 'AddCustomer',
-                component: () => import('@/views/basicdata/customer/AddCustomer'),
-                meta: { title: '添加客户页', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Customermanage/create',
-                name: 'CreateCustomer',
-                component: () => import('@/views/basicdata/customer/CreateCustomer'),
-                meta: { title: '创建客户', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Customermanage/info',
-                name: 'CustomerInfo',
-                component: () => import('@/views/basicdata/customer/CustomerInfo'),
-                meta: { title: '客户详情页', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Customermanage/edit',
-                name: 'CustomerEditInfo',
-                component: () => import('@/views/basicdata/customer/EditCusInfo'),
-                meta: { title: '客户编辑页', keepAlive: true, hidden: true, permission: ['table'] }
-              }
-            ]
-          },
-          {
-            path: '/basicdata/Healthmanager',
-            name: 'Healthmanager',
-            component: () => import('@/views/basicdata/Index'),
-            meta: { title: '健管师管理', keepAlive: true, permission: ['table'] },
-            redirect: '/basicdata/Healthmanager/table',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/basicdata/Healthmanager/table',
-                name: 'HealthmanagerTable',
-                component: () => import('@/views/basicdata/khmanager/Healthmanager'),
-                meta: { title: '健管师信息表', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Healthmanager/info',
-                name: 'HealthmanagerInfo',
-                component: () => import('@/views/basicdata/khmanager/khManagerinfo'),
-                meta: { title: '健管师详情页', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Healthmanager/edit',
-                name: 'HealthmanagerEdit',
-                component: () => import('@/views/basicdata/khmanager/khManagerEdit'),
-                meta: { title: '健管师编辑页', keepAlive: true, hidden: true, permission: ['table'] }
-              }
-            ]
-          },
-          {
-            path: '/basicdata/Equipmentmanager',
-            name: 'Equipmentmanager',
-            component: () => import('@/views/basicdata/Index'),
-            meta: { title: '设备管理', keepAlive: true, permission: ['table'] },
-            redirect: '/basicdata/Equipmentmanager/table',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/basicdata/Equipmentmanager/table',
-                name: 'EquipmentmanagerTable',
-                component: () => import('@/views/basicdata/equipment/EquipmentTable'),
-                meta: { title: '设备信息表', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Equipmentmanager/info',
-                name: 'EquipmentmanagerInfo',
-                component: () => import('@/views/basicdata/equipment/equipmentInfo'),
-                meta: { title: '设备详情页', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/basicdata/Equipmentmanager/edit',
-                name: 'EquipmentmanagerEdit',
-                component: () => import('@/views/basicdata/equipment/equipmentEdit'),
-                meta: { title: '设备编辑页', keepAlive: true, hidden: true, permission: ['table'] }
+                path: '/livingData/userTable/person/data',
+                name: 'PersonInfoData',
+                component: () => import('@/views/record/livingData/personData/InfoData'),
+                meta: { title: '成员生活数据', keepAlive: true, hidden: true }
               }
             ]
           }
         ]
       },
 
+      // 新路由树
+      // basicdata 基础数据
+      // {
+      //   path: '/basicdata',
+      //   name: 'basicdata',
+      //   redirect: '/basicdata/Customermanage',
+      //   component: PageView,
+      //   meta: { title: '基础数据', icon: 'table', permission: ['table'] },
+      //   children: [
+      //     {
+      //       path: '/basicdata/Customermanage',
+      //       name: 'Customermanage',
+      //       component: () => import('@/views/basicdata/Index'),
+      //       meta: { title: '客户管理', keepAlive: true, hideHeader: true, permission: ['table'] },
+      //       redirect: '/basicdata/Customermanage/table',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/basicdata/Customermanage/table',
+      //           name: 'CustomerTable',
+      //           component: () => import('@/views/basicdata/customer/CustomerTable'),
+      //           meta: { title: '客户信息表', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Customermanage/add',
+      //           name: 'AddCustomer',
+      //           component: () => import('@/views/basicdata/customer/AddCustomer'),
+      //           meta: { title: '添加客户页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Customermanage/create',
+      //           name: 'CreateCustomer',
+      //           component: () => import('@/views/basicdata/customer/CreateCustomer'),
+      //           meta: { title: '创建客户', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Customermanage/info',
+      //           name: 'CustomerInfo',
+      //           component: () => import('@/views/basicdata/customer/CustomerInfo'),
+      //           meta: { title: '客户详情页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Customermanage/edit',
+      //           name: 'CustomerEditInfo',
+      //           component: () => import('@/views/basicdata/customer/EditCusInfo'),
+      //           meta: { title: '客户编辑页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/basicdata/Healthmanager',
+      //       name: 'Healthmanager',
+      //       component: () => import('@/views/basicdata/Index'),
+      //       meta: { title: '健管师管理', keepAlive: true, permission: ['table'] },
+      //       redirect: '/basicdata/Healthmanager/table',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/basicdata/Healthmanager/table',
+      //           name: 'HealthmanagerTable',
+      //           component: () => import('@/views/basicdata/khmanager/Healthmanager'),
+      //           meta: { title: '健管师信息表', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Healthmanager/info',
+      //           name: 'HealthmanagerInfo',
+      //           component: () => import('@/views/basicdata/khmanager/khManagerinfo'),
+      //           meta: { title: '健管师详情页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Healthmanager/edit',
+      //           name: 'HealthmanagerEdit',
+      //           component: () => import('@/views/basicdata/khmanager/khManagerEdit'),
+      //           meta: { title: '健管师编辑页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/basicdata/Equipmentmanager',
+      //       name: 'Equipmentmanager',
+      //       component: () => import('@/views/basicdata/Index'),
+      //       meta: { title: '设备管理', keepAlive: true, permission: ['table'] },
+      //       redirect: '/basicdata/Equipmentmanager/table',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/basicdata/Equipmentmanager/table',
+      //           name: 'EquipmentmanagerTable',
+      //           component: () => import('@/views/basicdata/equipment/EquipmentTable'),
+      //           meta: { title: '设备信息表', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Equipmentmanager/info',
+      //           name: 'EquipmentmanagerInfo',
+      //           component: () => import('@/views/basicdata/equipment/equipmentInfo'),
+      //           meta: { title: '设备详情页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/basicdata/Equipmentmanager/edit',
+      //           name: 'EquipmentmanagerEdit',
+      //           component: () => import('@/views/basicdata/equipment/equipmentEdit'),
+      //           meta: { title: '设备编辑页', keepAlive: true, hidden: true, permission: ['table'] }
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
+
       // 健康档案 healthrecord
       {
         path: '/record',
         name: 'record',
         component: PageView,
-        redirect: '/record/HealthReport',
+        // redirect: '/record/HealthReport',
         meta: { title: '健康档案', icon: 'table', permission: ['table'] },
         children: [
           {
@@ -668,6 +745,11 @@ export const asyncRouterMap = [
  */
 export const constantRouterMap = [
   {
+    path: '/',
+    name: 'rootHomePage',
+    component: () => import('@/views/rootHomePage/homePage')
+  },
+  {
     path: '/user',
     component: UserLayout,
     redirect: '/user/login',
@@ -691,11 +773,6 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/rootHomePage',
-    name: 'rootHomePage',
-    component: () => import('@/views/rootHomePage/homePage')
-  },
-  {
     path: '/test',
     component: BlankLayout,
     redirect: '/test/home',
@@ -706,13 +783,13 @@ export const constantRouterMap = [
         component: () => import('@/views/Home')
       }
     ]
-  },
-  {
-    path: '/404',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
-  },
-  {
-    path: '/500',
-    component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
   }
+  // {
+  //   path: '/404',
+  //   component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
+  // },
+  // {
+  //   path: '/500',
+  //   component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500')
+  // }
 ]

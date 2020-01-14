@@ -1,10 +1,8 @@
 <template>
-  <a-layout-header class="home-header-wrapper">
-    <logo />
-    <div class="header-right">
-      <HeadMenu />
-    </div>
-  </a-layout-header>
+  <a-layout-footer class="home-footer-wrapper">
+    Copyright © 2019 杭州师范大学工程中心
+    <!-- <div class="footer-info">当前用户：呀哈哈</div> -->
+  </a-layout-footer>
 </template>
 
 <script>
@@ -24,11 +22,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.home-header-wrapper {
-  padding: 0 12px;
+.home-footer-wrapper {
+  text-align: center;
   background: #002140;
   color: white;
-  display: flex;
-  justify-content: space-between;
 }
 </style>

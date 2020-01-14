@@ -1,7 +1,12 @@
 <template>
   <div class="logo">
-    <div class="logo-icon"><LogoSvg alt="logo" /></div>
-    <div class="logo-title" v-if="showTitle">{{ $t('khmgr.name') }}</div>
+    <div class="logo-icon">
+      <LogoSvg alt="logo" />
+    </div>
+    <div
+      class="logo-title"
+      v-if="showTitle"
+    >{{ $t('khmgr.name') }}</div>
   </div>
 </template>
 
@@ -30,6 +35,7 @@ export default {
 
 <style lang="less" scoped>
 .logo {
+  color: white;
   cursor: pointer;
   width: 224px;
   height: 64px;
@@ -46,7 +52,7 @@ export default {
     }
   }
   .logo-title {
-    color: #444;
+    color: white;
     font-size: 22px;
   }
 }

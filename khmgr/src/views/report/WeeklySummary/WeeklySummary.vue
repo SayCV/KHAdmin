@@ -3,24 +3,46 @@
     <div class="table-operator">
       <PageName></PageName>
       <div class="table-page-search-submitButtons">
-        <a-button type="primary" @click="this.$refs.table.refresh(true)">查询</a-button>
-        <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+        <a-button
+          type="primary"
+          @click="this.$refs.table.refresh(true)"
+        >查询</a-button>
+        <a-button
+          style="margin-left: 8px"
+          @click="() => queryParam = {}"
+        >重置</a-button>
       </div>
     </div>
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
         <a-row :gutter="48">
-          <a-col :md="8" :sm="24">
+          <a-col
+            :md="8"
+            :sm="24"
+          >
             <a-form-item label="健康号">
-              <a-input v-model="queryParam.id" placeholder style="width: 100%" />
+              <a-input
+                v-model="queryParam.id"
+                placeholder
+                style="width: 100%"
+              />
             </a-form-item>
           </a-col>
-          <a-col :md="8" :sm="24">
+          <a-col
+            :md="8"
+            :sm="24"
+          >
             <a-form-item label="姓名">
-              <a-input v-model="queryParam.name" style="width: 100%" />
+              <a-input
+                v-model="queryParam.name"
+                style="width: 100%"
+              />
             </a-form-item>
           </a-col>
-          <a-col :md="8" :sm="24">
+          <a-col
+            :md="8"
+            :sm="24"
+          >
             <a-form-item label="健康评级">
               <a-select default-value="0">
                 <a-select-option value="0">A</a-select-option>
@@ -35,7 +57,12 @@
     </div>
     <!-- 全选 -->
     <div style="margin-bottom: 16px">
-      <a-button type="primary" @click="start" :disabled="!hasSelected" :loading="loading">重置</a-button>
+      <a-button
+        type="primary"
+        @click="start"
+        :disabled="!hasSelected"
+        :loading="loading"
+      >重置</a-button>
       <span style="margin-left: 8px;margin-right: 8px;">
         <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
       </span>
@@ -54,14 +81,34 @@
       :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
       bordered
     >
-      <span slot="serial" slot-scope="text, record, index">{{ index + 1 }}</span>
-      <a slot="userNo" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
-      <a slot="name" slot-scope="text, record" @click="() => handleView(record.userId)">{{ text }}</a>
-      <span slot="file" slot-scope="text, record">
+      <span
+        slot="serial"
+        slot-scope="text, record, index"
+      >{{ index + 1 }}</span>
+      <a
+        slot="userNo"
+        slot-scope="text, record"
+        @click="() => handleView(record.userId)"
+      >{{ text }}</a>
+      <a
+        slot="name"
+        slot-scope="text, record"
+        @click="() => handleView(record.userId)"
+      >{{ text }}</a>
+      <span
+        slot="file"
+        slot-scope="text, record"
+      >
         <a @click="() => handleView(record.userId)">查看</a>
       </span>
-      <span slot="sex" slot-scope="sex">{{ translateSex(sex) }}</span>
-      <template slot="operation" slot-scope="text, record">
+      <span
+        slot="sex"
+        slot-scope="sex"
+      >{{ translateSex(sex) }}</span>
+      <template
+        slot="operation"
+        slot-scope="text, record"
+      >
         <div class="editable-row-operations">
           <span slot="operation">
             <a @click="() => handleEdit(record.userId)">编辑</a>
@@ -77,7 +124,7 @@
 <script>
 import { axios } from '@/utils/request'
 import { PageName } from '@/components'
-
+import { translateSex } from '@/utils/util'
 const columns = [
   {
     title: '#',
@@ -173,16 +220,7 @@ export default {
     }
   },
   methods: {
-    translateSex (key) {
-      switch (key) {
-        case 0:
-          return '男'
-        case 1:
-          return '女'
-        default:
-          return '未知'
-      }
-    },
+    translateSex (key) { translateSex(key) },
     handleTableChange (pagination, filters, sorter) {
       console.log(pagination)
       const pager = {

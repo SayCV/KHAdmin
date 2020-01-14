@@ -25,7 +25,7 @@ export function handleScrollHeader (callback) {
   let timer = 0
 
   let beforeScrollTop = window.pageYOffset
-  callback = callback || function () {}
+  callback = callback || function () { }
   window.addEventListener(
     'scroll',
     event => {
@@ -58,4 +58,19 @@ export function removeLoadingAnimate (id = '', timeout = 1500) {
   setTimeout(() => {
     document.body.removeChild(document.getElementById(id))
   }, timeout)
+}
+
+/**
+ * translateSex 性别转换为中文
+ * @param key 性别 bool 值
+ */
+export const translateSex = (key) => {
+  switch (key) {
+    case 0:
+      return '男'
+    case 1:
+      return '女'
+    default:
+      return '--'
+  }
 }

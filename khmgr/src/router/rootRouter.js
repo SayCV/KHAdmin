@@ -6,6 +6,11 @@ import { UserLayout, BlankLayout } from '@/layouts'
  */
 export const rootRouterMap = [
   {
+    path: '/',
+    name: 'rootHomePage',
+    component: () => import('@/views/rootHomePage/homePage')
+  },
+  {
     path: '/user',
     component: UserLayout,
     redirect: '/user/login',
@@ -27,11 +32,6 @@ export const rootRouterMap = [
         component: () => import('@/views/user/RegisterResult')
       }
     ]
-  },
-  {
-    path: '/rootHomePage',
-    name: 'rootHomePage',
-    component: () => import('@/views/rootHomePage/homePage')
   },
   {
     path: '/test',

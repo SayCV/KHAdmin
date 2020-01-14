@@ -1,19 +1,42 @@
 <template>
-  <a-card>
+  <div class="user-info-page">
     <div class="back">
-      <a-button type="primary" icon="form" @click="handleBtnToEdit">编辑</a-button>
       <ButtonBack></ButtonBack>
     </div>
-    <div class="info-title">
-      <h1>
-        个人信息表
-        <span class="account-id">{{ userId }}</span>
-      </h1>
+    <div class="user-info-wrapper">
+      <a-divider orientation="left">基本信息</a-divider>
+      <description-list size="large">
+        <div class="user-avatar">
+          <div class="text">头像：</div>
+          <a-avatar icon="user" />
+        </div>
+        <description-list-item term="用户名">{{ data.userName ||'--' }}</description-list-item>
+        <description-list-item term="健康号">{{ data.userNo ||'--' }}</description-list-item>
+        <description-list-item term="身份证">{{ data.identityId ||'--' }}</description-list-item>
+        <description-list-item term="电话">{{ data.phone ||'--' }}</description-list-item>
+        <description-list-item term="邮箱">{{ data.email ||'--' }}</description-list-item>
+        <description-list-item term="成员数量">{{ `${data.personCount ||'--' } 人` }}</description-list-item>
+      </description-list>
+    </div>
+    <div class="user-other-wrapper">
+      <a-divider orientation="left">其他信息</a-divider>
+      <description-list size="large">
+        <description-list-item term="性别">{{ data.sex ||'--' }}</description-list-item>
+        <description-list-item term="民族">{{ data.minzu ||'--' }}</description-list-item>
+        <description-list-item term="年龄">{{ data.age ||'--' }}</description-list-item>
+        <description-list-item term="出生日期">{{ data.date ||'--' }}</description-list-item>
+        <description-list-item term="婚姻状况">{{ data.hunyin ||'--' }}</description-list-item>
+        <description-list-item term="单位">{{ data.danwei ||'--' }}</description-list-item>
+        <description-list-item term="最高学历">{{ data.xueli ||'--' }}</description-list-item>
+        <description-list-item term="用户组">{{ data.userGroup ||'--' }}</description-list-item>
+        <description-list-item term="创建时间">{{ data.createOn ||'--' }}</description-list-item>
+        <description-list-item term="家庭地址">{{ data.address ||'--' }}</description-list-item>
+      </description-list>
     </div>
     <!-- 基本信息 -->
     <div class="person-info">
       <!-- table -->
-      <div class="ant-descriptions-view">
+      <!-- <div class="ant-descriptions-view">
         <table>
           <tbody>
             <tr class="ant-descriptions-row"></tr>
@@ -25,9 +48,15 @@
                 :style="{backgroundImage: 'url(' + data.avatar + ')'}"
               ></td>
               <td class="ant-descriptions-item-label">姓名</td>
-              <td class="ant-descriptions-item-content" colspan="1">{{ data.name }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="1"
+              >{{ data.name }}</td>
               <td class="ant-descriptions-item-label">身份证</td>
-              <td class="ant-descriptions-item-content" colspan="2">{{ data.identityId }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="2"
+              >{{ data.identityId }}</td>
             </tr>
             <tr class="ant-descriptions-row">
               <td class="ant-descriptions-item-label">性别</td>
@@ -39,7 +68,10 @@
               <td class="ant-descriptions-item-label">年龄</td>
               <td class="ant-descriptions-item-content">{{ data.age }}</td>
               <td class="ant-descriptions-item-label">电话</td>
-              <td class="ant-descriptions-item-content" colspan="2">{{ data.phone }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="2"
+              >{{ data.phone }}</td>
             </tr>
             <tr class="ant-descriptions-row">
               <td class="ant-descriptions-item-label">邮箱</td>
@@ -51,46 +83,78 @@
             </tr>
             <tr class="ant-descriptions-row">
               <td class="ant-descriptions-item-label">账号ID</td>
-              <td class="ant-descriptions-item-content" colspan="1">{{ data.userId }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="1"
+              >{{ data.userId }}</td>
               <td class="ant-descriptions-item-label">单位</td>
-              <td class="ant-descriptions-item-content" colspan="5">{{ data.workplace }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="5"
+              >{{ data.workplace }}</td>
             </tr>
             <tr class="ant-descriptions-row">
               <td class="ant-descriptions-item-label">用户名</td>
-              <td class="ant-descriptions-item-content" colspan="1">{{ data.username }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="1"
+              >{{ data.username }}</td>
               <td class="ant-descriptions-item-label">最高学历</td>
-              <td class="ant-descriptions-item-content" colspan="5">{{ data.education }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="5"
+              >{{ data.education }}</td>
             </tr>
             <tr class="ant-descriptions-row">
               <td class="ant-descriptions-item-label">用户组</td>
-              <td class="ant-descriptions-item-content" colspan="1">{{ data.usergroup }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="1"
+              >{{ data.usergroup }}</td>
               <td class="ant-descriptions-item-label">创建时间</td>
-              <td class="ant-descriptions-item-content" colspan="5">{{ data.createdTime }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="5"
+              >{{ data.createdTime }}</td>
             </tr>
             <tr class="ant-descriptions-row">
               <td class="ant-descriptions-item-label">家庭地址</td>
-              <td class="ant-descriptions-item-content" colspan="5">{{ data.address }}</td>
+              <td
+                class="ant-descriptions-item-content"
+                colspan="5"
+              >{{ data.address }}</td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
       <!-- table -->
     </div>
 
     <div class="edit">
-      <a-button type="primary" icon="form" @click="handleBtnToEdit">编辑</a-button>
+      <a-button
+        type="primary"
+        icon="form"
+        @click="handleBtnToEdit"
+      >编辑</a-button>
     </div>
-  </a-card>
+  </div>
 </template>
 
 <script>
+
 import { axios } from '@/utils/request'
 import ButtonBack from '@/components/Button/ButtonBack'
+import { DescriptionList } from '@/components'
+const DescriptionListItem = DescriptionList.Item
 
 export default {
   // 客户管理详情页
   name: 'CustomerInfo',
-  components: { ButtonBack },
+  components: {
+    ButtonBack,
+    DescriptionList,
+    DescriptionListItem
+  },
   data () {
     return {
       userId: this.$route.query.userId,
@@ -99,17 +163,18 @@ export default {
     }
   },
   mounted () {
+    console.log('route =>', this.$route)
     this.fetch()
   },
-  watch: {
-    '$route.path' (to, from) {
-      if (to === '/basicdata/Customermanage/info') {
-        console.log('再次进入客户管理详情页', to)
-        this.userId = this.$route.query.userId
-        this.fetch()
-      }
-    }
-  },
+  // watch: {
+  //   '$route.path' (to, from) {
+  //     if (to === '/customerManager/table/info') {
+  //       console.log('再次进入客户管理详情页', to)
+  //       this.userId = this.$route.query.userId
+  //       this.fetch()
+  //     }
+  //   }
+  // },
   methods: {
     // 获取数据
     fetch (params = {}) {
@@ -122,13 +187,13 @@ export default {
         console.log('info-res')
         console.log(res)
         this.loading = false
-        this.data = res.data.result.data
+        this.data = res
         console.log('info', this.data)
       })
     },
     handleBtnToEdit () {
       this.$router.push({
-        path: '/basicdata/Customermanage/edit',
+        path: '/customerManager/table/edit',
         query: {
           userId: this.userId
         }
@@ -141,18 +206,30 @@ export default {
 }
 </script>
 
-<style scoped>
-.back {
-  display: flex;
-  justify-content: space-between;
+<style lang="less" scoped>
+.user-info-page {
+  .back {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .user-info-wrapper {
+    .user-avatar {
+      display: flex;
+      padding-bottom: 12px;
+      .text {
+        line-height: 32px;
+        color: rgba(0, 0, 0, 0.85);
+      }
+    }
+  }
+  .edit {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
-.edit {
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 .account-id {
   height: 32px;
   font-size: 18px;

@@ -1,4 +1,5 @@
 export default {
+  goBack: 'Home Page',
   header: {
     HeadMenu: {
       center: 'user center',

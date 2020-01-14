@@ -46,16 +46,20 @@
           @toggle="toggle"
         />
         <!-- pageHeader , route meta :true on hide -->
-        <page-header v-if="!$route.meta.hiddenHeaderContent" :title="pageTitle"></page-header>
+        <page-header
+          v-if="!$route.meta.hiddenHeaderContent"
+          :title="pageTitle"
+        ></page-header>
       </div>
 
       <!-- layout content -->
 
       <!-- :style="{ height: '100%' , margin: multiTab ? '24px 24px 0' : '24px 24px 0', paddingTop: fixedHeader ? '64px' : '0' }" -->
-      <div class="g-content" :style="{height:'calc(100vh - 180px)',paddingTop: '24px' }">
-        <a-layout-content
-          :style="{ height: '100%' , padding: multiTab ? '0 24px' : '0 24px', paddingTop: fixedHeader ? '64px' : '0' }"
-        >
+      <div
+        class="g-content"
+        :style="{height:'calc(100vh - 180px)',paddingTop: '24px' }"
+      >
+        <a-layout-content :style="{ height: '100%' , padding: multiTab ? '0 24px' : '0 24px', paddingTop: fixedHeader ? '64px' : '0' }">
           <multi-tab v-if="multiTab"></multi-tab>
           <transition name="page-transition">
             <route-view />
@@ -129,7 +133,13 @@ export default {
     }
   },
   created () {
-    this.menus = asyncRouterMap.find((item) => item.path === '/').children // 让菜单生成不经过动态路由
+    const routerPath = this.$route.path
+
+    const routerTree = asyncRouterMap[0].children.find((item) => routerPath.includes(item.path)) || {}
+    // 根据不同模块，动态截取路由树
+    this.menus.push(routerTree)
+    console.log('tree =>', routerTree, this.$route)
+    // this.menus = asyncRouterMap.find((item) => item.path === '/').children // 让菜单生成不经过动态路由
     // this.menus = this.mainMenu.find(item => item.path === '/' && !item.hidden).children // 让菜单生成经过动态路由
     this.collapsed = !this.sidebarOpened
   },

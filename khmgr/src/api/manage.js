@@ -18,7 +18,7 @@ export function getCustomerList (parameter) {
   return axios({
     url: api.customerlist,
     method: 'get',
-    params: parameter
+    params: { ...parameter }
   })
 }
 

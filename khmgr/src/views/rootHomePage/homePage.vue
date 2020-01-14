@@ -5,10 +5,10 @@
     </div>
     <a-layout-content>
       <div class="grid-container">
-        <div class="grid-layout-container">
+        <div class="grid-style-container">
           <grid-layout
             :layout="layoutLeft"
-            :col-num="6"
+            :col-num="4"
             :colWidth="BASE_LEN"
             :row-height="BASE_LEN"
             :is-draggable="true"
@@ -33,52 +33,272 @@
                   :height="item.height"
                   :length="item.length"
                   :rotateX="item.rotateX"
-                  :faceStyle="item.faceStyle"
+                  :faceStyle="item.faceStyle || defaultFaceStyle"
+                  @click="toRedirectPage(item.link)"
                 >
-                  <!-- custom face for each tile in left layout-->
                   <template v-if="item.i === '0'">
                     <div slot="front">
                       <div class="tile-label">
-                        Microsoft Edge
+                        {{ $t(`${HOMR_PAGE}.CustomerManage`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '1'">
                     <div slot="front">
                       <div class="tile-label">
-                        Xbox
+                        {{ $t(`${HOMR_PAGE}.EquipmentManager`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '2'">
                     <div slot="front">
                       <div class="tile-label">
-                        My Office
+                        {{ $t(`${HOMR_PAGE}.healthGoal`) }}
                       </div>
                     </div>
                   </template>
+
                   <template v-else-if="item.i === '3'">
                     <div slot="front">
                       <div class="tile-label">
-                        OneNote
+                        {{ $t(`${HOMR_PAGE}.livingData`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '4'">
                     <div slot="front">
                       <div class="tile-label">
-                        PowerPoint
+                        {{ $t(`${HOMR_PAGE}.MedicalRecords`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '5'">
                     <div slot="front">
                       <div class="tile-label">
-                        Cortana
+                        {{ $t(`${HOMR_PAGE}.ExaminationData`) }}
                       </div>
                     </div>
                   </template>
-                  <template v-else-if="item.i === '6'">
+                </MetroTile>
+              </div>
+            </grid-item>
+          </grid-layout>
+        </div>
+        <div class="grid-style-container">
+          <grid-layout
+            :layout="layoutMiddle"
+            :col-num="4"
+            :colWidth="BASE_LEN"
+            :row-height="BASE_LEN"
+            :is-draggable="true"
+            :is-resizable="false"
+            :is-mirrored="false"
+            :vertical-compact="true"
+            :margin="[0, 0]"
+            :use-css-transforms="true"
+          >
+            <grid-item
+              v-for="item in layoutMiddle"
+              :x="item.x"
+              :y="item.y"
+              :w="item.w"
+              :h="item.h"
+              :i="item.i"
+              :key="item.i"
+            >
+              <div class="container">
+                <MetroTile
+                  :width="item.width"
+                  :height="item.height"
+                  :length="item.length"
+                  :rotateX="item.rotateX"
+                  :faceStyle="item.faceStyle"
+                  :frontStyle="item.frontStyle"
+                  :topStyle="item.topStyle"
+                  :backStyle="item.backStyle"
+                  :bottomStyle="item.bottomStyle"
+                  :perspective="item.perspective"
+                  @click="toRedirectPage(item.link)"
+                >
+                  <!-- custom face for each tile in right layout-->
+                  <template v-if="item.i === '0'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        {{ $t(`${HOMR_PAGE}.dashboard.name`) }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '1'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        {{ $t(`${HOMR_PAGE}.WeeklySummary`) }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '2'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        {{ $t(`${HOMR_PAGE}.callCenter`) }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '3'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        {{ $t(`${HOMR_PAGE}.HealthReport`) }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '4'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        {{ $t(`${HOMR_PAGE}.healthRiskAnalysis`) }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '5'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        Access
+                      </div>
+                    </div>
+                  </template>
+                </MetroTile>
+              </div>
+            </grid-item>
+          </grid-layout>
+        </div>
+        <div class="grid-style-container">
+          <grid-layout
+            :layout="layoutRight"
+            :col-num="4"
+            :colWidth="BASE_LEN"
+            :row-height="BASE_LEN"
+            :is-draggable="true"
+            :is-resizable="false"
+            :is-mirrored="false"
+            :vertical-compact="true"
+            :margin="[0, 0]"
+            :use-css-transforms="true"
+          >
+            <grid-item
+              v-for="item in layoutRight"
+              :x="item.x"
+              :y="item.y"
+              :w="item.w"
+              :h="item.h"
+              :i="item.i"
+              :key="item.i"
+            >
+              <div class="container">
+                <MetroTile
+                  :width="item.width"
+                  :height="item.height"
+                  :length="item.length"
+                  :rotateX="item.rotateX"
+                  :faceStyle="item.faceStyle"
+                  :frontStyle="item.frontStyle"
+                  :topStyle="item.topStyle"
+                  :backStyle="item.backStyle"
+                  :bottomStyle="item.bottomStyle"
+                  :perspective="item.perspective"
+                >
+                  <template v-if="item.i === '0'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        Excel
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '1'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        View Source on GitHub
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '2'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        Vue
+                      </div>
+                      <img
+                        src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png"
+                        class="image"
+                      />
+                    </div>
+                    <div slot="top">
+                      <div class="tile-label">
+                        Angular
+                      </div>
+                      <img
+                        src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png"
+                        class="image"
+                      />
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '3'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        Groove Music
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '4'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        Google Chrome
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '5'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        Access
+                      </div>
+                    </div>
+                  </template>
+                </MetroTile>
+              </div>
+            </grid-item>
+          </grid-layout>
+        </div>
+        <div class="grid-style-container">
+          <grid-layout
+            :layout="infoLayoutMap"
+            :col-num="4"
+            :colWidth="BASE_LEN"
+            :row-height="BASE_LEN"
+            :is-draggable="true"
+            :is-resizable="false"
+            :is-mirrored="false"
+            :vertical-compact="true"
+            :margin="[0, 0]"
+            :use-css-transforms="true"
+          >
+            <grid-item
+              v-for="item in infoLayoutMap"
+              :x="item.x"
+              :y="item.y"
+              :w="item.w"
+              :h="item.h"
+              :i="item.i"
+              :key="item.i"
+            >
+              <div class="container">
+                <MetroTile
+                  :width="item.width"
+                  :height="item.height"
+                  :length="item.length"
+                  :rotateX="item.rotateX"
+                  :faceStyle="item.faceStyle"
+                  :frontStyle="item.frontStyle"
+                  :topStyle="item.topStyle"
+                  :backStyle="item.backStyle"
+                  :bottomStyle="item.bottomStyle"
+                  :perspective="item.perspective"
+                >
+                  <template v-if="item.i === '0'">
                     <div slot="front">
                       <div class="calendar">
                         <div class="calendar-week-day">
@@ -90,7 +310,7 @@
                       </div>
                     </div>
                   </template>
-                  <template v-else-if="item.i === '7'">
+                  <template v-else-if="item.i === '1'">
                     <div slot="front">
                       <div class="tile-label">
                         Microsoft Store
@@ -137,112 +357,10 @@
                       </div>
                     </div>
                   </template>
-                </MetroTile>
-              </div>
-            </grid-item>
-          </grid-layout>
-        </div>
-        <div class="grid-layout-container">
-          <grid-layout
-            :layout="layoutRight"
-            :col-num="6"
-            :colWidth="BASE_LEN"
-            :row-height="BASE_LEN"
-            :is-draggable="true"
-            :is-resizable="false"
-            :is-mirrored="false"
-            :vertical-compact="true"
-            :margin="[0, 0]"
-            :use-css-transforms="true"
-          >
-            <grid-item
-              v-for="item in layoutRight"
-              :x="item.x"
-              :y="item.y"
-              :w="item.w"
-              :h="item.h"
-              :i="item.i"
-              :key="item.i"
-            >
-              <div class="container">
-                <MetroTile
-                  :width="item.width"
-                  :height="item.height"
-                  :length="item.length"
-                  :rotateX="item.rotateX"
-                  :faceStyle="item.faceStyle"
-                  :frontStyle="item.frontStyle"
-                  :topStyle="item.topStyle"
-                  :backStyle="item.backStyle"
-                  :bottomStyle="item.bottomStyle"
-                  :perspective="item.perspective"
-                  v-on="item.i === '5' ? { click: redirect } : {}"
-                >
-                  <!-- custom face for each tile in right layout-->
-                  <template v-if="item.i === '0'">
-                    <div slot="front"></div>
-                  </template>
-                  <template v-else-if="item.i === '1'">
-                    <div slot="front"></div>
-                  </template>
-                  <template v-else-if="item.i === '2'">
-                    <div slot="front"></div>
-                  </template>
-                  <template v-else-if="item.i === '3'">
-                    <div slot="front"></div>
-                  </template>
-                  <template v-else-if="item.i === '4'">
+                  <template v-if="item.i === '2'">
                     <div slot="front">
-                      <div class="tile-label">
-                        Excel
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="item.i === '5'">
-                    <div slot="front">
-                      <div class="tile-label">
-                        View Source on GitHub
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="item.i === '6'">
-                    <div slot="front">
-                      <div class="tile-label">
-                        Vue
-                      </div>
-                      <img
-                        src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png"
-                        class="image"
-                      />
-                    </div>
-                    <div slot="top">
-                      <div class="tile-label">
-                        Angular
-                      </div>
-                      <img
-                        src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png"
-                        class="image"
-                      />
-                    </div>
-                  </template>
-                  <template v-else-if="item.i === '7'">
-                    <div slot="front">
-                      <div class="tile-label">
-                        Groove Music
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="item.i === '8'">
-                    <div slot="front">
-                      <div class="tile-label">
-                        Google Chrome
-                      </div>
-                    </div>
-                  </template>
-                  <template v-else-if="item.i === '9'">
-                    <div slot="front">
-                      <div class="tile-label">
-                        Access
+                      <div class="weather">
+                        <WeatherCard />
                       </div>
                     </div>
                   </template>
@@ -253,16 +371,17 @@
         </div>
       </div>
     </a-layout-content>
-    <a-layout-footer style="text-align: center">
-      Copyright © 2019 杭州师范大学工程中心
-    </a-layout-footer>
+    <global-footer></global-footer>
   </a-layout>
 </template>
 
 <script>
 import VueGridLayout from 'vue-grid-layout'
 import GlobalHeader from '@/views/rootHomePage/rootHomeHeader'
+import GlobalFooter from '@/views/rootHomePage/rootHomeFooter'
 import MetroTile from 'vue-metro-tile'
+import moment from 'moment'
+import WeatherCard from '@/components/weatherCard/weatherCard'
 // let _ = require('lodash')
 const BASE_LEN = 65
 const MARGIN = 3
@@ -272,9 +391,12 @@ export default {
   components: {
     VueGridLayout,
     GlobalHeader,
-    MetroTile
+    GlobalFooter,
+    MetroTile,
+    WeatherCard
   },
   data: () => ({
+    HOMR_PAGE: 'rootHomePage',
     BASE_LEN,
     defaultFaceStyle: { 'background-color': '#1E90FF' },
     layoutLeft: [
@@ -284,55 +406,59 @@ export default {
         w: 4,
         h: 2,
         i: '0',
+        link: '/customerManager',
         width: BASE_LEN * 4 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 2,
-        y: 2,
-        w: 4,
-        h: 2,
-        i: '1',
-        width: BASE_LEN * 4 - MARGIN * 2,
-        height: BASE_LEN * 2 - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#228b22'
+          'background-color': '#3cb371'
         }
       },
       {
         x: 0,
-        y: 4,
-        w: 4,
-        h: 2,
-        i: '2',
-        width: BASE_LEN * 4 - MARGIN * 2,
-        height: BASE_LEN * 2 - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#ff4500'
-        }
-      },
-      {
-        x: 4,
-        y: 0,
+        y: 2,
         w: 2,
         h: 2,
-        i: '3',
+        i: '1',
+        link: '/EquipmentManager',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
-          'background-color': '#9400d3'
+          'background-color': 'blue'
         }
       },
       {
-        x: 4,
+        x: 2,
         y: 4,
+        w: 2,
+        h: 2,
+        i: '2',
+        link: '/record',
+        width: BASE_LEN * 2 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#8a2be2'
+        }
+      },
+      {
+        x: 0,
+        y: 6,
+        w: 4,
+        h: 2,
+        i: '3',
+        link: '/livingData',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#4169e1'
+        }
+      },
+      {
+        x: 0,
+        y: 8,
         w: 2,
         h: 2,
         i: '4',
@@ -340,12 +466,12 @@ export default {
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
-          'background-color': '#ffa07a'
+          'background-color': '#4100e1'
         }
       },
       {
-        x: 0,
-        y: 2,
+        x: 2,
+        y: 8,
         w: 2,
         h: 2,
         i: '5',
@@ -353,95 +479,18 @@ export default {
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 0,
-        y: 6,
-        w: 2,
-        h: 2,
-        i: '6',
-        width: BASE_LEN * 2 - MARGIN * 2,
-        height: BASE_LEN * 2 - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 2,
-        y: 6,
-        w: 4,
-        h: 2,
-        i: '7',
-        width: BASE_LEN * 4 - MARGIN * 2,
-        height: BASE_LEN * 2 - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
+          'background-color': '#0169e1'
         }
       }
     ],
-    layoutRight: [
+    layoutMiddle: [
       {
         x: 0,
-        y: 0,
-        w: 1,
-        h: 1,
-        i: '0',
-        width: BASE_LEN - MARGIN * 2,
-        height: BASE_LEN - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 1,
-        y: 0,
-        w: 1,
-        h: 1,
-        i: '1',
-        width: BASE_LEN - MARGIN * 2,
-        height: BASE_LEN - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 1,
-        y: 1,
-        w: 1,
-        h: 1,
-        i: '2',
-        width: BASE_LEN - MARGIN * 2,
-        height: BASE_LEN - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 0,
-        y: 1,
-        w: 1,
-        h: 1,
-        i: '3',
-        width: BASE_LEN - MARGIN * 2,
-        height: BASE_LEN - MARGIN * 2,
-        rotateX: 0,
-        faceStyle: {
-          'background-color': '#1E90FF'
-        }
-      },
-      {
-        x: 2,
         y: 0,
         w: 4,
         h: 2,
-        i: '4',
+        i: '0',
+        link: '/dashboard',
         width: BASE_LEN * 4 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -453,21 +502,88 @@ export default {
         x: 0,
         y: 2,
         w: 4,
-        h: 4,
-        i: '5',
+        h: 2,
+        i: '1',
         width: BASE_LEN * 4 - MARGIN * 2,
-        height: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
           'background-color': '#000'
         }
       },
       {
-        x: 4,
-        y: 2,
+        x: 0,
+        y: 4,
         w: 2,
         h: 2,
-        i: '6',
+        i: '2',
+        width: BASE_LEN * 2 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        frontStyle: {
+          'background-color': '#8a2be2'
+        }
+      },
+      {
+        x: 2,
+        y: 4,
+        w: 2,
+        h: 2,
+        i: '3',
+        width: BASE_LEN * 2 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#4169e1'
+        }
+      },
+      {
+        x: 0,
+        y: 6,
+        w: 4,
+        h: 2,
+        i: '4',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#cd5c5c'
+        }
+      }
+    ],
+    layoutRight: [
+      {
+        x: 0,
+        y: 0,
+        w: 4,
+        h: 2,
+        i: '0',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#3cb371'
+        }
+      },
+      {
+        x: 0,
+        y: 2,
+        w: 4,
+        h: 2,
+        i: '1',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#000'
+        }
+      },
+      {
+        x: 0,
+        y: 4,
+        w: 2,
+        h: 2,
+        i: '2',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -486,11 +602,11 @@ export default {
         perspective: 0
       },
       {
-        x: 4,
+        x: 2,
         y: 4,
         w: 2,
         h: 2,
-        i: '7',
+        i: '3',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -503,7 +619,7 @@ export default {
         y: 6,
         w: 4,
         h: 2,
-        i: '8',
+        i: '4',
         width: BASE_LEN * 4 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -512,16 +628,57 @@ export default {
         }
       },
       {
-        x: 4,
-        y: 6,
+        x: 0,
+        y: 8,
         w: 2,
         h: 2,
-        i: '9',
+        i: '5',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
           'background-color': '#cd5c5c'
+        }
+      }
+    ],
+    infoLayoutMap: [
+      {
+        x: 0,
+        y: 0,
+        w: 4,
+        h: 2,
+        i: '0',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#1E90FF'
+        }
+      },
+      {
+        x: 0,
+        y: 2,
+        w: 2,
+        h: 2,
+        i: '1',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#9400d3'
+        }
+      },
+      {
+        x: 0,
+        y: 4,
+        w: 4,
+        h: 2,
+        i: '2',
+        width: BASE_LEN * 4 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#4169e1'
         }
       }
     ],
@@ -538,12 +695,13 @@ export default {
       return weekDayMap[new Date().getDay()]
     })(),
     monthDay: (() => {
-      return new Date().getDate()
+      const date = moment().format('YYYY-MM-DD')
+      return date.toString()
     })(),
-    rotateIndex1: 0,
-    rotateArray1: [-90, 90, 90, -90],
     rotateIndex2: 0,
-    rotateArray2: [-90, 90]
+    rotateArray2: [-90, 90],
+    rotateInfoIndex: 0,
+    rotateInfoArray: [-90, 90, 90, -90]
   }),
   methods: {
     setRotateX (layoutItem, rotateIndexName, rotateArray) {
@@ -553,19 +711,25 @@ export default {
     redirect () {
       window.open('https://www.baidu.com', '_blank')
       // window.location.href = REPO_URL;
+    },
+    toRedirectPage (route) {
+      this.$router.push({
+        path: route
+      })
     }
   },
   mounted () {
-    this.interval1 = setInterval(() => {
-      this.setRotateX(this.layoutLeft[7], 'rotateIndex1', this.rotateArray1)
-    }, 3000)
     this.interval2 = setInterval(() => {
-      this.setRotateX(this.layoutRight[6], 'rotateIndex2', this.rotateArray2)
+      this.setRotateX(this.layoutRight[2], 'rotateIndex2', this.rotateArray2)
     }, 5000)
+    this.infoInterval = setInterval(() => {
+      this.setRotateX(this.infoLayoutMap[1], 'rotateInfoIndex', this.rotateInfoArray)
+    }, 3500)
   },
   beforeDestroy () {
     clearInterval(this.interval1)
     clearInterval(this.interval2)
+    clearInterval(this.infoInterval)
   }
 }
 </script>
@@ -575,21 +739,32 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: url(~@/assets/loginbk.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+
   .ant-layout-content {
     flex: auto;
     padding: 50px;
     .grid-container {
-      display: flex;
-      .grid-layout-container {
-        // display: inline-block;
-        width: 390px;
+      // display: flex;
+      display: grid;
+      grid-template-columns: 260px 260px 260px 260px;
+      grid-column-gap: 16px;
+      .grid-style-container {
+        display: inline-block;
+        width: 260px;
         height: 100%;
       }
-
       .container {
         margin: 3px;
         width: calc(100% - 6px);
         height: calc(100% - 6px);
+        transition: all 0.05s;
+        &:hover {
+          outline: #eee solid 2px;
+          transition: all 0.05s;
+        }
       }
     }
   }
@@ -679,7 +854,7 @@ export default {
 }
 .calendar .calendar-month-day {
   margin-top: 15px;
-  font-size: 30px;
+  font-size: 22px;
   transform: scale(1.75);
 }
 </style>
