@@ -16,7 +16,7 @@ import './mock'
 
 import bootstrap from './core/bootstrap'
 import './core/use'
-import './permission' // permission control
+// import './permission' // permission control
 import './utils/filter' // global filter
 // import { ACCESS_TOKEN } from '@/store/mutation-types'
 

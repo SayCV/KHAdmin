@@ -224,6 +224,11 @@ export default {
           // if (!res.username === loginParams.username || !res.password === loginParams.password) {
           //   this.loginSuccess(res)
           // }
+
+          // mock loging
+          this.loginSuccess()
+
+          // 正确登录逻辑
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch(err => this.requestFailed(err))

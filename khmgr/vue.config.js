@@ -92,7 +92,8 @@ module.exports = {
     proxy: {
       '/api': {
         // 后端接口地址
-        target: 'http://172.31.231.91/khsrv/',
+        // target: 'http://172.31.231.91/khsrv/',
+        target: 'http://localhost:8000',
         ws: false,
         changeOrigin: true // 是否允许跨越
       },

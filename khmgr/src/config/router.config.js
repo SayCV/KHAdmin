@@ -11,12 +11,12 @@ export const asyncRouterMap = [
     meta: { title: '首页' },
     // redirect: '/dashboard/workplace',
     children: [
-      // 客户管理
+      // 我的客户
       {
         path: '/customerManager',
         name: 'CustomerManager',
         component: () => import('@/views/basicdata/Index'),
-        meta: { title: '客户管理', keepAlive: true, icon: 'table', permission: ['table'] },
+        meta: { title: '我的客户', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/customerManager/table',
         children: [
           {
@@ -53,6 +53,38 @@ export const asyncRouterMap = [
             name: 'CreateCustomer',
             component: () => import('@/views/basicdata/customer/CreateCustomer'),
             meta: { title: '新增客户', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
+      {
+        path: '/equipmentManager',
+        name: 'EquipmentManager',
+        component: () => import('@/views/basicdata/Index'),
+        meta: { title: '设备管理', keepAlive: true, icon: 'table', permission: ['table'] },
+        redirect: '/equipmentManager/table',
+        children: [
+          {
+            path: '/equipmentManager/table',
+            name: 'EquipmentTable',
+            component: () => import('@/views/basicdata/equipment/EquipmentTable'),
+            meta: { title: '设备信息', keepAlive: true, hidden: true, permission: ['table'] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/equipmentManager/table/info',
+                name: 'EquipmentmanagerInfo',
+                component: () => import('@/views/basicdata/equipment/equipmentInfo'),
+                meta: { title: '设备详情', keepAlive: true, hidden: true, permission: ['table'] },
+                hidden: true
+              },
+              {
+                path: '/equipmentManager/table/edit',
+                name: 'EquipmentmanagerEdit',
+                component: () => import('@/views/basicdata/equipment/equipmentEdit'),
+                meta: { title: '编辑设备', keepAlive: true, hidden: true, permission: ['table'] },
+                hidden: true
+              }
+            ]
           }
         ]
       },
