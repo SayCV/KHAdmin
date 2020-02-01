@@ -155,11 +155,7 @@
 </template>
 
 <script>
-import { STable } from '@/components'
-
-// import axios from 'axios'
-import { axios } from '@/utils/request'
-
+import { getEquipmentList } from '@/api/basicData/equipmentManager'
 const columns = [
   {
     title: '#',
@@ -202,7 +198,6 @@ const columns = [
 export default {
   name: 'EquipmentTable',
   components: {
-    STable
   },
   data () {
     // this.cacheData = data.map(item => ({ ...item }))
@@ -244,16 +239,8 @@ export default {
     },
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
-      this.loading = true
-      axios({
-        url: '/api/basedata/equipmentlist',
-        method: 'get',
-        params: {
-          results: 10,
-          ...params
-        }
-      }).then(res => {
+      this.loading = false
+      getEquipmentList(params).then(res => {
         console.log('设备列表', res)
         const pagination = { ...this.pagination }
         // Read total count from server

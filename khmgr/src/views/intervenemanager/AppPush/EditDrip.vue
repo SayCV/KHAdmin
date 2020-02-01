@@ -4,14 +4,23 @@
       <ButtonBack></ButtonBack>
     </div>
     <div class="create-main">
-      <a-form :form="form" @submit="handleSubmit">
+      <a-form
+        :form="form"
+        @submit="handleSubmit"
+      >
         <div class="main-basic">
-          <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-            <a-input
-              v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]"
-            />
+          <a-form-item
+            label="标题"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
+            <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]" />
           </a-form-item>
-          <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+          <a-form-item
+            label="摘要"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <a-textarea
               rows="4"
               v-decorator="[
@@ -20,15 +29,22 @@
               ]"
             />
           </a-form-item>
-          <a-form-item label="作者" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+          <a-form-item
+            label="作者"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <a-input
               v-decorator="[
                 'author',
                 {rules: [{ required: true, message: 'Please input your author!' }], initialValue: data.author }
-              ]"
-            />
+              ]" />
           </a-form-item>
-          <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+          <a-form-item
+            label="封面"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <div class="clearfix">
               <a-upload
                 accept="image/*"
@@ -44,23 +60,41 @@
                   <div class="ant-upload-text">上传视频封面</div>
                 </div>
               </a-upload>
-              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                <img alt="example" style="width: 100%" :src="previewImage" />
+              <a-modal
+                :visible="previewVisible"
+                :footer="null"
+                @cancel="handleCancel"
+              >
+                <img
+                  alt="example"
+                  style="width: 100%"
+                  :src="previewImage"
+                />
               </a-modal>
             </div>
           </a-form-item>
         </div>
         <div class="main-content">
           <a-form-item>
-            <div id="main" ref="myEditor">
-              <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
+            <div
+              id="main"
+              ref="myEditor"
+            >
+              <mavon-editor
+                ref="md"
+                v-model="editorContent"
+                @imgAdd="$imgAdd"
+              />
             </div>
           </a-form-item>
         </div>
         <!-- fixed footer toolbar -->
         <footer-tool-bar>
           <div>
-            <a-button type="primary" html-type="submit">提交</a-button>
+            <a-button
+              type="primary"
+              html-type="submit"
+            >提交</a-button>
             <a-modal
               :title="ModalTitle"
               :visible="visible"
@@ -71,7 +105,10 @@
               <div class="model-content">
                 <div class="title">{{ ModalText.title }}</div>
                 <div class="desc">
-                  <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
+                  <a-tag
+                    class="author"
+                    color="blue"
+                  >{{ ModalText.author }}</a-tag>
                   <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
                 </div>
                 <div class="content">
@@ -88,6 +125,7 @@
 
 <script>
 import { axios } from '@/utils/request'
+import { getAPPDripInfo, updateAPPDrip } from '@/api/interventionManager/appDripNews'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -168,15 +206,20 @@ export default {
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
-      axios({
-        url: `/api/admin/news/${newsId}`,
-        method: 'get'
-      }).then(res => {
-        console.log('进入编辑页面时表单数据', res)
-        this.data = res
+      getAPPDripInfo(newsId).then(res => {
+        this.data = res || {}
         this.initFileList(this.data)
-        this.editorContent = res.content
+        this.editorContent = res.content || ''
       })
+      // axios({
+      //   url: `/api/admin/news/${newsId}`,
+      //   method: 'get'
+      // }).then(res => {
+      //   console.log('进入编辑页面时表单数据', res)
+      //   this.data = res
+      //   this.initFileList(this.data)
+      //   this.editorContent = res.content
+      // })
     },
     initFileList (data) {
       // 设置默认封面
@@ -184,7 +227,7 @@ export default {
         uid: '-1',
         name: 'default',
         status: 'done',
-        url: data.cover
+        url: data.cover || ''
       }]
     },
     formPost (formData, newsId) {
@@ -207,7 +250,23 @@ export default {
       }).catch(err => {
         if (err) {
           this.$notification['error']({
-            message: '注意！注意！',
+            description: '修改点滴失败.'
+          })
+        }
+      })
+    },
+    toUpdateAPPDrip (formData, newsId) {
+      updateAPPDrip(formData, newsId).then(res => {
+        if (res) {
+          // 跳转到新闻详情页面
+          this.$router.push({
+            path: '/intervenemanager/AppPush/list'
+            // query: { newsId: res.data.value }
+          })
+        }
+      }).catch(err => {
+        if (err) {
+          this.$notification['error']({
             description: '修改点滴失败.'
           })
         }

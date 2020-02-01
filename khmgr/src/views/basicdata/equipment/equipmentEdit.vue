@@ -205,9 +205,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
 import ButtonBack from '@/components/Button/ButtonBack'
+import { getEquipmentItem } from '@/api/basicData/equipmentManager'
 
 export default {
   name: 'EquipmentEdit',
@@ -240,18 +240,10 @@ export default {
     fetch (params = {}) {
       console.log('params:', params)
       this.loading = true
-      axios({
-        // url: '/api/basedata/equipmentlistItem',
-        url: '/api/equipmentlistItem/item',
-        method: 'get',
-        params: {
-          equipmentId: this.equipmentId
-        }
-      }).then(res => {
+      getEquipmentItem({ equipmentId: this.equipmentId }).then(res => {
         console.log('equipment-info', res)
         this.loading = false
-        this.data = res.data.result.data
-        console.log('equipment', this.data)
+        this.data = res.result.data || {}
       })
     },
     // handler

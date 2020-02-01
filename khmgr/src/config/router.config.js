@@ -88,6 +88,21 @@ export const asyncRouterMap = [
           }
         ]
       },
+      {
+        path: '/healthGoals',
+        name: 'healthGoals',
+        component: () => import('@/views/basicdata/Index'),
+        meta: { title: '健康小目标', keepAlive: true, icon: 'table', permission: ['table'] },
+        redirect: '/healthGoals/table',
+        children: [
+          {
+            path: '/healthGoals/table',
+            name: 'HealthGoalsTable',
+            component: () => import('@/views/basicdata/healthgoal/healthGoalsTable'),
+            meta: { title: '目标列表', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
       // dashboard
       {
         path: '/dashboard',
@@ -113,27 +128,27 @@ export const asyncRouterMap = [
       {
         path: '/livingData',
         name: 'LivingData',
-        component: () => import('@/views/record/Index'),
+        component: () => import('@/views/basicdata/Index'),
         meta: { title: '用户生活数据', keepAlive: true, permission: ['table'] },
         redirect: '/livingData/userTable',
         children: [
           {
             path: '/livingData/userTable',
             name: 'LivingUserTable',
-            component: () => import('@/views/record/livingData/LivingTable'),
+            component: () => import('@/views/basicdata/livingData/LivingTable'),
             meta: { title: '用户列表', keepAlive: true, hidden: false },
             hideChildrenInMenu: true,
             children: [
               {
                 path: '/livingData/userTable/person/list',
                 name: 'PersonList',
-                component: () => import('@/views/record/livingData/personData/PersonList'),
+                component: () => import('@/views/basicdata/livingData/personData/PersonList'),
                 meta: { title: '成员列表', keepAlive: true, hidden: true }
               },
               {
                 path: '/livingData/userTable/person/data',
                 name: 'PersonInfoData',
-                component: () => import('@/views/record/livingData/personData/InfoData'),
+                component: () => import('@/views/basicdata/livingData/personData/InfoData'),
                 meta: { title: '成员生活数据', keepAlive: true, hidden: true }
               }
             ]
@@ -250,93 +265,93 @@ export const asyncRouterMap = [
       // },
 
       // 健康档案 healthrecord
-      {
-        path: '/record',
-        name: 'record',
-        component: PageView,
-        // redirect: '/record/HealthReport',
-        meta: { title: '健康档案', icon: 'table', permission: ['table'] },
-        children: [
-          {
-            path: '/record/livingData',
-            name: 'LifeData',
-            component: () => import('@/views/record/Index'),
-            meta: { title: '生活数据', keepAlive: true, permission: ['table'] },
-            hideChildrenInMenu: true,
-            redirect: '/record/livingData/table',
-            children: [
-              {
-                path: '/record/livingData/table',
-                name: 'LivingTable',
-                component: () => import('@/views/record/livingData/LivingTable'),
-                meta: { title: '用户列表', keepAlive: true, hidden: true }
-              },
-              {
-                path: '/record/livingData/person',
-                name: 'PersonTable',
-                component: () => import('@/views/record/livingData/SubIndex'),
-                meta: { title: '用户列表', keepAlive: true, hidden: true },
-                hideChildrenInMenu: true,
-                redirect: '/record/livingData/person/list',
-                children: [
-                  {
-                    path: '/record/livingData/person/list',
-                    name: 'PersonList',
-                    component: () => import('@/views/record/livingData/personData/PersonList'),
-                    meta: { title: '成员列表', keepAlive: true, hidden: true }
-                  },
-                  {
-                    path: '/record/livingData/person/data',
-                    name: 'InfoData',
-                    component: () => import('@/views/record/livingData/personData/InfoData'),
-                    meta: { title: '成员生活数据', keepAlive: true, hidden: true }
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            path: '/record/HealthGoal',
-            name: 'HealthGoal',
-            component: () => import('@/views/record/Index'),
-            meta: { title: '健康小目标', keepAlive: true, permission: ['table'] },
-            hideChildrenInMenu: true,
-            redirect: '/record/HealthGoal/table',
-            children: [
-              {
-                path: '/record/HealthGoal/table',
-                name: 'AimsTable',
-                component: () => import('@/views/record/healthgoal/AimsTable'),
-                meta: { title: '用户目标列表', keepAlive: true, hidden: true }
-              }
-            ]
-          },
-          {
-            path: '/record/QuestionnaireScale',
-            name: 'QuestionnaireScale',
-            component: () => import('@/views/record/QuestionnaireScale'),
-            meta: { title: '问卷结果', keepAlive: true, permission: ['table'] }
-          },
-          {
-            path: '/record/MedicalRecords',
-            name: 'MedicalRecords',
-            component: () => import('@/views/record/MedicalRecords'),
-            meta: { title: '电子病历*', keepAlive: true, permission: ['table'] }
-          },
-          {
-            path: '/record/ExaminationData',
-            name: 'SearchArticles',
-            component: () => import('../views/record/ExaminationData'),
-            meta: { title: '体检数据*', permission: ['table'] }
-          },
-          {
-            path: '/record/HealthRecords',
-            name: 'HealthRecords',
-            component: () => import('../views/record/HealthRecords'),
-            meta: { title: '社区健康记录*', permission: ['table'] }
-          }
-        ]
-      },
+      // {
+      //   path: '/record',
+      //   name: 'record',
+      //   component: PageView,
+      //   // redirect: '/record/HealthReport',
+      //   meta: { title: '健康档案', icon: 'table', permission: ['table'] },
+      //   children: [
+      //     {
+      //       path: '/record/livingData',
+      //       name: 'LifeData',
+      //       component: () => import('@/views/record/Index'),
+      //       meta: { title: '生活数据', keepAlive: true, permission: ['table'] },
+      //       hideChildrenInMenu: true,
+      //       redirect: '/record/livingData/table',
+      //       children: [
+      //         {
+      //           path: '/record/livingData/table',
+      //           name: 'LivingTable',
+      //           component: () => import('@/views/record/livingData/LivingTable'),
+      //           meta: { title: '用户列表', keepAlive: true, hidden: true }
+      //         },
+      //         {
+      //           path: '/record/livingData/person',
+      //           name: 'PersonTable',
+      //           component: () => import('@/views/record/livingData/SubIndex'),
+      //           meta: { title: '用户列表', keepAlive: true, hidden: true },
+      //           hideChildrenInMenu: true,
+      //           redirect: '/record/livingData/person/list',
+      //           children: [
+      //             {
+      //               path: '/record/livingData/person/list',
+      //               name: 'PersonList',
+      //               component: () => import('@/views/record/livingData/personData/PersonList'),
+      //               meta: { title: '成员列表', keepAlive: true, hidden: true }
+      //             },
+      //             {
+      //               path: '/record/livingData/person/data',
+      //               name: 'InfoData',
+      //               component: () => import('@/views/record/livingData/personData/InfoData'),
+      //               meta: { title: '成员生活数据', keepAlive: true, hidden: true }
+      //             }
+      //           ]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/record/HealthGoal',
+      //       name: 'HealthGoal',
+      //       component: () => import('@/views/record/Index'),
+      //       meta: { title: '健康小目标', keepAlive: true, permission: ['table'] },
+      //       hideChildrenInMenu: true,
+      //       redirect: '/record/HealthGoal/table',
+      //       children: [
+      //         {
+      //           path: '/record/HealthGoal/table',
+      //           name: 'AimsTable',
+      //           component: () => import('@/views/record/healthgoal/AimsTable'),
+      //           meta: { title: '用户目标列表', keepAlive: true, hidden: true }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/record/QuestionnaireScale',
+      //       name: 'QuestionnaireScale',
+      //       component: () => import('@/views/record/QuestionnaireScale'),
+      //       meta: { title: '问卷结果', keepAlive: true, permission: ['table'] }
+      //     },
+      //     {
+      //       path: '/record/MedicalRecords',
+      //       name: 'MedicalRecords',
+      //       component: () => import('@/views/record/MedicalRecords'),
+      //       meta: { title: '电子病历*', keepAlive: true, permission: ['table'] }
+      //     },
+      //     {
+      //       path: '/record/ExaminationData',
+      //       name: 'SearchArticles',
+      //       component: () => import('../views/record/ExaminationData'),
+      //       meta: { title: '体检数据*', permission: ['table'] }
+      //     },
+      //     {
+      //       path: '/record/HealthRecords',
+      //       name: 'HealthRecords',
+      //       component: () => import('../views/record/HealthRecords'),
+      //       meta: { title: '社区健康记录*', permission: ['table'] }
+      //     }
+      //   ]
+      // },
 
       // 健康报告 healthreport
       {

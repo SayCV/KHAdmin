@@ -1,4 +1,3 @@
-
 import { axios } from '@/utils/request'
 
 export function getUserList (parameter) {

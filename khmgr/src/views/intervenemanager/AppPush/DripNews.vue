@@ -1,7 +1,15 @@
 <template>
   <div class="newsPage">
-    <PageTitle @toRefresh="fetch" name="添加点滴" :linkTo="addDripLink" :isLoading="refresh"></PageTitle>
-    <div class="news-pagination" v-if="showPagination">
+    <PageTitle
+      @toRefresh="fetch"
+      name="添加点滴"
+      :linkTo="addDripLink"
+      :isLoading="refresh"
+    ></PageTitle>
+    <div
+      class="news-pagination"
+      v-if="showPagination"
+    >
       <div class="pagination">
         <a-pagination
           @change="handlePageChange"
@@ -12,21 +20,43 @@
       </div>
     </div>
     <div class="news-container">
-      <div class="spin" v-if="refresh">
+      <div
+        class="spin"
+        v-if="refresh"
+      >
         <a-spin></a-spin>
       </div>
-      <div class="data-loading" v-else>
-        <div class="no-newsLists" v-if="NodripLists">
+      <div
+        class="data-loading"
+        v-else
+      >
+        <div
+          class="no-newsLists"
+          v-if="NodripLists"
+        >
           <Empty></Empty>
         </div>
-        <div class="news-main" v-else>
-          <div v-for="Item in dripLists" :key="Item.newsId">
-            <DripItem :dripItem="Item" @toEdit="handleEdit" @toDelete="handleDelete"></DripItem>
+        <div
+          class="news-main"
+          v-else
+        >
+          <div
+            v-for="Item in dripLists"
+            :key="Item.newsId"
+          >
+            <DripItem
+              :dripItem="Item"
+              @toEdit="handleEdit"
+              @toDelete="handleDelete"
+            ></DripItem>
           </div>
         </div>
       </div>
     </div>
-    <div class="news-pagination-bottom" v-if="showPagination">
+    <div
+      class="news-pagination-bottom"
+      v-if="showPagination"
+    >
       <div class="pagination">
         <a-pagination
           @change="handlePageChange"
@@ -41,7 +71,7 @@
 
 <script>
 import { DripItem, Empty, PageTitle } from '@/components'
-
+import { getAPPDripList } from '@/api/interventionManager/appDripNews'
 import { axios } from '@/utils/request'
 
 export default {
@@ -84,20 +114,19 @@ export default {
         // url: '/api/admin/news/', // 后台数据
         method: 'get',
         params: {
-          ...params
+          current: this.current,
+          pageSize: this.pageSize
         }
       }).then(res => {
-        console.log('获取点滴列表', res)
-        // 后台数据
         if (res.total === 0) {
           this.NodripLists = true
           this.dripLists = []
           this.totalCount = 0
-        } else {
-          this.NodripLists = false
-          this.dripLists = res.list
-          this.totalCount = res.total
         }
+        this.NodripLists = false
+        this.dripLists = res.list || []
+        this.totalCount = res.total || 0
+
         this.refresh = false
       }).catch(err => {
         if (err) {
@@ -108,9 +137,33 @@ export default {
           })
         }
         this.refresh = false
-      }).finally(
-        console.log('data loading done')
-      )
+      })
+    },
+    // api整理后的fetch函数
+    fetchs () {
+      getAPPDripList({
+        current: this.current,
+        pageSize: this.pageSize
+      }).then(res => {
+        if (res.total === 0) {
+          this.NodripLists = true
+          this.dripLists = []
+          this.totalCount = 0
+        }
+        this.NodripLists = false
+        this.dripLists = res.list || []
+        this.totalCount = res.total || 0
+        this.refresh = false
+      }).catch(err => {
+        if (err) {
+          this.NodripLists = true
+          this.$notification['error']({
+            message: '注意！注意！',
+            description: '网络链接中断...'
+          })
+        }
+        this.refresh = false
+      })
     },
     handlePageChange (pagination) {
       console.log('pagination', pagination)

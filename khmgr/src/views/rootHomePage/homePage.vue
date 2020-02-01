@@ -434,7 +434,7 @@ export default {
         w: 2,
         h: 2,
         i: '2',
-        link: '/record',
+        link: '/healthGoals',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,

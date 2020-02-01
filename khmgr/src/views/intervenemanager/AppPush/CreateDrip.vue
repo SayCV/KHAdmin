@@ -4,14 +4,23 @@
       <ButtonBack></ButtonBack>
     </div>
     <div class="create-main">
-      <a-form :form="form" @submit="handleSubmit">
+      <a-form
+        :form="form"
+        @submit="handleSubmit"
+      >
         <div class="main-basic">
-          <a-form-item label="标题" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
-            <a-input
-              v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]"
-            />
+          <a-form-item
+            label="标题"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
+            <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]" />
           </a-form-item>
-          <a-form-item label="摘要" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+          <a-form-item
+            label="摘要"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <a-textarea
               rows="4"
               v-decorator="[
@@ -20,13 +29,16 @@
               ]"
             />
           </a-form-item>
-          <a-form-item label="作者" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+          <a-form-item
+            label="作者"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <a-input
               v-decorator="[
                 'author',
                 {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
-              ]"
-            />
+              ]" />
           </a-form-item>
           <a-form-item
             :labelCol="{md: {span: 4}, sm: {span: 4}}"
@@ -42,7 +54,11 @@
               >{{ option.text }}</a-select-option>
             </a-select>
           </a-form-item>
-          <a-form-item label="封面" :label-col="{ span: 4 }" :wrapper-col="{ span: 16 }">
+          <a-form-item
+            label="封面"
+            :label-col="{ span: 4 }"
+            :wrapper-col="{ span: 16 }"
+          >
             <div class="clearfix">
               <a-upload
                 accept="image/*"
@@ -58,23 +74,41 @@
                   <div class="ant-upload-text">上传视频封面</div>
                 </div>
               </a-upload>
-              <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-                <img alt="example" style="width: 100%" :src="previewImage" />
+              <a-modal
+                :visible="previewVisible"
+                :footer="null"
+                @cancel="handleCancel"
+              >
+                <img
+                  alt="example"
+                  style="width: 100%"
+                  :src="previewImage"
+                />
               </a-modal>
             </div>
           </a-form-item>
         </div>
         <div class="main-content">
           <a-form-item>
-            <div id="main" ref="myEditor">
-              <mavon-editor ref="md" v-model="editorContent" @imgAdd="$imgAdd" />
+            <div
+              id="main"
+              ref="myEditor"
+            >
+              <mavon-editor
+                ref="md"
+                v-model="editorContent"
+                @imgAdd="$imgAdd"
+              />
             </div>
           </a-form-item>
         </div>
         <!-- fixed footer toolbar -->
         <footer-tool-bar>
           <div>
-            <a-button type="primary" html-type="submit">提 交</a-button>
+            <a-button
+              type="primary"
+              html-type="submit"
+            >提 交</a-button>
             <a-modal
               :title="ModalTitle"
               :visible="visible"
@@ -85,7 +119,10 @@
               <div class="model-content">
                 <div class="title">{{ ModalText.title }}</div>
                 <div class="desc">
-                  <a-tag class="author" color="blue">{{ ModalText.author }}</a-tag>
+                  <a-tag
+                    class="author"
+                    color="blue"
+                  >{{ ModalText.author }}</a-tag>
                   <span class="time">{{ moment().format('YYYY-MM-DD hh:mm') }}</span>
                 </div>
                 <div class="content">
@@ -102,6 +139,7 @@
 
 <script>
 import { axios } from '@/utils/request'
+import { createAPPDrip } from '@/api/interventionManager/appDripNews'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -114,9 +152,9 @@ export default {
   data () {
     return {
       upLoadAddress: upLoadAddress,
-      selected: 0, // 比如想要默认选中为 Three 那么就把他设置为C
+      selected: 0, // 默认选中
       options: [
-        { text: '全部推送', value: 0 }, // 每个选项里面就不用在多一个selected 了
+        { text: '全部推送', value: 0 },
         { text: '条件推送', value: 1 }
       ],
       previewMdHtml: null,
@@ -130,7 +168,7 @@ export default {
       previewVisible: false,
       previewImage: '',
       fileList: [], // 上传组件的图片
-      toPostForm: {},
+      postFormValue: {},
       cover: null
     }
   },
@@ -147,7 +185,7 @@ export default {
     beforeUpload (file) {
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
-        this.$message.error('Image must smaller than 2MB!')
+        this.$message.error('图片大小不能超过 2MB!')
       }
       return isLt2M
     },
@@ -167,7 +205,7 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (this.editorContent === '') {
+          if (this.editorContent.trim() === '') {
             this.$message.warning('MarkDown文本编辑器内容不能为空！')
           } else {
             // 追加表单字段
@@ -192,8 +230,8 @@ export default {
       this.$set(values, 'pubType', this.selected)
       // 点滴内容恒为isTop===false
       this.$set(values, 'isTop', false)
-      this.toPostForm = values
-      console.log('函数：追加表单字段: ', this.toPostForm)
+      this.postFormValue = values
+      console.log('函数：追加表单字段: ', this.postFormValue)
     },
     formPost (formData) {
       // Post且跳转
@@ -221,16 +259,32 @@ export default {
         }
       })
     },
+    toCreateAPPDrip (formData) {
+      createAPPDrip(formData).then(res => {
+        // 跳转到新闻详情页面
+        this.$router.push({
+          path: '/intervenemanager/AppPush/list'
+          // query: { newsId: res.data.value }
+        })
+      }).catch(err => {
+        if (err) {
+          this.$notification['error']({
+            description: '发表点滴失败.'
+          })
+        }
+      })
+    },
     showModal () {
       this.visible = true
       this.ModalTitle = '点滴预览'
-      this.ModalText = this.toPostForm
+      this.ModalText = this.postFormValue
       this.previewMdHtml = Mdjs.md2html(this.ModalText.content)
     },
     handleOk () {
       this.confirmLoading = true
       setTimeout(() => {
-        this.formPost(this.toPostForm)
+        this.formPost(this.postFormValue)
+        // this.toCreateAPPDrip(this.postFormValue)
         this.visible = false
         this.confirmLoading = false
       }, 1000)
