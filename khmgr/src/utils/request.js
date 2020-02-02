@@ -8,7 +8,8 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 // 创建 axios 实例 开发域名
 const service = axios.create({
-  baseURL: 'http://172.31.231.91/khsrv/',
+  // baseURL: 'http://172.31.231.91/khsrv/',
+  baseURL: 'http://keephealth.hznu.edu.cn/khsrv/',
   timeout: 6000, // 请求超时时间
   headers: {
     'Content-Type': 'application/json; charset=utf-8'

@@ -1,10 +1,11 @@
 <template>
   <div class="user-info-page">
-    <div class="back">
-      <ButtonBack></ButtonBack>
-    </div>
-    <div class="user-info-wrapper">
-      <a-divider orientation="left">基本信息</a-divider>
+    <a-card
+      title="基本信息"
+      :bordered="false"
+      :loading="loading"
+    >
+      <ButtonBack slot="extra"></ButtonBack>
       <description-list size="large">
         <div class="user-avatar">
           <div class="text">头像：</div>
@@ -17,9 +18,12 @@
         <description-list-item term="邮箱">{{ data.email ||'--' }}</description-list-item>
         <description-list-item term="成员数量">{{ `${data.personCount ||'--' } 人` }}</description-list-item>
       </description-list>
-    </div>
-    <div class="user-other-wrapper">
-      <a-divider orientation="left">其他信息</a-divider>
+    </a-card>
+    <a-card
+      title="其他信息"
+      :bordered="false"
+      :loading="loading"
+    >
       <description-list size="large">
         <description-list-item term="性别">{{ data.sex ||'--' }}</description-list-item>
         <description-list-item term="民族">{{ data.minzu ||'--' }}</description-list-item>
@@ -32,7 +36,7 @@
         <description-list-item term="创建时间">{{ data.createOn ||'--' }}</description-list-item>
         <description-list-item term="家庭地址">{{ data.address ||'--' }}</description-list-item>
       </description-list>
-    </div>
+    </a-card>
     <!-- 基本信息 -->
     <div class="person-info">
       <!-- table -->
@@ -86,7 +90,7 @@
               <td
                 class="ant-descriptions-item-content"
                 colspan="1"
-              >{{ data.userId }}</td>
+              >{{ data.accountId }}</td>
               <td class="ant-descriptions-item-label">单位</td>
               <td
                 class="ant-descriptions-item-content"
@@ -129,7 +133,6 @@
       </div> -->
       <!-- table -->
     </div>
-
     <div class="edit">
       <a-button
         type="primary"
@@ -141,14 +144,12 @@
 </template>
 
 <script>
-
-import { axios } from '@/utils/request'
+import { getCustomerDetailInfo } from '@/api/basicData/customers'
 import ButtonBack from '@/components/Button/ButtonBack'
 import { DescriptionList } from '@/components'
 const DescriptionListItem = DescriptionList.Item
 
 export default {
-  // 客户管理详情页
   name: 'CustomerInfo',
   components: {
     ButtonBack,
@@ -157,50 +158,35 @@ export default {
   },
   data () {
     return {
-      userId: this.$route.query.userId,
+      accountId: this.$route.query.accountId,
       loading: false,
       data: {}
     }
   },
   mounted () {
-    console.log('route =>', this.$route)
     this.fetch()
   },
-  // watch: {
-  //   '$route.path' (to, from) {
-  //     if (to === '/customerManager/table/info') {
-  //       console.log('再次进入客户管理详情页', to)
-  //       this.userId = this.$route.query.userId
-  //       this.fetch()
-  //     }
-  //   }
-  // },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.fetch()
+    })
+  },
   methods: {
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
       this.loading = true
-      axios({
-        url: `/api/admin/customers/${this.userId}`,
-        method: 'get'
-      }).then(res => {
-        console.log('info-res')
-        console.log(res)
+      getCustomerDetailInfo(this.accountId).then(res => {
         this.loading = false
-        this.data = res
-        console.log('info', this.data)
-      })
+        this.data = res || {}
+      }).catch(() => { this.loading = false })
     },
     handleBtnToEdit () {
       this.$router.push({
         path: '/customerManager/table/edit',
         query: {
-          userId: this.userId
+          accountId: this.accountId
         }
       })
-    },
-    handleBtnBack () {
-      this.$router.push({ name: 'CustomerTable' })
     }
   }
 }
@@ -212,16 +198,16 @@ export default {
     display: flex;
     justify-content: flex-end;
   }
-  .user-info-wrapper {
-    .user-avatar {
-      display: flex;
-      padding-bottom: 12px;
-      .text {
-        line-height: 32px;
-        color: rgba(0, 0, 0, 0.85);
-      }
+
+  .user-avatar {
+    display: flex;
+    padding-bottom: 12px;
+    .text {
+      line-height: 32px;
+      color: rgba(0, 0, 0, 0.85);
     }
   }
+
   .edit {
     margin-top: 2rem;
     display: flex;

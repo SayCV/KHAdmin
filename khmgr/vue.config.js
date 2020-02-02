@@ -93,9 +93,12 @@ module.exports = {
       '/api': {
         // 后端接口地址
         // target: 'http://172.31.231.91/khsrv/',
-        target: 'http://localhost:8000',
-        ws: false,
-        changeOrigin: true // 是否允许跨越
+        target: 'http://keephealth.hznu.edu.cn/khsrv/',
+        ws: true,
+        changeOrigin: true, // 是否允许跨越
+        pathRewrite: {
+          '^/api': '/api'
+        }
       },
       '/imgs': {
         target: 'http://localhost:8000',

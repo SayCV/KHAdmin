@@ -1,23 +1,23 @@
 <template>
   <div class="edit-customer-page">
-    <div class="back">
-      <ButtonBack></ButtonBack>
-    </div>
-    <div class="customer-container">
-      <a-form @submit="handleSubmit" :form="form">
-        <a-divider orientation="left">基本信息</a-divider>
+    <a-form
+      @submit="handleSubmit"
+      :form="form"
+    >
+      <a-card
+        title="基本信息"
+        :bordered="false"
+      >
         <div class="basic-info">
           <a-form-item
             label="用户名"
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input
-              v-decorator="[
+            <a-input v-decorator="[
                 'username',
                 { initialValue: ''}
-              ]"
-            />
+              ]" />
           </a-form-item>
           <a-form-item
             label="电话"
@@ -52,12 +52,10 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-select
-              v-decorator="[
+            <a-select v-decorator="[
                 'sex',
                 {initialValue: '0'}
-              ]"
-            >
+              ]">
               <a-select-option value="0">男</a-select-option>
               <a-select-option value="1">女</a-select-option>
             </a-select>
@@ -78,7 +76,11 @@
             />
           </a-form-item>
         </div>
-        <a-divider orientation="left">其他信息</a-divider>
+      </a-card>
+      <a-card
+        title="基本信息"
+        :bordered="false"
+      >
         <div class="other-info">
           <a-form-item
             label="民族"
@@ -98,24 +100,20 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input
-              v-decorator="[
+            <a-input v-decorator="[
                 'identityId',
                 { initialValue: ''}
-              ]"
-            />
+              ]" />
           </a-form-item>
           <a-form-item
             label="邮箱"
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input
-              v-decorator="[
+            <a-input v-decorator="[
                 'email',
                 { initialValue: ''}
-              ]"
-            />
+              ]" />
           </a-form-item>
 
           <a-form-item
@@ -123,12 +121,10 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-select
-              v-decorator="[
+            <a-select v-decorator="[
                 'maritalstatus',
                 {initialValue: '0'}
-              ]"
-            >
+              ]">
               <a-select-option value="0">未婚</a-select-option>
               <a-select-option value="1">已婚</a-select-option>
             </a-select>
@@ -138,12 +134,10 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input
-              v-decorator="[
+            <a-input v-decorator="[
                 'education',
                 { initialValue: ''}
-              ]"
-            />
+              ]" />
           </a-form-item>
           <a-form-item
             label="注册时间"
@@ -186,11 +180,17 @@
             />
           </a-form-item>
         </div>
-        <div class="from-option" style="text-align: center">
-          <a-button htmlType="submit" type="primary" >创建</a-button>
-        </div>
-      </a-form>
-    </div>
+      </a-card>
+      <div
+        class="from-option"
+        style="text-align: center"
+      >
+        <a-button
+          htmlType="submit"
+          type="primary"
+        >创建</a-button>
+      </div>
+    </a-form>
   </div>
 </template>
 
@@ -239,11 +239,21 @@ export default {
 
 <style lang='less' scoped>
 .edit-customer-page {
-  .back {
+  .basic-info,
+  .other-info {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    position: relative;
   }
-  .customer-container {
+  .basic-info .ant-row,
+  .other-info .ant-row {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* 页面小于900px */
+  .edit-customer-page {
     .basic-info,
     .other-info {
       display: flex;
@@ -253,28 +263,6 @@ export default {
     .basic-info .ant-row,
     .other-info .ant-row {
       width: 50%;
-    }
-  }
-}
-
-@media screen and (max-width: 900px) {
-  /* 页面小于900px */
-  .edit-customer-page {
-    .back {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .customer-container {
-      .basic-info,
-      .other-info {
-        display: flex;
-        flex-wrap: wrap;
-        position: relative;
-      }
-      .basic-info .ant-row,
-      .other-info .ant-row {
-        width: 50%;
-      }
     }
   }
 }

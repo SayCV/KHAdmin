@@ -16,9 +16,9 @@ import './mock'
 
 import bootstrap from './core/bootstrap'
 import './core/use'
-// import './permission' // permission control
+// permission control
+// import './permission'
 import './utils/filter' // global filter
-// import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 // use mavonEditor
 Vue.use(mavonEditor)

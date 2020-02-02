@@ -126,6 +126,7 @@
 <script>
 import { axios } from '@/utils/request'
 import { getAPPDripInfo, updateAPPDrip } from '@/api/interventionManager/appDripNews'
+import { uploadResources } from '@/api/common'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -302,6 +303,18 @@ export default {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' }
       }).then(url => {
+        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
+        /**
+         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
+         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
+         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
+         */
+        console.log('image', url)
+        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
+        this.$refs.md.$img2Url(pos, mdImgUrl)
+      })
+      // 整理api
+      uploadResources(formData).then(url => {
         // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
         /**
          * $vm 指为mavonEditor实例，可以通过如下两种方式获取

@@ -1,11 +1,15 @@
 <template>
-  <div class="edit-customer-page">
-    <div class="back">
-      <ButtonBack></ButtonBack>
-    </div>
-    <div class="customer-container">
-      <a-form @submit="handleSubmit" :form="form">
-        <a-divider orientation="left">基本信息</a-divider>
+  <div class="edit-customer-container">
+    <a-form
+      @submit="handleSubmit"
+      :form="form"
+    >
+      <a-card
+        title="基本信息"
+        :bordered="false"
+        :loading="loading"
+      >
+        <ButtonBack slot="extra"></ButtonBack>
         <div class="basic-info">
           <a-form-item
             label="用户名"
@@ -15,7 +19,8 @@
             <a-input
               v-decorator="[
                 'username',
-                {rules: [{ required: false, message: '请输入用户名' }],initialValue: data.username}
+                {rules: [{ required: false, message: '请输入用户名' }],
+                 initialValue: data.username||''}
               ]"
               name="username"
             />
@@ -28,7 +33,8 @@
             <a-input
               v-decorator="[
                 'phone',
-                {rules: [{ required: true, message: '请输入电话' }],initialValue: data.phone}
+                {rules: [{ required: true, message: '请输入电话' }],
+                 initialValue: data.phone||''}
               ]"
               name="phone"
             />
@@ -41,7 +47,7 @@
             <a-input
               v-decorator="['name', {
                 rules: [{ required: false, message: '请输入姓名' }],
-                initialValue: data.name
+                initialValue: data.name||''
               }]"
               name="name"
             />
@@ -54,7 +60,7 @@
             <a-input
               v-decorator="['age', {
                 rules: [{ required: false, message: '请输入年龄' }],
-                initialValue: data.age
+                initialValue: data.age||''
               }]"
               name="age"
             />
@@ -67,14 +73,12 @@
             <a-select
               v-decorator="[
                 'sex',
-                {initialValue: data.sex}
-              ]"
-            >
+                {initialValue: data.sex||'0'}
+              ]">
               <a-select-option value="0">男</a-select-option>
               <a-select-option value="1">女</a-select-option>
             </a-select>
           </a-form-item>
-
           <a-form-item
             label="出生日期"
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
@@ -87,13 +91,18 @@
               v-decorator="[
                 'brithday',
                 {rules: [{ required: false, message: '请选择出生日期' }],
-                 initialValue: moment(data.createdTime, dateFormat)
+                 initialValue: initBirthDateValue
                 }
               ]"
             />
           </a-form-item>
         </div>
-        <a-divider orientation="left">其他信息</a-divider>
+      </a-card>
+      <a-card
+        title="其他信息"
+        :bordered="false"
+        :loading="loading"
+      >
         <div class="other-info">
           <a-form-item
             label="民族"
@@ -103,7 +112,8 @@
             <a-input
               v-decorator="[
                 'nation',
-                {rules: [{ required: false, message: '请输入民族' }],initialValue: data.nation}
+                {rules: [{ required: false, message: '请输入民族' }],
+                 initialValue: data.nation||''}
               ]"
               name="nation"
             />
@@ -116,7 +126,8 @@
             <a-input
               v-decorator="[
                 'identityId',
-                {rules: [{ required: false, message: '请输入身份证' }],initialValue: data.identityId}
+                {rules: [{ required: false, message: '请输入身份证' }],
+                 initialValue: data.identityId||''}
               ]"
               name="identityId"
             />
@@ -129,12 +140,12 @@
             <a-input
               v-decorator="[
                 'email',
-                {rules: [{ required: false, message: '请输入邮箱' }],initialValue: data.email}
+                {rules: [{ required: false, message: '请输入邮箱' }],
+                 initialValue: data.email||''}
               ]"
               name="email"
             />
           </a-form-item>
-
           <a-form-item
             label="婚姻状况"
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
@@ -143,9 +154,8 @@
             <a-select
               v-decorator="[
                 'maritalstatus',
-                {initialValue: data.maritalstatus}
-              ]"
-            >
+                {initialValue: data.maritalstatus||''}
+              ]">
               <a-select-option value="0">未婚</a-select-option>
               <a-select-option value="1">已婚</a-select-option>
             </a-select>
@@ -158,7 +168,8 @@
             <a-input
               v-decorator="[
                 'education',
-                {rules: [{ required: false, message: '请填写学历' }],initialValue: data.education}
+                {rules: [{ required: false, message: '请填写学历' }],
+                 initialValue: data.education||''}
               ]"
               name="education"
             />
@@ -174,7 +185,8 @@
               style="width: 100%"
               v-decorator="[
                 'register-time',
-                {rules: [{ required: false, message: '请选择注册时间' }],initialValue: moment(data.createdTime, dateFormat) }
+                {rules: [{ required: false, message: '请选择注册时间' }],
+                 initialValue: initCreatedDateValue }
               ]"
             />
           </a-form-item>
@@ -187,7 +199,8 @@
               rows="4"
               v-decorator="[
                 'description',
-                {rules: [{ required: false, message: '请填写单位' }],initialValue: data.workplace}
+                {rules: [{ required: false, message: '请填写单位' }],
+                 initialValue: data.workplace||''}
               ]"
             />
           </a-form-item>
@@ -200,68 +213,77 @@
               rows="4"
               v-decorator="[
                 'type',
-                {rules: [{ required: false, message: '请填写家庭地址' }],initialValue: data.address}
+                {rules: [{ required: false, message: '请填写家庭地址' }],
+                 initialValue: data.address||''}
               ]"
             />
           </a-form-item>
         </div>
-        <div class="from-option" style="text-align: center">
-          <a-button htmlType="submit" type="primary">提交</a-button>
-        </div>
-      </a-form>
-    </div>
+      </a-card>
+      <div
+        class="from-option"
+        style="text-align: center"
+      >
+        <a-button
+          htmlType="submit"
+          type="primary"
+          style="marginRight: 8px"
+        >提交</a-button>
+        <a-button>保存</a-button>
+      </div>
+    </a-form>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
 import ButtonBack from '@/components/Button/ButtonBack'
+import { getCustomerDetailInfo } from '@/api/basicData/customers'
 
 export default {
   // 客户管理编辑
-  name: 'EditCusInfo',
+  name: 'CustomerEditInfo',
   components: { ButtonBack },
   data () {
     return {
       dateFormat: 'YYYY-MM-DD',
       accountId: this.$route.query.accountId,
-      description: '表单页用于向用户收集或验证信息，基础表单常见于数据项较少的表单场景。',
-      value: 1,
       data: {},
-      // form
+      loading: false,
       form: this.$form.createForm(this)
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.accountId = vm.$route.query.newsaccountIdId
-      vm.fetch()
-    })
-  },
+  // beforeRouteEnter (to, from, next) {
+  //   next(vm => {
+  //     vm.accountId = vm.$route.query.accountId
+  //     vm.fetch()
+  //   })
+  // },
   mounted () {
     this.fetch()
+  },
+  computed: {
+    initCreatedDateValue () {
+      return this.data.createdTime === '' || isNaN(this.data.createdTime)
+        ? null
+        : moment(this.data.createdTime, this.dateFormat)
+    },
+    initBirthDateValue () {
+      return this.data.birthday === '' || isNaN(this.data.birthday)
+        ? null
+        : moment(this.data.birthday, this.dateFormat)
+    }
   },
   methods: {
     // default-date
     moment,
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
       this.loading = true
-      axios({
-        url: '/api/account/userlist/info/',
-        method: 'get',
-        params: {
-          accountId: this.accountId
-        }
-      }).then(res => {
-        console.log('info-res')
-        console.log(res)
+      getCustomerDetailInfo(this.accountId).then(res => {
         this.loading = false
-        this.data = res.data.result.data
-        console.log('info', this.data)
-      })
+        this.data = res || {}
+      }).catch(() => { this.loading = false })
     },
     // handler
     handleSubmit (e) {
@@ -272,21 +294,28 @@ export default {
           console.log('Received values of form: ', values)
         }
       })
-    },
-    handleBtnBack () {
-      this.$router.push({ name: 'CustomerTable' })
     }
   }
 }
 </script>
 
 <style lang='less' scoped>
-.edit-customer-page {
-  .back {
+.edit-customer-container {
+  .basic-info,
+  .other-info {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    position: relative;
   }
-  .customer-container {
+  .basic-info .ant-row,
+  .other-info .ant-row {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* 页面小于900px */
+  .edit-customer-container {
     .basic-info,
     .other-info {
       display: flex;
@@ -296,28 +325,6 @@ export default {
     .basic-info .ant-row,
     .other-info .ant-row {
       width: 50%;
-    }
-  }
-}
-
-@media screen and (max-width: 900px) {
-  /* 页面小于900px */
-  .edit-customer-page {
-    .back {
-      display: flex;
-      justify-content: flex-end;
-    }
-    .customer-container {
-      .basic-info,
-      .other-info {
-        display: flex;
-        flex-wrap: wrap;
-        position: relative;
-      }
-      .basic-info .ant-row,
-      .other-info .ant-row {
-        width: 50%;
-      }
     }
   }
 }

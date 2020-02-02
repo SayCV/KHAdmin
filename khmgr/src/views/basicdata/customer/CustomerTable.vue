@@ -140,7 +140,7 @@
         <a
           slot="userNo"
           slot-scope="text, record"
-          @click="() => handleView(record.userNo)"
+          @click="() => handleView(record.accountId)"
         >{{ text }}</a>
         <template
           slot="operation"
@@ -148,9 +148,9 @@
         >
           <div class="editable-row-operations">
             <span slot="operation">
-              <a @click="() => handleEdit(record.userId)">编辑</a>
+              <a @click="() => handleEdit(record.accountId)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="() => handleView(record.userId)">查看</a>
+              <a @click="() => handleView(record.accountId)">查看</a>
             </span>
           </div>
         </template>
@@ -163,13 +163,11 @@
 <script>
 
 import _ from 'lodash'
-import { STable } from '@/components'
-import { getCustomerList } from '@/api/manage'
+import { getCustomerList } from '@/api/basicData/customers'
 import { translateSex } from '@/utils/util'
 const columns = [
   {
     title: '健康号',
-    align: 'center',
     dataIndex: 'userNo',
     key: 'userNo',
     scopedSlots: {
@@ -179,7 +177,6 @@ const columns = [
   },
   {
     title: '用户名',
-    align: 'center',
     dataIndex: 'userName',
     key: 'userName',
     scopedSlots: {
@@ -189,27 +186,23 @@ const columns = [
   },
   {
     title: '电话',
-    align: 'center',
     dataIndex: 'phone',
     key: 'phone'
   },
   {
     title: '性别',
-    align: 'center',
     dataIndex: 'sex',
     key: 'sex'
   },
 
   {
     title: '健康评级',
-    align: 'center',
     dataIndex: 'healthLevel',
     key: 'healthLevel',
     sorter: true
   },
   {
     title: '创建时间',
-    align: 'center',
     dataIndex: 'createOn',
     key: 'createOn',
     sorter: true
@@ -217,7 +210,7 @@ const columns = [
 
   {
     title: '操作',
-    align: 'center',
+    align: 'right',
     dataIndex: 'operation',
     scopedSlots: {
       customRender: 'operation'
@@ -228,21 +221,18 @@ const columns = [
 export default {
   name: 'CustomerTable',
   components: {
-    STable
   },
   data () {
     return {
-      // 高级搜索 展开/关闭
       advanced: false,
-      // 表头
       columns,
       // 查询参数
       queryParam: {},
       customerList: [],
       loading: false,
       pagination: {
-        current: 1,
-        pageSize: 1,
+        pageNum: 1,
+        pageSize: 10,
         total: 0
       },
       selectedRowKeys: [],
@@ -250,10 +240,7 @@ export default {
     }
   },
   mounted () {
-    this.fetch({
-      pageSize: this.pagination.pageSize,
-      pageNum: this.pagination.current
-    })
+    this.fetch(this.pagination)
   },
   computed: {
     hasSelected () {
@@ -263,11 +250,11 @@ export default {
   methods: {
     handleTableChange (pagination, filters, sorter) {
       const pager = { ...this.pagination }
-      pager.current = pagination.current
+      pager.pageNum = pagination.pageNum
       this.pagination = pager
       this.fetch({
         pageSize: pagination.pageSize,
-        pageNum: pagination.current,
+        pageNum: pagination.pageNum,
         sortField: sorter.field,
         sortOrder: sorter.order,
         ...filters
@@ -275,7 +262,6 @@ export default {
     },
     // 获取数据
     fetch (params = {}) {
-      console.log('params:', params)
       this.loading = true
       getCustomerList(params).then(res => {
         console.log('customerList res =>', res)
@@ -293,7 +279,7 @@ export default {
         _.forEach(list, item => {
           this.customerList.push({
             key: _.get(item, 'userId') || '--',
-            userId: _.get(item, 'userId') || '--',
+            accountId: _.get(item, 'userId') || '--',
             userNo: _.get(item, 'userNo') || '--',
             userName: _.get(item, 'userName') || '--',
             sex: translateSex(_.get(item, 'sex')),
@@ -307,21 +293,21 @@ export default {
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-    handleEdit (userId) {
+    handleEdit (accountId) {
       // 点击行进入edit页
       this.$router.push({
         path: '/customerManager/table/edit',
         query: {
-          userId: userId
+          accountId: accountId
         }
       })
     },
-    handleView (userId) {
+    handleView (accountId) {
       // 点击行进入详情页
       this.$router.push({
         path: '/customerManager/table/info',
         query: {
-          userId: userId
+          accountId: accountId
         }
       })
     },
