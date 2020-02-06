@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="aims-table-page">
+    <div
+      v-if="$route.name === 'HealthGoalsTable'"
+      class="aims-table-page"
+    >
       <div class="page-top">
         <div class="top-btns"></div>
         <div class="table-page-search-wrapper">
@@ -53,7 +56,6 @@
         <div style="margin-bottom: 16px">
           <a-button
             type="primary"
-            @click="start"
             :disabled="!hasSelected"
             :loading="loading"
           >重置</a-button>
@@ -98,10 +100,12 @@
         </template>
       </a-table>
     </div>
+    <router-view v-else />
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import { getHealthGoalList } from '@/api/basicData/healthGoal'
 const columns = [
   {
@@ -114,7 +118,6 @@ const columns = [
     scopedSlots: { customRender: 'userNo' },
     sorter: false
   },
-
   {
     title: '用户名',
     dataIndex: 'userName',
@@ -148,7 +151,7 @@ export default {
       advanced: false,
       // 查询参数
       queryParam: {},
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       data: [],
       pagination: {},
       loading: false,
@@ -186,34 +189,48 @@ export default {
         const pagination = { ...this.pagination }
         pagination.total = res.total
         this.loading = false
-        this.data = res.list
         this.pagination = pagination
-      })
+        this.forEachHealthGoals(res.list)
+      }).catch(() => { this.loading = false })
     },
-    start () {
-      this.loading = true
-      setTimeout(() => {
-        this.loading = false
-        this.selectedRowKeys = []
-      }, 1000)
+    forEachHealthGoals (list) {
+      _.isArray(list) && _.forEach(list, item => {
+        this.data.push({
+          key: _.get(item, 'userId') || '--',
+          accountId: _.get(item, 'userId') || '--',
+          userNo: _.get(item, 'userNo') || '--',
+          userName: _.get(item, 'userName') || '--',
+          aims: _.get(item, 'aims') || '--',
+          createOn: _.get(item, 'createOn') || '--'
+        })
+      })
+      if (list.length === 0) this.data = []
     },
     onSelectChange (selectedRowKeys) {
       console.log('selectedRowKeys changed: ', selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
     },
-    handleDelete (userId) {
+    handleDelete (accountId) {
       this.$confirm({
+        centered: true,
         title: '你确定要删除该项?',
         onOk () { },
         onCancel () { }
       })
     },
-    handleView (userId) {
-      // 点击行进入详情页
+    handleView (accountId) {
       this.$router.push({
-        path: ' ',
+        name: 'HealthGoalsInfo',
         query: {
-          userId: userId
+          accountId: accountId
+        }
+      })
+    },
+    handleEdit (accountId) {
+      this.$router.push({
+        name: 'HealthGoalsEdit',
+        query: {
+          accountId: accountId
         }
       })
     },
@@ -227,8 +244,4 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.aims-table-page {
-  .page-top {
-  }
-}
 </style>

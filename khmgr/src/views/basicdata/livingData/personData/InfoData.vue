@@ -1,12 +1,66 @@
 <template>
   <div class="living-data-info">
-    <div class="page-top">
-
-      <ButtonBack class="btn-back"></ButtonBack>
-    </div>
-    <div class="data-table">
-      <div class="detail-info">
-        <div class="title">{{ this.$route.meta.title }}</div>
+    <a-card
+      title="基本信息"
+      :bordered="false"
+      :loading="loading"
+    >
+      <ButtonBack
+        slot="extra"
+        name="返回成员列表页"
+      ></ButtonBack>
+      <div class="basic-desription">
+        <description-list>
+          <description-list-item term="健康号">{{ level || '--' }}</description-list-item>
+          <description-list-item term="姓名">{{ level || '--' }}</description-list-item>
+          <description-list-item term="性别">{{ level || '--' }}</description-list-item>
+          <description-list-item term="年龄">{{ level || '--' }}</description-list-item>
+          <description-list-item term="健康评级">{{ level || '--' }}</description-list-item>
+          <description-list-item term="启动时间">{{ level || '--' }}</description-list-item>
+        </description-list>
+      </div>
+    </a-card>
+    <a-card
+      :title="this.$route.meta.title"
+      :bordered="false"
+      :loading="loading"
+    >
+      <div class="select-date">
+        <a-form
+          layout="inline"
+          :form="form"
+          @submit="handleSubmit"
+        >
+          <a-form-item label="选择日期">
+            <a-date-picker
+              format="YYYY-MM-DD"
+              :disabledDate="disabledDate"
+              v-decorator="['date-picker', {
+                rules: [{ type: 'object', required: true, message: 'Please select time!' }],
+                initialValue:moment(moment().endOf('day'),'YYYY-MM-DD')
+              }]"
+            />
+          </a-form-item>
+          <a-form-item>
+            <a-button
+              type="primary"
+              icon="search"
+              :disabled="loading"
+              html-type="submit"
+            >查询</a-button>
+          </a-form-item>
+        </a-form>
+      </div>
+      <div
+        class="no-datas"
+        v-if="noDatas"
+      >
+        <Empty></Empty>
+      </div>
+      <div
+        v-else
+        class="data-table"
+      >
         <div class="detail-data">
           <div class="label">
             <div class="label-item">名称</div>
@@ -14,89 +68,46 @@
             <div class="label-item">参考</div>
             <div class="label-item">单位</div>
           </div>
-          <div class="content">
-            <div class="spin" v-if="refresh">
-              <a-spin></a-spin>
-            </div>
-            <div class="data-loading" v-else>
-              <div class="no-datas" v-if="noDatas">
-                <Empty></Empty>
-              </div>
-              <div class="datas" v-else>
-                <div class="row" v-for="data in detailData" :key="data.label">
-                  <div class="value-item">{{ data.indicatorNameCN }}</div>
-                  <div class="value-item">{{ isToiletTime(data) }}</div>
-                  <div class="value-item">{{ referenceValue }}</div>
-                  <div class="value-item">{{ data.indicatorUnit }}</div>
-                </div>
-              </div>
+          <div class="datas">
+            <div
+              class="row"
+              v-for="data in detailData"
+              :key="data.label"
+            >
+              <div class="value-item">{{ data.indicatorNameCN }}</div>
+              <div class="value-item">{{ isToiletTime(data) }}</div>
+              <div class="value-item">{{ referenceValue }}</div>
+              <div class="value-item">{{ data.indicatorUnit }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="basic-info">
-        <div class="title">基本信息</div>
-        <div class="basic-data">
-          <div class="item">
-            <div class="label">姓名</div>
-            <div class="data">强啊强</div>
-          </div>
-          <div class="item">
-            <div class="label">健康号</div>
-            <div class="data">1000001</div>
-          </div>
-          <div class="item">
-            <div class="label">性别</div>
-            <div class="data">男</div>
-          </div>
-          <div class="item">
-            <div class="label">年龄</div>
-            <div class="data">21</div>
-          </div>
-          <div class="item">
-            <div class="label">健康评级</div>
-            <div class="data">{{ level }}</div>
-          </div>
-        </div>
-        <div class="data-change">
-          <div class="label">选择日期</div>
-          <div class="content">
-            <a-form layout="inline" :form="form" @submit="handleSubmit">
-              <a-form-item>
-                <a-date-picker
-                  format="YYYY-MM-DD"
-                  :disabledDate="disabledDate"
-                  v-decorator="['date-picker', {
-                    rules: [{ type: 'object', required: true, message: 'Please select time!' }],
-                    initialValue:moment(moment().endOf('day'),'YYYY-MM-DD')
-                  }]"
-                />
-              </a-form-item>
-              <a-form-item>
-                <a-button type="primary" icon="search" :disabled="refresh" html-type="submit">查询</a-button>
-              </a-form-item>
-            </a-form>
-          </div>
-        </div>
-      </div>
-    </div>
+    </a-card>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
-import { axios } from '@/utils/request'
+// import { axios } from '@/utils/request'
 import ButtonBack from '@/components/Button/ButtonBack'
 import Empty from '@/components/Empty/Empty'
+import { getPersonLivingData } from '@/api/basicData/livingData'
+import { DescriptionList } from '@/components'
+const DescriptionListItem = DescriptionList.Item
 
 export default {
   // 成员详细健康数据
   name: 'InfoData',
-  components: { ButtonBack, Empty },
+  components: {
+    ButtonBack,
+    Empty,
+    DescriptionList,
+    DescriptionListItem
+  },
   data () {
     return {
       personId: this.$route.query.personId,
-      refresh: false,
+      loading: false,
       form: this.$form.createForm(this),
       detailData: [],
       noDatas: false,
@@ -110,7 +121,6 @@ export default {
   methods: {
     moment,
     disabledDate (current) {
-      // Can not select days before today and today
       return current && current > moment().endOf('day')
     },
     handleSubmit (e) {
@@ -130,32 +140,27 @@ export default {
     fetch (params = {}) {
       console.log('params:', params)
       console.log('personId:', this.personId)
-      this.refresh = true
-      axios({
-        // url: `/api/persons/${this.personId}/indicators`,
-        url: '/api/persons/2/indicators',
-        method: 'get'
-
-      }).then(res => {
-        console.log('生活数据详情:', res)
-        if (res.datas) {
-          this.detailData = res.datas.list
-          this.level = res.level
-        }
+      this.loading = true
+      getPersonLivingData(this.personId).then(res => {
+        this.loading = false
+        this.detailData = res.datas.list || []
+        this.level = res.level || '--'
         if (res.datas.total === 0) {
           this.noDatas = true
         }
-        this.refresh = false
       }).catch(err => {
+        this.loading = false
         if (err) {
           this.noDatas = true
         }
-        this.refresh = false
       })
     },
     isToiletTime (data) {
       if (data.indicatorName === 'toilet_time') {
-        return JSON.parse(data.indicatorValue).TimeSpan || '0'
+        console.log(JSON.parse(data.indicatorValue))
+        const toiletTime = JSON.parse(data.indicatorValue).TimeSpan.toString().substring(0, 12)
+        console.log(toiletTime)
+        return toiletTime || '0'
       }
       return data.indicatorValue === 'NaN' ? '0' : data.indicatorValue
     }
@@ -164,126 +169,53 @@ export default {
 </script>
 <style lang="less" scoped>
 .living-data-info {
-  .page-top {
-    margin-bottom: 20px;
+  .select-date {
+    height: 82px;
   }
   .data-table {
-    border: 1px solid #d9d9d9;
-    display: flex;
-
-    .detail-info {
-      flex: 3;
-      .title {
+    border-right: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
+    .detail-data {
+      .label {
+        display: flex;
         background: #fafafa;
-        padding: 12px 24px;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.9);
+        border-top: 1px solid #d9d9d9;
+        border-bottom: 1px solid #d9d9d9;
+        .label-item {
+          flex: 1;
+          padding: 12px 24px;
+          font-size: 14px;
+          color: rgba(0, 0, 0, 0.85);
+          border-right: 1px solid #d9d9d9;
+          &:last-child {
+            border-right: 0px solid #d9d9d9;
+          }
+        }
       }
-      .detail-data {
-        .label {
+      .datas {
+        .row {
           display: flex;
-          background: #fafafa;
-          border-top: 1px solid #d9d9d9;
           border-bottom: 1px solid #d9d9d9;
-          .label-item {
+          .value-item {
             flex: 1;
             padding: 12px 24px;
             font-size: 14px;
-            color: rgba(0, 0, 0, 0.85);
-            border-right: 1px solid #d9d9d9;
-            &:last-child {
-              border-right: 0px solid #d9d9d9;
-            }
-          }
-        }
-        .content {
-          position: relative;
-          min-height: calc(45px * 12 + 12px);
-          .spin {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-          }
-          .data-loading {
-            .no-datas {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-            .datas {
-              .row {
-                display: flex;
-                border-bottom: 1px solid #d9d9d9;
-                .value-item {
-                  flex: 1;
-                  padding: 12px 24px;
-                  font-size: 14px;
-                  color: rgba(0, 0, 0, 0.65);
-                  border-right: 1px solid #d9d9d9;
-                  &:first-child {
-                    background: #fafafa;
-                  }
-                  &:nth-child(2n + 1) {
-                    background: #fafafa;
-                    color: rgba(0, 0, 0, 0.85);
-                  }
-                  &:last-child {
-                    border-right: 0px solid #d9d9d9;
-                  }
-                }
-                &:last-child {
-                  border-bottom: 0px solid #d9d9d9;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    .basic-info {
-      max-width: 340px;
-      flex: 1;
-      border-left: 1px solid #d9d9d9;
-      .title {
-        background: #fafafa;
-        padding: 12px 24px;
-        font-size: 14px;
-        color: rgba(0, 0, 0, 0.9);
-        border-bottom: 1px solid #d9d9d9;
-      }
-      .basic-data {
-        .item {
-          display: flex;
-          border-bottom: 1px solid #d9d9d9;
-          .label {
-            flex: 1;
-            background: #fafafa;
-            color: rgba(0, 0, 0, 0.85);
-            padding: 12px 24px;
-            border-right: 1px solid #d9d9d9;
-            &:last-child {
-              border-right: 0px solid #d9d9d9;
-            }
-          }
-          .data {
-            flex: 1;
-            padding: 12px 24px;
             color: rgba(0, 0, 0, 0.65);
+            border-right: 1px solid #d9d9d9;
+            &:first-child {
+              background: #fafafa;
+            }
+            &:nth-child(2n + 1) {
+              background: #fafafa;
+              color: rgba(0, 0, 0, 0.85);
+            }
+            &:last-child {
+              border-right: 0px solid #d9d9d9;
+            }
           }
-        }
-      }
-      .data-change {
-        .label {
-          color: rgba(0, 0, 0, 0.85);
-          background: #fafafa;
-          padding: 12px 24px;
-          border-bottom: 1px solid #d9d9d9;
-        }
-        .content {
-          padding: 12px 24px;
-          border-bottom: 1px solid #d9d9d9;
+          &:last-child {
+            border-bottom: 1px solid #d9d9d9;
+          }
         }
       }
     }

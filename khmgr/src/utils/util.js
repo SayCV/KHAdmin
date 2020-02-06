@@ -66,9 +66,9 @@ export function removeLoadingAnimate (id = '', timeout = 1500) {
  */
 export const translateSex = (key) => {
   switch (key) {
-    case 0:
+    case '0':
       return '男'
-    case 1:
+    case '1':
       return '女'
     default:
       return '--'

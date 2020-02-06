@@ -11,11 +11,11 @@ export const asyncRouterMap = [
     meta: { title: '首页' },
     // redirect: '/dashboard/workplace',
     children: [
-      // 我的客户
+      // 基础数据
       {
         path: '/customerManager',
         name: 'CustomerManager',
-        component: () => import('@/views/basicdata/Index'),
+        component: RouteView,
         meta: { title: '我的客户', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/customerManager/table',
         children: [
@@ -59,7 +59,7 @@ export const asyncRouterMap = [
       {
         path: '/equipmentManager',
         name: 'EquipmentManager',
-        component: () => import('@/views/basicdata/Index'),
+        component: RouteView,
         meta: { title: '设备管理', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/equipmentManager/table',
         children: [
@@ -91,7 +91,7 @@ export const asyncRouterMap = [
       {
         path: '/healthGoals',
         name: 'healthGoals',
-        component: () => import('@/views/basicdata/Index'),
+        component: RouteView,
         meta: { title: '健康小目标', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/healthGoals/table',
         children: [
@@ -99,37 +99,32 @@ export const asyncRouterMap = [
             path: '/healthGoals/table',
             name: 'HealthGoalsTable',
             component: () => import('@/views/basicdata/healthgoal/healthGoalsTable'),
-            meta: { title: '目标列表', keepAlive: true, hidden: true, permission: ['table'] }
-          }
-        ]
-      },
-      // dashboard
-      {
-        path: '/dashboard',
-        name: 'dashboard',
-        redirect: '/dashboard/workplace',
-        component: RouteView,
-        meta: { title: '健康管理仪表盘', keepAlive: true, icon: bxAnaalyse, permission: ['dashboard'] },
-        children: [
-          {
-            path: '/dashboard/workplace',
-            name: 'Workplace',
-            component: () => import('@/views/dashboard/Workplace'),
-            meta: { title: '工作台', keepAlive: true, permission: ['dashboard'] }
-          },
-          {
-            path: '/dashboard/analysis',
-            name: 'analysis',
-            component: () => import('@/views/dashboard/Analysis'),
-            meta: { title: '日报分析', keepAlive: false, permission: ['dashboard'] }
+            meta: { title: '目标列表', keepAlive: true, hidden: true, permission: ['table'] },
+            // hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/healthGoals/table/info',
+                name: 'HealthGoalsInfo',
+                component: () => import('@/views/basicdata/healthgoal/healthGoalsInfo'),
+                // hidden: true,
+                meta: { title: '目标详情页', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/healthGoals/table/edit',
+                name: 'HealthGoalsEdit',
+                component: () => import('@/views/basicdata/healthgoal/healthGoalsEdit'),
+                // hidden: true,
+                meta: { title: '编辑目标', keepAlive: true, hidden: true, permission: ['table'] }
+              }
+            ]
           }
         ]
       },
       {
         path: '/livingData',
         name: 'LivingData',
-        component: () => import('@/views/basicdata/Index'),
-        meta: { title: '用户生活数据', keepAlive: true, permission: ['table'] },
+        component: RouteView,
+        meta: { title: '用户生活数据', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/livingData/userTable',
         children: [
           {
@@ -155,7 +150,105 @@ export const asyncRouterMap = [
           }
         ]
       },
-
+      {
+        path: '/MedicalRecords',
+        name: 'MedicalRecords',
+        component: () => import('@/views/record/MedicalRecords'),
+        meta: { title: '电子病历*', keepAlive: true, permission: ['table'] }
+      },
+      {
+        path: '/ExaminationData',
+        name: 'SearchArticles',
+        component: () => import('../views/record/ExaminationData'),
+        meta: { title: '体检数据*', permission: ['table'] }
+      },
+      // 健康监测
+      {
+        path: '/dashboard',
+        name: 'dashboard',
+        redirect: '/dashboard/analysis',
+        component: RouteView,
+        meta: { title: '健康管理仪表盘', keepAlive: true, icon: bxAnaalyse, permission: ['dashboard'] },
+        children: [
+          {
+            path: '/dashboard/analysis',
+            name: 'analysis',
+            component: () => import('@/views/dashboard/Analysis'),
+            meta: { title: '日报分析', keepAlive: false, permission: ['dashboard'] }
+          }
+        ]
+      },
+      {
+        path: '/callCenter',
+        name: 'callCenter',
+        component: () => import('@/views/dashboard/Workplace'),
+        meta: { title: '呼叫中心', keepAlive: true, permission: ['dashboard'] }
+      },
+      {
+        path: '/workplace',
+        name: 'Workplace',
+        component: () => import('@/views/dashboard/Workplace'),
+        meta: { title: '工作台', keepAlive: true, permission: ['dashboard'] }
+      },
+      {
+        path: '/weeklySummary',
+        name: 'WeeklySummary',
+        component: RouteView,
+        meta: { title: '每周个人健康小结', keepAlive: true, icon: 'table', permission: ['table'] },
+        redirect: '/weeklySummary/table',
+        // hideChildrenInMenu: true,
+        children: [
+          {
+            path: '/weeklySummary/table',
+            name: 'WeeklySummaryTable',
+            component: () => import('@/views/intervenemanager/WeeklySummary/WeeklySummary'),
+            meta: { title: '健康总结列表', keepAlive: true, hidden: true, permission: ['table'] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/weeklySummary/edit',
+                name: 'WeeklySummaryEdit',
+                component: () => import('@/views/intervenemanager/WeeklySummary/WSEdit'),
+                meta: { title: '编辑每周小结', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/weeklySummary/info',
+                name: 'WeeklySummaryInfo',
+                component: () => import('@/views/intervenemanager/WeeklySummary/WSInfo'),
+                meta: { title: '每周小结详情', keepAlive: true, hidden: true, permission: ['table'] }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: '/yearlySummary',
+        name: 'HealthReport',
+        component: () => import('@/views/report/Index'),
+        meta: { title: '多维健康报告', keepAlive: true, permission: ['table'] },
+        redirect: '/report/HealthReport/table',
+        hideChildrenInMenu: true,
+        children: [
+          {
+            path: '/report/HealthReport/table',
+            name: 'HealthReportTable',
+            component: () => import('@/views/report/HealthReport/HealthReport'),
+            meta: { title: '健康报告表', keepAlive: true, hidden: true, permission: ['table'] }
+          },
+          {
+            path: '/report/HealthReport/edit',
+            name: 'HealthReportEdit',
+            component: () => import('@/views/report/HealthReport/HREdit'),
+            meta: { title: '编辑健康报告', keepAlive: true, hidden: true, permission: ['table'] }
+          },
+          {
+            path: '/report/HealthReport/info',
+            name: 'HealthReportInfo',
+            component: () => import('@/views/report/HealthReport/HRInfo'),
+            meta: { title: '健康报告详情', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
       // 新路由树
       // basicdata 基础数据
       // {
@@ -354,71 +447,71 @@ export const asyncRouterMap = [
       // },
 
       // 健康报告 healthreport
-      {
-        path: '/report',
-        name: 'report',
-        component: PageView,
-        redirect: '/report/HealthReport',
-        meta: { title: '健康报告', icon: 'table', permission: ['table'] },
-        children: [
-          {
-            path: '/report/HealthReport',
-            name: 'HealthReport',
-            component: () => import('@/views/report/Index'),
-            meta: { title: '多维健康报告', keepAlive: true, permission: ['table'] },
-            redirect: '/report/HealthReport/table',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/report/HealthReport/table',
-                name: 'HealthReportTable',
-                component: () => import('@/views/report/HealthReport/HealthReport'),
-                meta: { title: '健康报告表', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/report/HealthReport/edit',
-                name: 'HealthReportEdit',
-                component: () => import('@/views/report/HealthReport/HREdit'),
-                meta: { title: '编辑健康报告', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/report/HealthReport/info',
-                name: 'HealthReportInfo',
-                component: () => import('@/views/report/HealthReport/HRInfo'),
-                meta: { title: '健康报告详情', keepAlive: true, hidden: true, permission: ['table'] }
-              }
-            ]
-          },
-          {
-            path: '/report/WeeklySummary',
-            name: 'WeeklySummary',
-            component: () => import('@/views/report/Index'),
-            meta: { title: '每周小结', keepAlive: true, permission: ['table'] },
-            redirect: '/report/WeeklySummary/table',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/report/WeeklySummary/table',
-                name: 'WeeklySummaryTable',
-                component: () => import('@/views/report/WeeklySummary/WeeklySummary'),
-                meta: { title: '每周小结表', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/report/WeeklySummary/edit',
-                name: 'WeeklySummaryEdit',
-                component: () => import('@/views/report/WeeklySummary/WSEdit'),
-                meta: { title: '编辑每周小结', keepAlive: true, hidden: true, permission: ['table'] }
-              },
-              {
-                path: '/report/WeeklySummary/info',
-                name: 'WeeklySummaryInfo',
-                component: () => import('@/views/report/WeeklySummary/WSInfo'),
-                meta: { title: '每周小结详情', keepAlive: true, hidden: true, permission: ['table'] }
-              }
-            ]
-          }
-        ]
-      },
+      // {
+      //   path: '/report',
+      //   name: 'report',
+      //   component: PageView,
+      //   redirect: '/report/HealthReport',
+      //   meta: { title: '健康报告', icon: 'table', permission: ['table'] },
+      //   children: [
+      //     {
+      //       path: '/report/HealthReport',
+      //       name: 'HealthReport',
+      //       component: () => import('@/views/report/Index'),
+      //       meta: { title: '多维健康报告', keepAlive: true, permission: ['table'] },
+      //       redirect: '/report/HealthReport/table',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/report/HealthReport/table',
+      //           name: 'HealthReportTable',
+      //           component: () => import('@/views/report/HealthReport/HealthReport'),
+      //           meta: { title: '健康报告表', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/report/HealthReport/edit',
+      //           name: 'HealthReportEdit',
+      //           component: () => import('@/views/report/HealthReport/HREdit'),
+      //           meta: { title: '编辑健康报告', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/report/HealthReport/info',
+      //           name: 'HealthReportInfo',
+      //           component: () => import('@/views/report/HealthReport/HRInfo'),
+      //           meta: { title: '健康报告详情', keepAlive: true, hidden: true, permission: ['table'] }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/report/WeeklySummary',
+      //       name: 'WeeklySummary',
+      //       component: () => import('@/views/report/Index'),
+      //       meta: { title: '每周小结', keepAlive: true, permission: ['table'] },
+      //       redirect: '/report/WeeklySummary/table',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/report/WeeklySummary/table',
+      //           name: 'WeeklySummaryTable',
+      //           component: () => import('@/views/report/WeeklySummary/WeeklySummary'),
+      //           meta: { title: '每周小结表', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/report/WeeklySummary/edit',
+      //           name: 'WeeklySummaryEdit',
+      //           component: () => import('@/views/report/WeeklySummary/WSEdit'),
+      //           meta: { title: '编辑每周小结', keepAlive: true, hidden: true, permission: ['table'] }
+      //         },
+      //         {
+      //           path: '/report/WeeklySummary/info',
+      //           name: 'WeeklySummaryInfo',
+      //           component: () => import('@/views/report/WeeklySummary/WSInfo'),
+      //           meta: { title: '每周小结详情', keepAlive: true, hidden: true, permission: ['table'] }
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
 
       // 干预管理 intervenemanager
       {

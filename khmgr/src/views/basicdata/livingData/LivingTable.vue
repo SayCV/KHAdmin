@@ -149,7 +149,7 @@ const columns = [
 
 export default {
   // 生活数据
-  name: 'LivingTable',
+  name: 'LivingUserTable',
   components: {
   },
   data () {

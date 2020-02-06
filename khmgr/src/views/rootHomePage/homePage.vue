@@ -120,46 +120,45 @@
                   :perspective="item.perspective"
                   @click="toRedirectPage(item.link)"
                 >
-                  <!-- custom face for each tile in right layout-->
                   <template v-if="item.i === '0'">
                     <div slot="front">
                       <div class="tile-label">
-                        {{ $t(`${HOMR_PAGE}.dashboard.name`) }}
+                        {{ $t(`${HOMR_PAGE}.dashboard`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '1'">
                     <div slot="front">
                       <div class="tile-label">
-                        {{ $t(`${HOMR_PAGE}.WeeklySummary`) }}
+                        {{ $t(`${HOMR_PAGE}.callCenter`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '2'">
                     <div slot="front">
                       <div class="tile-label">
-                        {{ $t(`${HOMR_PAGE}.callCenter`) }}
+                        {{ $t(`${HOMR_PAGE}.workplace`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '3'">
                     <div slot="front">
                       <div class="tile-label">
-                        {{ $t(`${HOMR_PAGE}.HealthReport`) }}
+                        {{ $t(`${HOMR_PAGE}.weeklySummary`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '4'">
                     <div slot="front">
                       <div class="tile-label">
-                        {{ $t(`${HOMR_PAGE}.healthRiskAnalysis`) }}
+                        {{ $t(`${HOMR_PAGE}.yearlySummary`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '5'">
                     <div slot="front">
                       <div class="tile-label">
-                        Access
+                        {{ $t(`${HOMR_PAGE}.groupSummary`) }}
                       </div>
                     </div>
                   </template>
@@ -197,64 +196,54 @@
                   :length="item.length"
                   :rotateX="item.rotateX"
                   :faceStyle="item.faceStyle"
-                  :frontStyle="item.frontStyle"
-                  :topStyle="item.topStyle"
-                  :backStyle="item.backStyle"
-                  :bottomStyle="item.bottomStyle"
-                  :perspective="item.perspective"
+                  @click="toRedirectPage(item.link)"
                 >
                   <template v-if="item.i === '0'">
                     <div slot="front">
                       <div class="tile-label">
-                        Excel
+                        {{ $t(`${HOMR_PAGE}.healthCourse`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '1'">
                     <div slot="front">
                       <div class="tile-label">
-                        View Source on GitHub
+                        {{ $t(`${HOMR_PAGE}.healthAlert`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '2'">
                     <div slot="front">
                       <div class="tile-label">
-                        Vue
+                        {{ $t(`${HOMR_PAGE}.healthPlan`) }}
                       </div>
-                      <img
-                        src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png"
-                        class="image"
-                      />
-                    </div>
-                    <div slot="top">
-                      <div class="tile-label">
-                        Angular
-                      </div>
-                      <img
-                        src="https://user-images.githubusercontent.com/6414178/45696077-51b2e580-bb95-11e8-91ab-097cc1d1b89d.png"
-                        class="image"
-                      />
                     </div>
                   </template>
                   <template v-else-if="item.i === '3'">
                     <div slot="front">
                       <div class="tile-label">
-                        Groove Music
+                        {{ $t(`${HOMR_PAGE}.goalStrategy`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '4'">
                     <div slot="front">
                       <div class="tile-label">
-                        Google Chrome
+                        {{ $t(`${HOMR_PAGE}.AppPush`) }}
                       </div>
                     </div>
                   </template>
                   <template v-else-if="item.i === '5'">
                     <div slot="front">
                       <div class="tile-label">
-                        Access
+                        {{ $t(`${HOMR_PAGE}.TopPush`) }}
+                      </div>
+                    </div>
+                  </template>
+                  <template v-else-if="item.i === '6'">
+                    <div slot="front">
+                      <div class="tile-label">
+                        {{ $t(`${HOMR_PAGE}.VideoPush`) }}
                       </div>
                     </div>
                   </template>
@@ -501,10 +490,11 @@ export default {
       {
         x: 0,
         y: 2,
-        w: 4,
+        w: 2,
         h: 2,
         i: '1',
-        width: BASE_LEN * 4 - MARGIN * 2,
+        link: '/callCenter',
+        width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
@@ -512,11 +502,12 @@ export default {
         }
       },
       {
-        x: 0,
-        y: 4,
+        x: 2,
+        y: 2,
         w: 2,
         h: 2,
         i: '2',
+        link: '/workplace',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -525,12 +516,13 @@ export default {
         }
       },
       {
-        x: 2,
+        x: 0,
         y: 4,
-        w: 2,
+        w: 4,
         h: 2,
         i: '3',
-        width: BASE_LEN * 2 - MARGIN * 2,
+        link: '/weeklySummary',
+        width: BASE_LEN * 4 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
@@ -540,10 +532,25 @@ export default {
       {
         x: 0,
         y: 6,
-        w: 4,
+        w: 2,
         h: 2,
         i: '4',
-        width: BASE_LEN * 4 - MARGIN * 2,
+        link: '/yearlySummary',
+        width: BASE_LEN * 2 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#cd5c5c'
+        }
+      },
+      {
+        x: 2,
+        y: 6,
+        w: 2,
+        h: 2,
+        i: '5',
+        link: '/groupSummary',
+        width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
@@ -555,10 +562,11 @@ export default {
       {
         x: 0,
         y: 0,
-        w: 4,
+        w: 2,
         h: 2,
         i: '0',
-        width: BASE_LEN * 4 - MARGIN * 2,
+        link: '/healthCourse',
+        width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
@@ -566,12 +574,13 @@ export default {
         }
       },
       {
-        x: 0,
-        y: 2,
-        w: 4,
+        x: 2,
+        y: 0,
+        w: 2,
         h: 2,
         i: '1',
-        width: BASE_LEN * 4 - MARGIN * 2,
+        link: '/healthAlert',
+        width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
@@ -580,33 +589,25 @@ export default {
       },
       {
         x: 0,
-        y: 4,
+        y: 2,
         w: 2,
         h: 2,
         i: '2',
+        link: '/healthPlan',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         frontStyle: {
           'background-color': '#8a2be2'
-        },
-        topStyle: {
-          'background-color': '#1E90FF'
-        },
-        backStyle: {
-          'background-color': 'yellow'
-        },
-        bottomStyle: {
-          'background-color': 'green'
-        },
-        perspective: 0
+        }
       },
       {
         x: 2,
-        y: 4,
+        y: 2,
         w: 2,
         h: 2,
         i: '3',
+        link: '/goalStrategy',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -617,10 +618,11 @@ export default {
       {
         x: 0,
         y: 6,
-        w: 4,
+        w: 2,
         h: 2,
         i: '4',
-        width: BASE_LEN * 4 - MARGIN * 2,
+        link: '/AppPush',
+        width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
         faceStyle: {
@@ -628,11 +630,26 @@ export default {
         }
       },
       {
+        x: 2,
+        y: 6,
+        w: 2,
+        h: 2,
+        i: '5',
+        link: '/TopPush',
+        width: BASE_LEN * 2 - MARGIN * 2,
+        height: BASE_LEN * 2 - MARGIN * 2,
+        rotateX: 0,
+        faceStyle: {
+          'background-color': '#cd5c5c'
+        }
+      },
+      {
         x: 0,
         y: 8,
         w: 2,
         h: 2,
-        i: '5',
+        i: '6',
+        link: '/VideoPush',
         width: BASE_LEN * 2 - MARGIN * 2,
         height: BASE_LEN * 2 - MARGIN * 2,
         rotateX: 0,
@@ -698,8 +715,6 @@ export default {
       const date = moment().format('YYYY-MM-DD')
       return date.toString()
     })(),
-    rotateIndex2: 0,
-    rotateArray2: [-90, 90],
     rotateInfoIndex: 0,
     rotateInfoArray: [-90, 90, 90, -90]
   }),
@@ -719,16 +734,11 @@ export default {
     }
   },
   mounted () {
-    this.interval2 = setInterval(() => {
-      this.setRotateX(this.layoutRight[2], 'rotateIndex2', this.rotateArray2)
-    }, 5000)
     this.infoInterval = setInterval(() => {
       this.setRotateX(this.infoLayoutMap[1], 'rotateInfoIndex', this.rotateInfoArray)
     }, 3500)
   },
   beforeDestroy () {
-    clearInterval(this.interval1)
-    clearInterval(this.interval2)
     clearInterval(this.infoInterval)
   }
 }

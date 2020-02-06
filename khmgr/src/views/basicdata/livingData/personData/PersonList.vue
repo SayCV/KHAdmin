@@ -1,10 +1,19 @@
 <template>
   <div class="person-table-page">
-    <div class="page-top">
-      <ButtonBack></ButtonBack>
-    </div>
-    <div class="page-top-wrapper">
-      <a-divider orientation="left">用户基本信息</a-divider>
+    <a-card
+      title="基本信息"
+      :bordered="false"
+      :loading="loading"
+    >
+      <div
+        class="back"
+        slot="extra"
+      >
+        <ButtonBack
+          name="返回用户列表"
+          routerName="LivingUserTable"
+        ></ButtonBack>
+      </div>
       <description-list size="large">
         <description-list-item term="健康号">{{ data.userNo || '--' }}</description-list-item>
         <description-list-item term="用户名">{{ data.userName || '--' }}</description-list-item>
@@ -12,41 +21,45 @@
         <description-list-item term="邮箱">{{ data.email || '--' }}</description-list-item>
         <description-list-item term="成员数量">{{ `${data.personCount } 人` || '--' }}</description-list-item>
       </description-list>
-    </div>
+    </a-card>
     <!-- 表格 -->
-    <a-divider orientation="left">用户成员列表</a-divider>
-    <a-table
-      ref="table"
-      size="default"
-      :columns="columns"
-      :rowKey="(record) => record.key"
-      :dataSource="persons"
+    <a-card
+      title="成员列表"
+      :bordered="false"
       :loading="loading"
-      :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
-      bordered
     >
-      <span
-        slot="serial"
-        slot-scope="text, record, index"
-      >{{ index + 1 }}</span>
-      <a
-        slot="personId"
-        slot-scope="text, record"
-        @click="() => handleView(record.personId)"
-      >{{ text }}</a>
-      <template
-        slot="operation"
-        slot-scope="text, record"
+      <a-table
+        ref="table"
+        size="default"
+        :columns="columns"
+        :rowKey="(record) => record.key"
+        :dataSource="persons"
+        :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
+        bordered
       >
-        <div class="editable-row-operations">
-          <span slot="operation">
-            <a @click="() => handleView(record.personId)">查看</a>
-            <a-divider type="vertical" />
-            <a @click="() => handleDelete(record)">删除</a>
-          </span>
-        </div>
-      </template>
-    </a-table>
+        <span
+          slot="serial"
+          slot-scope="text, record, index"
+        >{{ index + 1 }}</span>
+        <a
+          slot="personId"
+          slot-scope="text, record"
+          @click="() => handleView(record.personId)"
+        >{{ text }}</a>
+        <template
+          slot="operation"
+          slot-scope="text, record"
+        >
+          <div class="editable-row-operations">
+            <span slot="operation">
+              <a @click="() => handleView(record.personId)">查看</a>
+              <a-divider type="vertical" />
+              <a @click="() => handleDelete(record)">删除</a>
+            </span>
+          </div>
+        </template>
+      </a-table>
+    </a-card>
   </div>
 </template>
 
@@ -145,25 +158,24 @@ export default {
     forEachPersonList (personArray) {
       if (personArray.length === 0) {
         this.persons = []
-      } else {
-        _.forEach(personArray, item => {
-          this.persons.push({
-            key: _.get(item, 'personId') || '--',
-            name: _.get(item, 'name') || '--',
-            sex: translateSex(_.get(item, 'sex')),
-            age: _.get(item, 'age') || '--',
-            relationName: _.get(item, 'relationName') || '--',
-            healthLevel: _.get(item, 'healthLevel') || '--'
-          })
-        })
       }
+      personArray && _.forEach(personArray, item => {
+        this.persons.push({
+          key: _.get(item, 'personId'),
+          personId: _.get(item, 'personId'),
+          name: _.get(item, 'name') || '--',
+          sex: translateSex(_.get(item, 'sex')),
+          age: _.get(item, 'age') || '--',
+          relationName: _.get(item, 'relationName') || '--',
+          healthLevel: _.get(item, 'healthLevel') || '--'
+        })
+      })
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
 
     handleDelete (record) {
-      // 点击行进入edit页
       this.$confirm({
         centered: true,
         title: '确定删除此成员？',
@@ -174,7 +186,6 @@ export default {
       })
     },
     handleView (personId) {
-      // 点击行进入详情页
       this.$router.push({
         path: '/livingData/userTable/person/data',
         query: {
@@ -182,17 +193,12 @@ export default {
         }
       })
     }
+
   }
 }
+
 </script>
 <style lang="less" scoped>
 .person-table-page {
-  .page-top {
-    display: flex;
-    justify-content: flex-start;
-  }
-  .page-top-wrapper {
-    margin: 20px 0 20px 0;
-  }
 }
 </style>

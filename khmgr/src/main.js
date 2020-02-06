@@ -19,13 +19,15 @@ import './core/use'
 // permission control
 // import './permission'
 import './utils/filter' // global filter
-
+// import lodash from 'lodash'
+// Object.defineProperty(Vue.prototype, '$_', { value: lodash })
 // use mavonEditor
 Vue.use(mavonEditor)
 
 Vue.config.productionTip = false
 
 Vue.use(VueAxios)
+// Vue.prototype.$lodash = lodash
 
 new Vue({
   router,

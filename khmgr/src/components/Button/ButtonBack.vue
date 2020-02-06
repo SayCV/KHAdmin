@@ -1,7 +1,11 @@
 <template>
   <div>
-    <a-button type="primary" @click="() => handleBack()">
-      <a-icon type="left" />返回
+    <a-button
+      type="primary"
+      @click="() => handleBack()"
+    >
+      {{ name }}
+      <a-icon :type="icon" />
     </a-button>
   </div>
 </template>
@@ -15,9 +19,17 @@ export default {
   props: {
     name: {
       type: String,
+      default: '返回'
+    },
+    icon: {
+      type: String,
+      default: 'rollback'
+    },
+    routerName: {
+      type: String,
       default: ''
     },
-    linkTo: {
+    routerPath: {
       type: String,
       default: ''
     }
@@ -25,14 +37,21 @@ export default {
   },
   data () {
     return {
-
     }
   },
   methods: {
     handleBack () {
-      // 点击行进入add页
-      console.log('click me to back !!')
-      this.$router.go(-1)
+      if (this.routerName !== '') {
+        console.log('go name =?', this.routerName)
+        this.$router.push({
+          name: `${this.routerName}`
+        })
+      } else if (this.routerPath !== '') {
+        console.log('go path =>', this.routerPath)
+        this.$router.push({
+          path: `${this.routerPath}`
+        })
+      } else { this.$router.go(-1) }
     }
   }
 }

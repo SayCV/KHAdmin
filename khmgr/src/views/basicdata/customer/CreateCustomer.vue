@@ -14,7 +14,8 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input v-decorator="[
+            <a-input
+              v-decorator="[
                 'username',
                 { initialValue: ''}
               ]" />
@@ -52,7 +53,8 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-select v-decorator="[
+            <a-select
+              v-decorator="[
                 'sex',
                 {initialValue: '0'}
               ]">
@@ -100,7 +102,8 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input v-decorator="[
+            <a-input
+              v-decorator="[
                 'identityId',
                 { initialValue: ''}
               ]" />
@@ -110,7 +113,8 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input v-decorator="[
+            <a-input
+              v-decorator="[
                 'email',
                 { initialValue: ''}
               ]" />
@@ -121,7 +125,8 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-select v-decorator="[
+            <a-select
+              v-decorator="[
                 'maritalstatus',
                 {initialValue: '0'}
               ]">
@@ -134,7 +139,8 @@
             :labelCol="{lg: {span: 4}, sm: {span: 4}}"
             :wrapperCol="{lg: {span: 16}, sm: {span: 16} }"
           >
-            <a-input v-decorator="[
+            <a-input
+              v-decorator="[
                 'education',
                 { initialValue: ''}
               ]" />
@@ -188,20 +194,19 @@
         <a-button
           htmlType="submit"
           type="primary"
+          style="marginRight: 8px"
         >创建</a-button>
+        <a-button>创建</a-button>
       </div>
     </a-form>
   </div>
 </template>
 
 <script>
-
-// import { axios } from '@/utils/request'
 import moment from 'moment'
 import ButtonBack from '@/components/Button/ButtonBack'
 
 export default {
-
   name: 'CreateCustomer',
   components: { ButtonBack },
   data () {

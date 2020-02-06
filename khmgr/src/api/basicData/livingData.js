@@ -14,3 +14,10 @@ export function getPersonList (params) {
     method: 'get'
   })
 }
+
+export function getPersonLivingData (personId) {
+  return axios({
+    url: `/api/persons/${personId}/indicators`,
+    method: 'get'
+  })
+}

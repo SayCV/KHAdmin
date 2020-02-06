@@ -130,6 +130,7 @@
       <a-table
         ref="table"
         size="default"
+        :loading="loading"
         :columns="columns"
         :dataSource="customerList"
         :pagination="pagination"
@@ -231,8 +232,8 @@ export default {
       customerList: [],
       loading: false,
       pagination: {
-        pageNum: 1,
         pageSize: 10,
+        current: 1,
         total: 0
       },
       selectedRowKeys: [],
@@ -240,7 +241,7 @@ export default {
     }
   },
   mounted () {
-    this.fetch(this.pagination)
+    this.fetch()
   },
   computed: {
     hasSelected () {
@@ -250,11 +251,11 @@ export default {
   methods: {
     handleTableChange (pagination, filters, sorter) {
       const pager = { ...this.pagination }
-      pager.pageNum = pagination.pageNum
+      pager.current = pagination.current
       this.pagination = pager
       this.fetch({
         pageSize: pagination.pageSize,
-        pageNum: pagination.pageNum,
+        pageNum: pagination.current,
         sortField: sorter.field,
         sortOrder: sorter.order,
         ...filters
@@ -263,32 +264,34 @@ export default {
     // 获取数据
     fetch (params = {}) {
       this.loading = true
-      getCustomerList(params).then(res => {
+      getCustomerList({
+        pageSize: this.pagination.pageSize,
+        pageNum: this.pagination.current
+      }).then(res => {
         console.log('customerList res =>', res)
         this.loading = false
         const pagination = { ...this.pagination }
         pagination.total = res.total || 0
-        this.forEachCustomerList(res.list)
         this.pagination = pagination
+        this.forEachCustomerList(res.list)
       }).catch(() => { this.loading = false })
     },
     forEachCustomerList (list) {
       if (list.length === 0) {
         this.customerList = []
-      } else {
-        _.forEach(list, item => {
-          this.customerList.push({
-            key: _.get(item, 'userId') || '--',
-            accountId: _.get(item, 'userId') || '--',
-            userNo: _.get(item, 'userNo') || '--',
-            userName: _.get(item, 'userName') || '--',
-            sex: translateSex(_.get(item, 'sex')),
-            phone: _.get(item, 'phone') || '--',
-            healthLevel: _.get(item, 'healthLevel') || '--',
-            createOn: _.get(item, 'createOn') || '--'
-          })
-        })
       }
+      list && _.forEach(list, item => {
+        this.customerList.push({
+          key: _.get(item, 'userId') || '--',
+          accountId: _.get(item, 'userId') || '--',
+          userNo: _.get(item, 'userNo') || '--',
+          userName: _.get(item, 'userName') || '--',
+          sex: translateSex(_.get(item, 'sex')),
+          phone: _.get(item, 'phone') || '--',
+          healthLevel: _.get(item, 'healthLevel') || '--',
+          createOn: _.get(item, 'createOn') || '--'
+        })
+      })
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
