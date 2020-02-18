@@ -1,19 +1,27 @@
 <template>
   <a-layout-footer class="home-footer-wrapper">
-    Copyright © 2019 杭州师范大学工程中心
-    <!-- <div class="footer-info">当前用户：呀哈哈</div> -->
+    <UserMenu></UserMenu>
+    <div class="footer-tight">
+      <span style="marginRight:16px">Copyright © 2019 杭州师范大学工程中心</span>
+      <a
+        class="link"
+        href="https://github.com/XQ0118/KHAdmin"
+        target="_blank"
+      >
+        <a-icon type="github" />
+      </a>
+    </div>
   </a-layout-footer>
 </template>
 
 <script>
-import HeadMenu from '@/views/rootHomePage/rootHeadMenu'
-import Logo from '@/views/rootHomePage/rootHeaderLogo'
+
+import UserMenu from '@/components/tools/UserMenu'
 
 export default {
   name: 'RootHomeHeader',
   components: {
-    HeadMenu,
-    Logo
+    UserMenu
   },
   data () {
     return {}
@@ -23,8 +31,16 @@ export default {
 
 <style lang="less" scoped>
 .home-footer-wrapper {
-  text-align: center;
+  padding: 0 50px;
   background: #002140;
   color: white;
+  display: flex;
+  justify-content: space-between;
+  .footer-tight {
+    padding: 24px 0;
+    .link {
+      color: #fff;
+    }
+  }
 }
 </style>

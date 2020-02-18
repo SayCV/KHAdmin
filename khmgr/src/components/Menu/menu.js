@@ -108,7 +108,7 @@ export default {
         <Item {...{ key: menu.path }}>
           <tag {...{ props, attrs }}>
             {this.renderIcon(menu.meta.icon)}
-            <span>{menu.meta.title}</span>
+            <span>{this.$t(`${menu.meta.title}`) || menu.meta.title}</span>
           </tag>
         </Item>
       )
@@ -122,7 +122,7 @@ export default {
         <SubMenu {...{ key: menu.path }}>
           <span slot="title">
             {this.renderIcon(menu.meta.icon)}
-            <span>{menu.meta.title}</span>
+            <span>{this.$t(`${menu.meta.title}`) || menu.meta.title}</span>
           </span>
           {itemArr}
         </SubMenu>
@@ -135,7 +135,7 @@ export default {
       const props = {}
       typeof (icon) === 'object' ? props.component = icon : props.type = icon
       return (
-        <Icon {... { props } }/>
+        <Icon {... { props }} />
       )
     }
   },

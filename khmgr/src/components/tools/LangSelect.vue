@@ -1,22 +1,30 @@
 <template>
   <a-dropdown>
     <span class="action global-lang">
-      <a-icon type="global" style="font-size: 16px" />
+      <a-icon
+        type="global"
+        style="font-size: 16px"
+      />
     </span>
-    <a-menu slot="overlay" style="width: 150px;" @click="SwitchLang">
+    <a-menu
+      slot="overlay"
+      style="width: 150px;"
+      @click="SwitchLang"
+    >
       <a-menu-item key="zh-CN">
         <a rel="noopener noreferrer">
-          <span role="img" aria-label="简体中文">🇨🇳</span> 简体中文
-        </a>
-      </a-menu-item>
-      <a-menu-item key="zh-TW">
-        <a rel="noopener noreferrer">
-          <span role="img" aria-label="繁体中文">🇭🇰</span> 繁体中文
+          <span
+            role="img"
+            aria-label="简体中文"
+          >🇨🇳</span> 简体中文
         </a>
       </a-menu-item>
       <a-menu-item key="en-US">
         <a rel="noopener noreferrer">
-          <span role="img" aria-label="English">🇬🇧</span> English
+          <span
+            role="img"
+            aria-label="English"
+          >🇬🇳</span> English
         </a>
       </a-menu-item>
     </a-menu>
@@ -31,7 +39,9 @@ export default {
   },
   methods: {
     SwitchLang (row) {
-      this.$store.dispatch('SetLang', row.key)
+      const lang = row.key.toString()
+      this.$store.dispatch('SetLang', lang)
+      this.$store.dispatch('setComponentLangType', lang)
     }
   }
 }

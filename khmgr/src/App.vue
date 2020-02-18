@@ -1,19 +1,23 @@
 <template>
-  <a-locale-provider :locale="locale">
-    <div id="app">
+  <div id="app">
+    <a-locale-provider :locale="locale">
       <router-view />
-    </div>
-  </a-locale-provider>
+    </a-locale-provider>
+  </div>
 </template>
 
 <script>
-import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
+
 import { deviceEnquire, DEVICE_TYPE } from '@/utils/device'
 
 export default {
   data () {
     return {
-      locale: zhCN
+    }
+  },
+  computed: {
+    locale () {
+      return this.$store.getters.getLang
     }
   },
   mounted () {

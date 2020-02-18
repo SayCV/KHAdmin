@@ -8,22 +8,22 @@ export const asyncRouterMap = [
     path: '/',
     name: 'index',
     component: BasicLayout,
-    meta: { title: '首页' },
+    meta: { title: 'sideMenu.homePage' },
     // redirect: '/dashboard/workplace',
     children: [
       // 基础数据
       {
         path: '/customerManager',
-        name: 'CustomerManager',
+        name: 'CustomerManager', // 我的客户
         component: RouteView,
-        meta: { title: '我的客户', keepAlive: true, icon: 'table', permission: ['table'] },
+        meta: { title: 'sideMenu.myCustomer.name', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/customerManager/table',
         children: [
           {
             path: '/customerManager/table',
             name: 'CustomerTable',
             component: () => import('@/views/basicdata/customer/CustomerTable'),
-            meta: { title: '客户列表', keepAlive: true, hidden: true, permission: ['table'] },
+            meta: { title: 'sideMenu.myCustomer.table', keepAlive: true, hidden: true, permission: ['table'] },
             hideChildrenInMenu: true,
             children: [
               {
@@ -31,14 +31,14 @@ export const asyncRouterMap = [
                 name: 'CustomerInfo',
                 component: () => import('@/views/basicdata/customer/CustomerInfo'),
                 hidden: true,
-                meta: { title: '客户详情页', keepAlive: true, hidden: true, permission: ['table'] }
+                meta: { title: 'sideMenu.myCustomer.info', keepAlive: true, hidden: true, permission: ['table'] }
               },
               {
                 path: '/customerManager/table/edit',
                 name: 'CustomerEditInfo',
                 component: () => import('@/views/basicdata/customer/EditCusInfo'),
                 hidden: true,
-                meta: { title: '客户编辑页', keepAlive: true, hidden: true, permission: ['table'] }
+                meta: { title: 'sideMenu.myCustomer.edit', keepAlive: true, hidden: true, permission: ['table'] }
               }
             ]
           },
@@ -46,42 +46,42 @@ export const asyncRouterMap = [
             path: '/customerManager/add',
             name: 'AddCustomer',
             component: () => import('@/views/basicdata/customer/AddCustomer'),
-            meta: { title: '添加客户', keepAlive: true, hidden: true, permission: ['table'] }
+            meta: { title: 'sideMenu.myCustomer.add', keepAlive: true, hidden: true, permission: ['table'] }
           },
           {
             path: '/customerManager/create',
             name: 'CreateCustomer',
             component: () => import('@/views/basicdata/customer/CreateCustomer'),
-            meta: { title: '新增客户', keepAlive: true, hidden: true, permission: ['table'] }
+            meta: { title: 'sideMenu.myCustomer.create', keepAlive: true, hidden: true, permission: ['table'] }
           }
         ]
       },
       {
         path: '/equipmentManager',
-        name: 'EquipmentManager',
+        name: 'EquipmentManager', // 设备管理
         component: RouteView,
-        meta: { title: '设备管理', keepAlive: true, icon: 'table', permission: ['table'] },
+        meta: { title: 'sideMenu.equipment.name', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/equipmentManager/table',
         children: [
           {
             path: '/equipmentManager/table',
             name: 'EquipmentTable',
             component: () => import('@/views/basicdata/equipment/EquipmentTable'),
-            meta: { title: '设备信息', keepAlive: true, hidden: true, permission: ['table'] },
+            meta: { title: 'sideMenu.equipment.table', keepAlive: true, hidden: true, permission: ['table'] },
             hideChildrenInMenu: true,
             children: [
               {
                 path: '/equipmentManager/table/info',
                 name: 'EquipmentmanagerInfo',
                 component: () => import('@/views/basicdata/equipment/equipmentInfo'),
-                meta: { title: '设备详情', keepAlive: true, hidden: true, permission: ['table'] },
+                meta: { title: 'sideMenu.equipment.info', keepAlive: true, hidden: true, permission: ['table'] },
                 hidden: true
               },
               {
                 path: '/equipmentManager/table/edit',
                 name: 'EquipmentmanagerEdit',
                 component: () => import('@/views/basicdata/equipment/equipmentEdit'),
-                meta: { title: '编辑设备', keepAlive: true, hidden: true, permission: ['table'] },
+                meta: { title: 'sideMenu.equipment.edit', keepAlive: true, hidden: true, permission: ['table'] },
                 hidden: true
               }
             ]
@@ -90,16 +90,16 @@ export const asyncRouterMap = [
       },
       {
         path: '/healthGoals',
-        name: 'healthGoals',
+        name: 'healthGoals', // 健康小目标
         component: RouteView,
-        meta: { title: '健康小目标', keepAlive: true, icon: 'table', permission: ['table'] },
+        meta: { title: 'sideMenu.healthGoal.name', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/healthGoals/table',
         children: [
           {
             path: '/healthGoals/table',
             name: 'HealthGoalsTable',
             component: () => import('@/views/basicdata/healthgoal/healthGoalsTable'),
-            meta: { title: '目标列表', keepAlive: true, hidden: true, permission: ['table'] },
+            meta: { title: 'sideMenu.healthGoal.table', keepAlive: true, hidden: true, permission: ['table'] },
             // hideChildrenInMenu: true,
             children: [
               {
@@ -107,14 +107,14 @@ export const asyncRouterMap = [
                 name: 'HealthGoalsInfo',
                 component: () => import('@/views/basicdata/healthgoal/healthGoalsInfo'),
                 // hidden: true,
-                meta: { title: '目标详情页', keepAlive: true, hidden: true, permission: ['table'] }
+                meta: { title: 'sideMenu.healthGoal.info', keepAlive: true, hidden: true, permission: ['table'] }
               },
               {
                 path: '/healthGoals/table/edit',
                 name: 'HealthGoalsEdit',
                 component: () => import('@/views/basicdata/healthgoal/healthGoalsEdit'),
                 // hidden: true,
-                meta: { title: '编辑目标', keepAlive: true, hidden: true, permission: ['table'] }
+                meta: { title: 'sideMenu.healthGoal.edit', keepAlive: true, hidden: true, permission: ['table'] }
               }
             ]
           }
@@ -124,77 +124,77 @@ export const asyncRouterMap = [
         path: '/livingData',
         name: 'LivingData',
         component: RouteView,
-        meta: { title: '用户生活数据', keepAlive: true, icon: 'table', permission: ['table'] },
+        meta: { title: 'sideMenu.livingData.name', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/livingData/userTable',
         children: [
           {
             path: '/livingData/userTable',
             name: 'LivingUserTable',
             component: () => import('@/views/basicdata/livingData/LivingTable'),
-            meta: { title: '用户列表', keepAlive: true, hidden: false },
+            meta: { title: 'sideMenu.livingData.table', keepAlive: true, hidden: false },
             hideChildrenInMenu: true,
             children: [
               {
                 path: '/livingData/userTable/person/list',
                 name: 'PersonList',
                 component: () => import('@/views/basicdata/livingData/personData/PersonList'),
-                meta: { title: '成员列表', keepAlive: true, hidden: true }
+                meta: { title: 'sideMenu.livingData.person', keepAlive: true, hidden: true }
               },
               {
                 path: '/livingData/userTable/person/data',
                 name: 'PersonInfoData',
                 component: () => import('@/views/basicdata/livingData/personData/InfoData'),
-                meta: { title: '成员生活数据', keepAlive: true, hidden: true }
+                meta: { title: 'sideMenu.livingData.personData', keepAlive: true, hidden: true }
               }
             ]
           }
         ]
       },
       {
-        path: '/MedicalRecords',
-        name: 'MedicalRecords',
-        component: () => import('@/views/record/MedicalRecords'),
-        meta: { title: '电子病历*', keepAlive: true, permission: ['table'] }
+        path: '/EMR',
+        name: 'EMR', // EMR electronic medical record 电子病历
+        component: () => import('@/views/basicdata/EMR'),
+        meta: { title: 'sideMenu.EMR.name', keepAlive: true, permission: ['table'] }
       },
       {
-        path: '/ExaminationData',
-        name: 'SearchArticles',
-        component: () => import('../views/record/ExaminationData'),
-        meta: { title: '体检数据*', permission: ['table'] }
+        path: '/PED',
+        name: 'PED', // PED physical examination data 体检数据
+        component: () => import('../views/basicdata/PED'),
+        meta: { title: 'sideMenu.PED.name', permission: ['table'] }
       },
       // 健康监测
       {
         path: '/dashboard',
-        name: 'dashboard',
+        name: 'dashboard', // 仪表盘
         redirect: '/dashboard/analysis',
         component: RouteView,
-        meta: { title: '健康管理仪表盘', keepAlive: true, icon: bxAnaalyse, permission: ['dashboard'] },
+        meta: { title: 'sideMenu.dashboard.name', keepAlive: true, icon: bxAnaalyse, permission: ['dashboard'] },
         children: [
           {
             path: '/dashboard/analysis',
-            name: 'analysis',
+            name: 'analysis', // 日报分析
             component: () => import('@/views/dashboard/Analysis'),
-            meta: { title: '日报分析', keepAlive: false, permission: ['dashboard'] }
+            meta: { title: 'sideMenu.dashboard.analysis', keepAlive: false, permission: ['dashboard'] }
           }
         ]
       },
       {
         path: '/callCenter',
-        name: 'callCenter',
+        name: 'callCenter', // 呼叫中心
         component: () => import('@/views/dashboard/Workplace'),
-        meta: { title: '呼叫中心', keepAlive: true, permission: ['dashboard'] }
+        meta: { title: 'sideMenu.callCenter.name', keepAlive: true, permission: ['dashboard'] }
       },
       {
         path: '/workplace',
-        name: 'Workplace',
+        name: 'Workplace', // 工作台
         component: () => import('@/views/dashboard/Workplace'),
-        meta: { title: '工作台', keepAlive: true, permission: ['dashboard'] }
+        meta: { title: 'sideMenu.workplace.name', keepAlive: true, permission: ['dashboard'] }
       },
       {
         path: '/weeklySummary',
-        name: 'WeeklySummary',
+        name: 'WeeklySummary', // 每周个人健康小结
         component: RouteView,
-        meta: { title: '每周个人健康小结', keepAlive: true, icon: 'table', permission: ['table'] },
+        meta: { title: 'sideMenu.weeklySummary.name', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/weeklySummary/table',
         // hideChildrenInMenu: true,
         children: [
@@ -202,20 +202,20 @@ export const asyncRouterMap = [
             path: '/weeklySummary/table',
             name: 'WeeklySummaryTable',
             component: () => import('@/views/intervenemanager/WeeklySummary/WeeklySummary'),
-            meta: { title: '健康总结列表', keepAlive: true, hidden: true, permission: ['table'] },
+            meta: { title: 'sideMenu.weeklySummary.table', keepAlive: true, hidden: true, permission: ['table'] },
             hideChildrenInMenu: true,
             children: [
-              {
-                path: '/weeklySummary/edit',
-                name: 'WeeklySummaryEdit',
-                component: () => import('@/views/intervenemanager/WeeklySummary/WSEdit'),
-                meta: { title: '编辑每周小结', keepAlive: true, hidden: true, permission: ['table'] }
-              },
               {
                 path: '/weeklySummary/info',
                 name: 'WeeklySummaryInfo',
                 component: () => import('@/views/intervenemanager/WeeklySummary/WSInfo'),
-                meta: { title: '每周小结详情', keepAlive: true, hidden: true, permission: ['table'] }
+                meta: { title: 'sideMenu.weeklySummary.info', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/weeklySummary/edit',
+                name: 'WeeklySummaryEdit',
+                component: () => import('@/views/intervenemanager/WeeklySummary/WSEdit'),
+                meta: { title: 'sideMenu.weeklySummary.edit', keepAlive: true, hidden: true, permission: ['table'] }
               }
             ]
           }
@@ -223,29 +223,32 @@ export const asyncRouterMap = [
       },
       {
         path: '/yearlySummary',
-        name: 'HealthReport',
+        name: 'HealthReport', // 多维健康报告
         component: () => import('@/views/report/Index'),
-        meta: { title: '多维健康报告', keepAlive: true, permission: ['table'] },
+        meta: { title: 'sideMenu.yearlySummary.name', keepAlive: true, permission: ['table'] },
         redirect: '/report/HealthReport/table',
-        hideChildrenInMenu: true,
+        // hideChildrenInMenu: true,
         children: [
           {
             path: '/report/HealthReport/table',
             name: 'HealthReportTable',
             component: () => import('@/views/report/HealthReport/HealthReport'),
-            meta: { title: '健康报告表', keepAlive: true, hidden: true, permission: ['table'] }
-          },
-          {
-            path: '/report/HealthReport/edit',
-            name: 'HealthReportEdit',
-            component: () => import('@/views/report/HealthReport/HREdit'),
-            meta: { title: '编辑健康报告', keepAlive: true, hidden: true, permission: ['table'] }
-          },
-          {
-            path: '/report/HealthReport/info',
-            name: 'HealthReportInfo',
-            component: () => import('@/views/report/HealthReport/HRInfo'),
-            meta: { title: '健康报告详情', keepAlive: true, hidden: true, permission: ['table'] }
+            meta: { title: 'sideMenu.yearlySummary.table', keepAlive: true, hidden: true, permission: ['table'] },
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/report/HealthReport/info',
+                name: 'HealthReportInfo',
+                component: () => import('@/views/report/HealthReport/HRInfo'),
+                meta: { title: 'sideMenu.yearlySummary.info', keepAlive: true, hidden: true, permission: ['table'] }
+              },
+              {
+                path: '/report/HealthReport/edit',
+                name: 'HealthReportEdit',
+                component: () => import('@/views/report/HealthReport/HREdit'),
+                meta: { title: 'sideMenu.yearlySummary.edit', keepAlive: true, hidden: true, permission: ['table'] }
+              }
+            ]
           }
         ]
       },

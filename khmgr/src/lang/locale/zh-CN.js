@@ -62,5 +62,62 @@ export default {
     information: '资讯',
     date: '日期',
     weather: '天气'
+  },
+  sideMenu: {
+    homePage: '首页',
+    myCustomer: {
+      name: '我的客户',
+      table: '客户列表',
+      add: '添加客户',
+      create: '新增客户',
+      info: '客户详情页',
+      edit: '客户编辑页'
+    },
+    equipment: {
+      name: '设备管理',
+      table: '设备信息',
+      info: '设备详情',
+      edit: '编辑设备'
+    },
+    healthGoal: {
+      name: '健康小目标',
+      table: '目标列表',
+      info: '目标详情页',
+      edit: '编辑目标'
+    },
+    livingData: {
+      name: '用户生活数据',
+      table: '用户列表',
+      person: '成员列表',
+      personData: '成员生活数据'
+    },
+    EMR: {
+      name: '电子病历*'
+    },
+    PED: {
+      name: '体检数据*'
+    },
+    dashboard: {
+      name: '健康管理仪表盘',
+      analysis: '日报分析'
+    },
+    callCenter: {
+      name: '呼叫中心'
+    },
+    workplace: {
+      name: '工作台'
+    },
+    weeklySummary: {
+      name: '每周个人健康小结',
+      table: '健康总结列表',
+      info: '每周小结详情',
+      edit: '编辑每周小结'
+    },
+    yearlySummary: {
+      name: '多维健康报告',
+      table: '健康报告列表',
+      info: '健康报告详情',
+      edit: '编辑健康报告'
+    }
   }
 }

@@ -12,6 +12,8 @@ import {
   DEFAULT_MULTI_TAB
 } from '@/store/mutation-types'
 
+import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN'
+
 const app = {
   state: {
     sidebar: true,
@@ -24,7 +26,13 @@ const app = {
     autoHideHeader: false,
     color: null,
     weak: false,
-    multiTab: true
+    multiTab: true,
+    lang: zhCN
+  },
+  getters: {
+    getLang: state => {
+      return state.lang
+    }
   },
   mutations: {
     SET_SIDEBAR_TYPE: (state, type) => {
@@ -74,9 +82,19 @@ const app = {
     TOGGLE_MULTI_TAB: (state, bool) => {
       Vue.ls.set(DEFAULT_MULTI_TAB, bool)
       state.multiTab = bool
+    },
+    SET_COMPONENT_LANG_TYPE: (state, lang) => {
+      if (lang === 'en-US') {
+        state.lang = null
+      } else {
+        state.lang = { ...zhCN }
+      }
     }
   },
   actions: {
+    setComponentLangType ({ commit }, lang) {
+      commit('SET_COMPONENT_LANG_TYPE', lang)
+    },
     setSidebar ({ commit }, type) {
       commit('SET_SIDEBAR_TYPE', type)
     },
