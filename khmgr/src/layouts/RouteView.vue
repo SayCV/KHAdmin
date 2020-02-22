@@ -30,10 +30,3 @@ export default {
   }
 }
 </script>
-
-<style lang="less" scoped>
-.router-view {
-  padding: 16px;
-  background-color: #fff;
-}
-</style>

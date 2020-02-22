@@ -18,7 +18,7 @@ export function getCustomerDetailInfo (userId) {
 
 export function updateCustomerInfo (data) {
   return axios({
-    url: '/api/admin/customers',
+    url: '/api/admin/customers/{accountId}',
     method: 'put',
     data: { ...data }
   })

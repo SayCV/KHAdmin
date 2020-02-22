@@ -173,7 +173,7 @@ export const asyncRouterMap = [
           {
             path: '/dashboard/analysis',
             name: 'analysis', // 日报分析
-            component: () => import('@/views/dashboard/Analysis'),
+            component: () => import('@/views/monitoring/dashboard/Analysis'),
             meta: { title: 'sideMenu.dashboard.analysis', keepAlive: false, permission: ['dashboard'] }
           }
         ]
@@ -182,13 +182,13 @@ export const asyncRouterMap = [
         path: '/callCenter',
         name: 'callCenter', // 呼叫中心
         component: () => import('@/views/dashboard/Workplace'),
-        meta: { title: 'sideMenu.callCenter.name', keepAlive: true, permission: ['dashboard'] }
+        meta: { title: 'sideMenu.callCenter.name', keepAlive: true, icon: 'table', permission: ['dashboard'] }
       },
       {
         path: '/workplace',
         name: 'Workplace', // 工作台
         component: () => import('@/views/dashboard/Workplace'),
-        meta: { title: 'sideMenu.workplace.name', keepAlive: true, permission: ['dashboard'] }
+        meta: { title: 'sideMenu.workplace.name', keepAlive: true, icon: 'table', permission: ['dashboard'] }
       },
       {
         path: '/weeklySummary',
@@ -224,8 +224,8 @@ export const asyncRouterMap = [
       {
         path: '/yearlySummary',
         name: 'HealthReport', // 多维健康报告
-        component: () => import('@/views/report/Index'),
-        meta: { title: 'sideMenu.yearlySummary.name', keepAlive: true, permission: ['table'] },
+        component: RouteView,
+        meta: { title: 'sideMenu.yearlySummary.name', keepAlive: true, icon: 'table', permission: ['table'] },
         redirect: '/report/HealthReport/table',
         // hideChildrenInMenu: true,
         children: [
@@ -249,6 +249,199 @@ export const asyncRouterMap = [
                 meta: { title: 'sideMenu.yearlySummary.edit', keepAlive: true, hidden: true, permission: ['table'] }
               }
             ]
+          }
+        ]
+      },
+      // 团体健康报告
+      // 干预管理
+      {
+        path: '/healthCourse',
+        name: 'HealthCourse', // 健康课程
+        component: RouteView,
+        meta: { title: '健康课程', keepAlive: true, icon: 'table' },
+        redirect: '/healthCourse/table',
+        children: [
+          {
+            path: '/healthCourse/table',
+            name: 'CourseTable',
+            component: () => import('@/views/intervention/healthCourse/courseTable'),
+            meta: { title: '课程列表', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
+      {
+        path: '/healthAlert',
+        name: 'HealthAlert', // 健康预警
+        component: RouteView,
+        meta: { title: '健康预警', keepAlive: true, icon: 'table' },
+        redirect: '/healthAlert/table',
+        children: [
+          {
+            path: '/healthAlert/table',
+            name: 'AlertTable',
+            component: () => import('@/views/intervention/healthAlert/alertTable'),
+            meta: { title: '预警列表', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
+      {
+        path: '/healthPlan',
+        name: 'HealthPlan', // 健康计划
+        component: RouteView,
+        meta: { title: '健康计划', keepAlive: true, icon: 'table' },
+        redirect: '/healthPlan/table',
+        children: [
+          {
+            path: '/healthPlan/table',
+            name: 'PlanTable',
+            component: () => import('@/views/intervention/healthPlan/planTable'),
+            meta: { title: '计划列表', keepAlive: true, hidden: true, permission: ['table'] }
+          }
+        ]
+      },
+      {
+        path: '/goalSet',
+        name: 'GoalSet', // 小目标设定与策略
+        component: RouteView,
+        meta: { title: '小目标设定策略', keepAlive: true, icon: 'table', permission: ['profile'] },
+        redirect: '/goalSet/quantifGoal/q',
+        children: [
+          {
+            path: '/goalSet/quantifGoal/q',
+            name: 'SetQuanGoal',
+            component: () => import('@/views/intervention/goalSet/TagIndex'),
+            meta: { title: '指标类', keepAlive: true, permission: ['profile'] },
+            redirect: '/goalSet/quantifGoal/list',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/goalSet/quantifGoal/list',
+                name: 'QuantitativeGoal',
+                component: () => import('@/views/intervention/goalSet/Quantized/QuantitativeGoal'),
+                meta: { title: '量化目标', keepAlive: true }
+              },
+              {
+                path: '/goalSet/quantifGoal/edit',
+                name: 'EditQuanGoal',
+                component: () => import('@/views/intervention/goalSet/Quantized/EditQuanGoal'),
+                meta: { title: '编辑量化目标', keepAlive: true }
+              }
+            ]
+          },
+          {
+            path: '/goalSet/addGoal',
+            name: 'AddGoal',
+            component: () => import('@/views/intervention/goalSet/AddGoal'),
+            meta: { title: '添加目标', keepAlive: true }
+          },
+          {
+            path: '/goalSet/unquantifGoal/uq',
+            name: 'SetUnquanGoal',
+            component: () => import('@/views/intervention/goalSet/TagIndex'),
+            meta: { title: '生活习惯类', keepAlive: true, permission: ['profile'] },
+            redirect: '/goalSet/unquantifGoal/list',
+            hideChildrenInMenu: true,
+            children: [
+              {
+                path: '/goalSet/unquantifGoal/list',
+                name: 'UnquantitativeGoal',
+                component: () => import('@/views/intervention/goalSet/Unquantized/UnquantitativeGoal'),
+                meta: { title: '非量化目标', keepAlive: true }
+              },
+              {
+                path: '/goalSet/unquantifGoal/edit',
+                name: 'EditUnquanGoal',
+                component: () => import('@/views/intervention/goalSet/Unquantized/EditUnquanGoal'),
+                meta: { title: '编辑非量化目标', keepAlive: true }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        path: '/healthBit',
+        name: 'HealthBit', // APP健康点滴
+        component: RouteView,
+        meta: { title: 'APP健康点滴', keepAlive: true, icon: 'table', permission: ['profile'] },
+        redirect: '/healthBit/list',
+        children: [
+          {
+            path: '/healthBit/list',
+            name: 'HealthBits',
+            component: () => import('@/views/intervention/healthBit/healthBits'),
+            meta: { title: '点滴内容', keepAlive: true, permission: ['profile'] }
+          },
+          {
+            path: '/healthBit/add',
+            name: 'CreateBit',
+            component: () => import('@/views/intervention/healthBit/createBit'),
+            meta: { title: '新建点滴', keepAlive: true, permission: ['profile'] }
+          },
+          {
+            path: '/healthBit/edit',
+            name: 'EditBit',
+            component: () => import('@/views/intervention/healthBit/editBit'),
+            meta: { title: '编辑点滴', keepAlive: true, permission: ['profile'] }
+          }
+        ]
+      },
+      {
+        path: '/headline',
+        name: 'Headline', // APP头条消息
+        component: RouteView,
+        meta: { title: 'APP头条消息', keepAlive: true, icon: 'table', permission: ['profile'] },
+        redirect: '/headline/list',
+        children: [
+          {
+            path: '/headline/list',
+            name: 'Headlines',
+            component: () => import('@/views/intervention/headline/headlines'),
+            meta: { title: '头条内容', keepAlive: true, permission: ['profile'] }
+          },
+          {
+            path: '/headline/add',
+            name: 'CreateHeadline',
+            component: () => import('@/views/intervention/headline/createHeadline'),
+            meta: { title: '新建头条', keepAlive: true, permission: ['profile'] }
+          },
+          {
+            path: '/headline/edit',
+            name: 'EditHeadline',
+            component: () => import('@/views/intervention/headline/editHeadline'),
+            meta: { title: '编辑头条', keepAlive: true, permission: ['profile'] }
+          }
+        ]
+      },
+      {
+        path: '/videos',
+        name: 'Videos', // HD视频宣教
+        component: RouteView,
+        meta: { title: 'HD视频宣教', keepAlive: true, icon: 'table', permission: ['profile'] },
+        redirect: '/videos/allvideos',
+        children: [
+          {
+            path: '/videos/allvideos',
+            name: 'AllVideos',
+            component: () => import('@/views/intervention/videos/AllVideos'),
+            meta: { title: '全部视频', keepAlive: true, permission: ['profile'] }
+          },
+          {
+            path: '/videos/videopush',
+            name: 'VideoPush',
+            component: () => import('@/views/intervention/videos/VideoPush'),
+            meta: { title: '上传视频', permission: ['profile'] }
+          },
+          {
+            path: '/videos/videoused',
+            name: 'HDVideoOnPaid',
+            component: () => import('@/views/intervention/videos/HDVideoOnPaid'),
+            meta: { title: '已用视频', keepAlive: true, permission: ['profile'] }
+          },
+          {
+            path: '/videos/videoedit',
+            name: 'VideoEdit',
+            component: () => import('@/views/intervention/videos/VideoEdit'),
+            meta: { title: '编辑视频', keepAlive: true, permission: ['profile'] }
           }
         ]
       },
@@ -515,185 +708,178 @@ export const asyncRouterMap = [
       //     }
       //   ]
       // },
-
       // 干预管理 intervenemanager
-      {
-        path: '/intervenemanager',
-        name: 'intervenemanager',
-        component: PageView,
-        redirect: '/intervenemanager/quantifGoal',
-        meta: { title: '干预管理', icon: 'profile', permission: ['profile'] },
-        children: [
-          {
-            path: '/intervenemanager/quantifGoal',
-            name: 'GoalStrategy',
-            component: () => import('@/views/intervenemanager/goalSet/Index'),
-            meta: { title: '小目标设定策略', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/quantifGoal/q',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/intervenemanager/quantifGoal/q',
-                name: 'SetQuanGoal',
-                component: () => import('@/views/intervenemanager/goalSet/TagIndex'),
-                meta: { title: '指标类', keepAlive: true, permission: ['profile'] },
-                redirect: '/intervenemanager/quantifGoal/list',
-                hideChildrenInMenu: true,
-                children: [
-                  {
-                    path: '/intervenemanager/quantifGoal/list',
-                    name: 'QuantitativeGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
-                    meta: { title: '量化目标', keepAlive: true, hidden: true }
-                  },
-                  {
-                    path: '/intervenemanager/quantifGoal/edit',
-                    name: 'EditQuanGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Quantized/EditQuanGoal'),
-                    meta: { title: '编辑量化目标', keepAlive: true, hidden: true }
-                  }
-                  // {
-                  //   path: '/intervenemanager/quantifGoal/add',
-                  //   name: 'AddQuanGoal',
-                  //   component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
-                  //   meta: { title: '添加目标', keepAlive: true, hidden: true }
-                  // }
-                ]
-              },
-              {
-                path: '/intervenemanager/addGoal',
-                name: 'AddGoal',
-                component: () => import('@/views/intervenemanager/goalSet/AddGoal'),
-                meta: { title: '添加目标', keepAlive: true, hidden: true }
-              },
-              {
-                path: '/intervenemanager/unquantifGoal/uq',
-                name: 'SetUnquanGoal',
-                component: () => import('@/views/intervenemanager/goalSet/TagIndex'),
-                meta: { title: '生活习惯类', keepAlive: true, permission: ['profile'] },
-                redirect: '/intervenemanager/unquantifGoal/list',
-                hideChildrenInMenu: true,
-                children: [
-                  {
-                    path: '/intervenemanager/unquantifGoal/list',
-                    name: 'UnquantitativeGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
-                    meta: { title: '非量化目标', keepAlive: true, hidden: true }
-                  },
-                  {
-                    path: '/intervenemanager/unquantifGoal/edit',
-                    name: 'EditUnquanGoal',
-                    component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
-                    meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
-                  }
-                  // {
-                  //   path: '/intervenemanager/unquantifGoal/add',
-                  //   name: 'AddQuanGoal',
-                  //   component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
-                  //   meta: { title: '添加目标', keepAlive: true, hidden: true }
-                  // }
-                ]
-              }
-            ]
-          },
-          {
-            path: '/intervenemanager/Planandcourse',
-            name: 'Planandcourse',
-            component: () => import('@/views/intervenemanager/PlanAndCourse/PlanAndCourse'),
-            meta: { title: '课程安排', keepAlive: true, permission: ['profile'] }
-          },
-          {
-            path: '/intervenemanager/AppPush',
-            name: 'AppPush',
-            component: () => import('@/views/intervenemanager/AppPush/Index'),
-            meta: { title: 'APP健康点滴', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/AppPush/list',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/intervenemanager/AppPush/list',
-                name: 'DripNews',
-                component: () => import('@/views/intervenemanager/AppPush/DripNews'),
-                meta: { title: '点滴内容', keepAlive: true, hidden: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/AppPush/add',
-                name: 'CreateDrip',
-                component: () => import('@/views/intervenemanager/AppPush/CreateDrip'),
-                meta: { title: '新建点滴', keepAlive: true, hidden: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/AppPush/edit',
-                name: 'EditDrip',
-                component: () => import('@/views/intervenemanager/AppPush/EditDrip'),
-                meta: { title: '编辑点滴', keepAlive: true, hidden: true, permission: ['profile'] }
-              }
-            ]
-          },
-          {
-            path: '/intervenemanager/TopPush',
-            name: 'TopPush',
-            component: () => import('@/views/intervenemanager/TopPush/Index'),
-            meta: { title: 'APP头条消息', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/TopPush/list',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/intervenemanager/TopPush/list',
-                name: 'TopNews',
-                component: () => import('@/views/intervenemanager/TopPush/TopNews'),
-                meta: { title: '头条内容', keepAlive: true, hidden: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/TopPush/add',
-                name: 'CreateTop',
-                component: () => import('@/views/intervenemanager/TopPush/CreateTop'),
-                meta: { title: '新建头条', keepAlive: true, hidden: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/TopPush/edit',
-                name: 'EditTop',
-                component: () => import('@/views/intervenemanager/TopPush/EditTop'),
-                meta: { title: '编辑头条', keepAlive: true, hidden: true, permission: ['profile'] }
-              }
-            ]
-          },
-          {
-            path: '/intervenemanager/Videopush',
-            name: 'Videopush',
-            component: () => import('@/views/intervenemanager/videos/Index'),
-            meta: { title: 'HD视频宣教', keepAlive: true, permission: ['profile'] },
-            redirect: '/intervenemanager/videos/allvideos',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/intervenemanager/videos/videopush',
-                name: 'VideoPush',
-                component: () => import('@/views/intervenemanager/videos/VideoPush'),
-                meta: { title: '上传视频', hidden: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/videos/videoused',
-                name: 'HDVideoOnPaid',
-                component: () => import('@/views/intervenemanager/videos/HDVideoOnPaid'),
-                meta: { title: '已用视频', hidden: true, keepAlive: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/videos/allvideos',
-                name: 'AllVideos',
-                component: () => import('@/views/intervenemanager/videos/AllVideos'),
-                meta: { title: '全部视频', hidden: true, keepAlive: true, permission: ['profile'] }
-              },
-              {
-                path: '/intervenemanager/videos/videoedit',
-                name: 'VideoEdit',
-                component: () => import('@/views/intervenemanager/videos/VideoEdit'),
-                meta: { title: '编辑视频', hidden: true, keepAlive: true, permission: ['profile'] }
-              }
-            ]
-          }
-        ]
-      },
+      // {
+      //   path: '/intervenemanager',
+      //   name: 'intervenemanager',
+      //   component: PageView,
+      //   redirect: '/intervenemanager/quantifGoal',
+      //   meta: { title: '干预管理', icon: 'profile', permission: ['profile'] },
+      //   children: [
+      //     {
+      //       path: '/intervenemanager/quantifGoal',
+      //       name: 'GoalStrategy',
+      //       component: () => import('@/views/intervenemanager/goalSet/Index'),
+      //       meta: { title: '小目标设定策略', keepAlive: true, permission: ['profile'] },
+      //       redirect: '/intervenemanager/quantifGoal/q',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/intervenemanager/quantifGoal/q',
+      //           name: 'SetQuanGoal',
+      //           component: () => import('@/views/intervenemanager/goalSet/TagIndex'),
+      //           meta: { title: '指标类', keepAlive: true, permission: ['profile'] },
+      //           redirect: '/intervenemanager/quantifGoal/list',
+      //           hideChildrenInMenu: true,
+      //           children: [
+      //             {
+      //               path: '/intervenemanager/quantifGoal/list',
+      //               name: 'QuantitativeGoal',
+      //               component: () => import('@/views/intervenemanager/goalSet/Quantized/QuantitativeGoal'),
+      //               meta: { title: '量化目标', keepAlive: true, hidden: true }
+      //             },
+      //             {
+      //               path: '/intervenemanager/quantifGoal/edit',
+      //               name: 'EditQuanGoal',
+      //               component: () => import('@/views/intervenemanager/goalSet/Quantized/EditQuanGoal'),
+      //               meta: { title: '编辑量化目标', keepAlive: true, hidden: true }
+      //             }
+      //           ]
+      //         },
+      //         {
+      //           path: '/intervenemanager/addGoal',
+      //           name: 'AddGoal',
+      //           component: () => import('@/views/intervenemanager/goalSet/AddGoal'),
+      //           meta: { title: '添加目标', keepAlive: true, hidden: true }
+      //         },
+      //         {
+      //           path: '/intervenemanager/unquantifGoal/uq',
+      //           name: 'SetUnquanGoal',
+      //           component: () => import('@/views/intervenemanager/goalSet/TagIndex'),
+      //           meta: { title: '生活习惯类', keepAlive: true, permission: ['profile'] },
+      //           redirect: '/intervenemanager/unquantifGoal/list',
+      //           hideChildrenInMenu: true,
+      //           children: [
+      //             {
+      //               path: '/intervenemanager/unquantifGoal/list',
+      //               name: 'UnquantitativeGoal',
+      //               component: () => import('@/views/intervenemanager/goalSet/Unquantized/UnquantitativeGoal'),
+      //               meta: { title: '非量化目标', keepAlive: true, hidden: true }
+      //             },
+      //             {
+      //               path: '/intervenemanager/unquantifGoal/edit',
+      //               name: 'EditUnquanGoal',
+      //               component: () => import('@/views/intervenemanager/goalSet/Unquantized/EditUnquanGoal'),
+      //               meta: { title: '编辑非量化目标', keepAlive: true, hidden: true }
+      //             }
+      //             // {
+      //             //   path: '/intervenemanager/unquantifGoal/add',
+      //             //   name: 'AddQuanGoal',
+      //             //   component: () => import('@/views/intervenemanager/goalSet/Quantized/AddQuanGoal'),
+      //             //   meta: { title: '添加目标', keepAlive: true, hidden: true }
+      //             // }
+      //           ]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/intervenemanager/Planandcourse',
+      //       name: 'Planandcourse',
+      //       component: () => import('@/views/intervenemanager/PlanAndCourse/PlanAndCourse'),
+      //       meta: { title: '课程安排', keepAlive: true, permission: ['profile'] }
+      //     },
+      //     {
+      //       path: '/intervenemanager/healthBit',
+      //       name: 'healthBit',
+      //       component: () => import('@/views/intervenemanager/healthBit/Index'),
+      //       meta: { title: 'APP健康点滴', keepAlive: true, permission: ['profile'] },
+      //       redirect: '/intervenemanager/healthBit/list',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/intervenemanager/healthBit/list',
+      //           name: 'DripNews',
+      //           component: () => import('@/views/intervenemanager/healthBit/DripNews'),
+      //           meta: { title: '点滴内容', keepAlive: true, hidden: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/healthBit/add',
+      //           name: 'CreateDrip',
+      //           component: () => import('@/views/intervenemanager/healthBit/CreateDrip'),
+      //           meta: { title: '新建点滴', keepAlive: true, hidden: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/healthBit/edit',
+      //           name: 'EditDrip',
+      //           component: () => import('@/views/intervenemanager/healthBit/EditDrip'),
+      //           meta: { title: '编辑点滴', keepAlive: true, hidden: true, permission: ['profile'] }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/intervenemanager/TopPush',
+      //       name: 'TopPush',
+      //       component: () => import('@/views/intervenemanager/TopPush/Index'),
+      //       meta: { title: 'APP头条消息', keepAlive: true, permission: ['profile'] },
+      //       redirect: '/intervenemanager/TopPush/list',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/intervenemanager/TopPush/list',
+      //           name: 'TopNews',
+      //           component: () => import('@/views/intervenemanager/TopPush/TopNews'),
+      //           meta: { title: '头条内容', keepAlive: true, hidden: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/TopPush/add',
+      //           name: 'CreateTop',
+      //           component: () => import('@/views/intervenemanager/TopPush/CreateTop'),
+      //           meta: { title: '新建头条', keepAlive: true, hidden: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/TopPush/edit',
+      //           name: 'EditTop',
+      //           component: () => import('@/views/intervenemanager/TopPush/EditTop'),
+      //           meta: { title: '编辑头条', keepAlive: true, hidden: true, permission: ['profile'] }
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       path: '/intervenemanager/Videopush',
+      //       name: 'Videopush',
+      //       component: () => import('@/views/intervenemanager/videos/Index'),
+      //       meta: { title: 'HD视频宣教', keepAlive: true, permission: ['profile'] },
+      //       redirect: '/intervenemanager/videos/allvideos',
+      //       hideChildrenInMenu: true,
+      //       children: [
+      //         {
+      //           path: '/intervenemanager/videos/videopush',
+      //           name: 'VideoPush',
+      //           component: () => import('@/views/intervenemanager/videos/VideoPush'),
+      //           meta: { title: '上传视频', hidden: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/videos/videoused',
+      //           name: 'HDVideoOnPaid',
+      //           component: () => import('@/views/intervenemanager/videos/HDVideoOnPaid'),
+      //           meta: { title: '已用视频', hidden: true, keepAlive: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/videos/allvideos',
+      //           name: 'AllVideos',
+      //           component: () => import('@/views/intervenemanager/videos/AllVideos'),
+      //           meta: { title: '全部视频', hidden: true, keepAlive: true, permission: ['profile'] }
+      //         },
+      //         {
+      //           path: '/intervenemanager/videos/videoedit',
+      //           name: 'VideoEdit',
+      //           component: () => import('@/views/intervenemanager/videos/VideoEdit'),
+      //           meta: { title: '编辑视频', hidden: true, keepAlive: true, permission: ['profile'] }
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
       // 商城业务business
       {
         path: '/business',

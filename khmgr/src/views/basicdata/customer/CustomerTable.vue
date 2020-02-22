@@ -10,7 +10,7 @@
           <a-button
             type="primary"
             icon="user-add"
-            @click="handleAddCus"
+            @click="handleAddCustomer"
           >邀请用户</a-button>
           <a-button
             type="primary"
@@ -314,7 +314,7 @@ export default {
         }
       })
     },
-    handleAddCus () {
+    handleAddCustomer () {
       // 点击行进入邀请客户页
       this.$router.push({
         path: '/customerManager/add'

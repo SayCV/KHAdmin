@@ -21,7 +21,7 @@
       </div>
     </a-card>
     <a-card
-      :title="this.$route.meta.title"
+      title="生活数据"
       :bordered="false"
       :loading="loading"
     >

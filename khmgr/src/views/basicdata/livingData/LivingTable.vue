@@ -4,9 +4,10 @@
       v-if="$route.name === 'LivingUserTable'"
       class="living-table-page"
     >
-      <div class="page-top">
-        <div class="operator-btns"></div>
-        <div class="table-page-search-wrapper">
+      <a-card
+        :bordered="false"
+      >
+        <div class="search-wrapper">
           <a-form layout="inline">
             <a-row :gutter="48">
               <a-col
@@ -44,38 +45,38 @@
             </a-row>
           </a-form>
         </div>
-      </div>
-      <div class="living-table-container"></div>
-      <a-table
-        ref="table"
-        size="default"
-        :rowKey="(record) => record.userId"
-        :loading="loading"
-        :columns="columns"
-        :dataSource="data"
-        :pagination="pagination"
-        @change="handleTableChange"
-        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-        bordered
-      >
-        <a
-          slot="userNo"
-          slot-scope="text, record"
-          @click="() => handleView(record.userId)"
-        >{{ text }}</a>
-        <template
-          slot="operation"
-          slot-scope="text, record"
+        <a-table
+          ref="table"
+          size="default"
+          :rowKey="(record) => record.userId"
+          :loading="loading"
+          :columns="columns"
+          :dataSource="data"
+          :pagination="pagination"
+          @change="handleTableChange"
+          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+          bordered
         >
-          <div class="editable-row-operations">
-            <span slot="operation">
-              <a @click="() => showModalForm(record)">编辑</a>
-              <a-divider type="vertical" />
-              <a @click="() => handleView(record.userId)">查看</a>
-            </span>
-          </div>
-        </template>
-      </a-table>
+          <a
+            slot="userNo"
+            slot-scope="text, record"
+            @click="() => handleView(record.userId)"
+          >{{ text }}</a>
+          <template
+            slot="operation"
+            slot-scope="text, record"
+          >
+            <div class="editable-row-operations">
+              <span slot="operation">
+                <a @click="() => showModalForm(record)">编辑</a>
+                <a-divider type="vertical" />
+                <a @click="() => handleView(record.userId)">查看</a>
+              </span>
+            </div>
+          </template>
+        </a-table>
+      </a-card>
+
     </div>
     <router-view v-else />
     <a-modal
@@ -247,12 +248,8 @@ export default {
 <style lang="less" scoped>
 .living-table-page {
   min-height: calc(100vh - 290px);
-  .page-top {
-    .top-btns {
-      display: flex;
-      justify-content: space-between;
-      // margin-bottom: 20px;
-    }
+  .search-wrapper {
+    margin-bottom: 48px;
   }
 }
 </style>

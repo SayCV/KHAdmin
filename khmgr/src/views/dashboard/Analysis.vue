@@ -16,6 +16,16 @@
               11%
             </trend>
           </div>
+          <div>
+            <trend flag="up" style="margin-right: 16px;">
+              <span slot="term">阿达瓦大</span>
+              12%
+            </trend>
+            <trend flag="down">
+              <span slot="term">阿瓦达无多</span>
+              11%
+            </trend>
+          </div>
           <template slot="footer">日均销售额<span>￥ 234.56</span></template>
         </chart-card>
       </a-col>

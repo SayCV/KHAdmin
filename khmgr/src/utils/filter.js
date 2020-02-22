@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import moment from 'moment'
+import numeral from 'numeral'
 import 'moment/locale/zh-cn'
 moment.locale('zh-cn')
 
@@ -9,6 +10,14 @@ Vue.filter('NumberFormat', function (value) {
   }
   const intPartFormat = value.toString().replace(/(\d)(?=(?:\d{3})+$)/g, '$1,') // 将整数部分逢三一断
   return intPartFormat
+})
+
+Vue.filter('PercentFormat', function (value) {
+  if (!value) {
+    return '0'
+  }
+  const percent = numeral(value).format(' %')
+  return percent
 })
 
 Vue.filter('dayjs', function (dataStr, pattern = 'YYYY-MM-DD HH:mm:ss') {

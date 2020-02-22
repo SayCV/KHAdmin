@@ -14,7 +14,7 @@
             :label-col="{ span: 4 }"
             :wrapper-col="{ span: 16 }"
           >
-            <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }],initialValue: data.title} ]" />
+            <a-input v-decorator="[ 'title', {rules: [{ required: true, message: 'Please input your title!' }]} ]" />
           </a-form-item>
           <a-form-item
             label="摘要"
@@ -25,7 +25,7 @@
               rows="4"
               v-decorator="[
                 'summary',
-                {rules: [{ required: true, message: '请填写摘要！' }],initialValue: data.summary}
+                {rules: [{ required: true, message: '请填写摘要' }]}
               ]"
             />
           </a-form-item>
@@ -37,8 +37,22 @@
             <a-input
               v-decorator="[
                 'author',
-                {rules: [{ required: true, message: 'Please input your author!' }], initialValue: data.author }
+                {rules: [{ required: true, message: 'Please input your author!' }], initialValue: author }
               ]" />
+          </a-form-item>
+          <a-form-item
+            :labelCol="{md: {span: 4}, sm: {span: 4}}"
+            :wrapperCol="{md: {span: 6}, sm: {span: 6} }"
+            label="发送人群"
+            has-feedback
+          >
+            <a-select v-model="selected">
+              <a-select-option
+                v-for="option in options"
+                :value="option.value"
+                :key="option.value"
+              >{{ option.text }}</a-select-option>
+            </a-select>
           </a-form-item>
           <a-form-item
             label="封面"
@@ -94,7 +108,7 @@
             <a-button
               type="primary"
               html-type="submit"
-            >提交</a-button>
+            >提 交</a-button>
             <a-modal
               :title="ModalTitle"
               :visible="visible"
@@ -125,8 +139,7 @@
 
 <script>
 import { axios } from '@/utils/request'
-import { getAPPDripInfo, updateAPPDrip } from '@/api/interventionManager/appDripNews'
-import { uploadResources } from '@/api/common'
+import { createAPPDrip } from '@/api/interventionManager/appDripNews'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -134,113 +147,102 @@ import { ButtonBack } from '@/components'
 import { upLoadAddress } from '@/core/icons' // import 资源上传地址
 
 export default {
-  name: 'EditDrip',
+  name: 'CreateBit',
   components: { FooterToolBar, ButtonBack },
   data () {
     return {
-      upLoadAddress: upLoadAddress, // 上传资源地址
-      newsId: this.$route.query.newsId, // 新闻id
-      data: {}, // 进入编辑页面填充表单的数据
-      previewMdHtml: null, // 预览markdown的语法生成的html
-      ModalTitle: null, // 预览标题
-      ModalText: {}, // 预览内容
-      visible: false, // 预览model是否可见
-      confirmLoading: false, // 预览model的确认loading
-      editorContent: '', // markdown编辑器的正文
+      upLoadAddress: upLoadAddress,
+      selected: 0, // 默认选中
+      options: [
+        { text: '全部推送', value: 0 },
+        { text: '条件推送', value: 1 }
+      ],
+      previewMdHtml: null,
+      ModalTitle: null,
+      ModalText: {},
+      visible: false,
+      confirmLoading: false,
+      author: this.$store.getters.nickname,
+      editorContent: '',
       form: this.$form.createForm(this),
-      previewVisible: false, // 是否预览的布尔值
-      previewImage: '', // 预览封面
-      fileList: [], // 上传封面的json数组
-      toPostForm: {}, // 最终需要提交的表单
-      cover: null // 封面的全局变量
+      previewVisible: false,
+      previewImage: '',
+      fileList: [], // 上传组件的图片
+      postFormValue: {},
+      cover: null
     }
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      vm.newsId = vm.$route.query.newsId
-      // this.data = this.$route.query.data
-      vm.getFormData(vm.newsId)
+      vm.clearFormData()
     })
   },
   mounted () {
-    // this.getFormData(this.newsId)
+
   },
   methods: {
     moment,
     beforeUpload (file) {
       const isLt2M = file.size / 1024 / 1024 < 2
       if (!isLt2M) {
-        this.$message.error('Image must smaller than 2MB!')
+        this.$message.error('图片大小不能超过 2MB!')
       }
       return isLt2M
+    },
+    clearFormData () {
+      // 清空表单内容
+      this.form.resetFields()
+      this.editorContent = ''
+      this.fileList = []
+    },
+    handleBack () {
+      // 返回PushList页面
+      this.$router.push({
+        path: '/intervenemanager/AppPush/list'
+      })
     },
     handleSubmit (e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (this.editorContent === '') {
-            this.$message.warning('MarkDown编辑器内容不能为空！')
+          if (this.editorContent.trim() === '') {
+            this.$message.warning('MarkDown文本编辑器内容不能为空！')
           } else {
-            // 给表单追加其他字段
-            if (this.fileList[0].name === 'default') {
-              // 判断是否修改了默认填充的封面
-              this.cover = null
-              this.cover = this.fileList[0].url
-            } else {
-              this.cover = null
-              this.cover = this.upLoadAddress + this.fileList[0].response
-            }
-            // $set给post的表单json数据追加字段
-            values = {
-              ...values,
-              'content': this.editorContent,
-              'cover': this.cover,
-              'isTop': false // 点滴属性为isTop===false
-            }
-            this.toPostForm = values
-            console.log('追加 values of form: ', this.toPostForm)
+            // 追加表单字段
+            this.appendForm(values)
             // 弹出model层，等待进一步操作
             this.showModal()
           }
         }
       })
     },
-    getFormData (newsId) {
-      // 进入新闻详情页面时表单填入数据
-      getAPPDripInfo(newsId).then(res => {
-        this.data = res || {}
-        this.initFileList(this.data)
-        this.editorContent = res.content || ''
-      })
-      // axios({
-      //   url: `/api/admin/news/${newsId}`,
-      //   method: 'get'
-      // }).then(res => {
-      //   console.log('进入编辑页面时表单数据', res)
-      //   this.data = res
-      //   this.initFileList(this.data)
-      //   this.editorContent = res.content
-      // })
+    appendForm (values) {
+      // const md = this.$refs.myEditor.querySelector('.auto-textarea-block').textContent
+      if (this.fileList[0]) {
+        this.cover = this.upLoadAddress + this.fileList[0].response
+      } else {
+        this.cover = ''
+      }
+      // $set给post的表单json数据追加字段
+      this.$set(values, 'content', this.editorContent)
+      this.$set(values, 'cover', this.cover)
+      // 推送类型
+      this.$set(values, 'pubType', this.selected)
+      // 点滴内容恒为isTop===false
+      this.$set(values, 'isTop', false)
+      this.postFormValue = values
+      console.log('函数：追加表单字段: ', this.postFormValue)
     },
-    initFileList (data) {
-      // 设置默认封面
-      this.fileList = [{
-        uid: '-1',
-        name: 'default',
-        status: 'done',
-        url: data.cover || ''
-      }]
-    },
-    formPost (formData, newsId) {
-      // put 编辑
+    formPost (formData) {
+      // Post且跳转
+      console.log('要提交的表单', formData)
       axios({
-        url: `/api/admin/news/${newsId}`,
-        // url: '/api/admin/news',
-        method: 'put',
+        url: '/api/admin/news',
+        method: 'post',
         data: formData,
         headers: { 'Content-Type': 'application/json' }
       }).then(res => {
-        console.log('修改后提交表单', res)
+        console.log('表单提交了', res)
         if (res) {
           // 跳转到新闻详情页面
           this.$router.push({
@@ -251,24 +253,23 @@ export default {
       }).catch(err => {
         if (err) {
           this.$notification['error']({
-            description: '修改点滴失败.'
+            message: '注意！注意！',
+            description: '发表点滴失败.'
           })
         }
       })
     },
-    toUpdateAPPDrip (formData, newsId) {
-      updateAPPDrip(formData, newsId).then(res => {
-        if (res) {
-          // 跳转到新闻详情页面
-          this.$router.push({
-            path: '/intervenemanager/AppPush/list'
-            // query: { newsId: res.data.value }
-          })
-        }
+    toCreateAPPDrip (formData) {
+      createAPPDrip(formData).then(res => {
+        // 跳转到新闻详情页面
+        this.$router.push({
+          path: '/intervenemanager/AppPush/list'
+          // query: { newsId: res.data.value }
+        })
       }).catch(err => {
         if (err) {
           this.$notification['error']({
-            description: '修改点滴失败.'
+            description: '发表点滴失败.'
           })
         }
       })
@@ -276,17 +277,17 @@ export default {
     showModal () {
       this.visible = true
       this.ModalTitle = '点滴预览'
-      this.ModalText = this.toPostForm
+      this.ModalText = this.postFormValue
       this.previewMdHtml = Mdjs.md2html(this.ModalText.content)
-      console.log(this.previewMdHtml)
     },
     handleOk () {
       this.confirmLoading = true
       setTimeout(() => {
-        this.formPost(this.toPostForm, this.newsId)
+        this.formPost(this.postFormValue)
+        // this.toCreateAPPDrip(this.postFormValue)
         this.visible = false
         this.confirmLoading = false
-      }, 500)
+      }, 1000)
     },
     handleCancel (e) {
       this.visible = false
@@ -309,19 +310,6 @@ export default {
          * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
          * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
          */
-        console.log('image', url)
-        const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
-        this.$refs.md.$img2Url(pos, mdImgUrl)
-      })
-      // 整理api
-      uploadResources(formData).then(url => {
-        // 第二步.将返回的url替换到文本原位置![...](0) -> ![...](url)
-        /**
-         * $vm 指为mavonEditor实例，可以通过如下两种方式获取
-         * 1. 通过引入对象获取: `import {mavonEditor} from ...` 等方式引入后，`$vm`为`mavonEditor`
-         * 2. 通过$refs获取: html声明ref : `<mavon-editor ref=md ></mavon-editor>，`$vm`为 `this.$refs.md`
-         */
-        console.log('image', url)
         const mdImgUrl = `http://172.31.214.104/khmsrv/api/resources/${url}`
         this.$refs.md.$img2Url(pos, mdImgUrl)
       })
@@ -332,12 +320,6 @@ export default {
     },
     imgHandleChange ({ fileList }) {
       this.fileList = fileList
-    },
-    handleBack () {
-      // 返回PushList页面
-      this.$router.push({
-        path: '/intervenemanager/AppPush/list'
-      })
     }
   }
 }
