@@ -201,20 +201,20 @@ export const asyncRouterMap = [
           {
             path: '/weeklySummary/table',
             name: 'WeeklySummaryTable',
-            component: () => import('@/views/intervenemanager/WeeklySummary/WeeklySummary'),
+            component: () => import('@/views/monitoring/weeklySummary/WeeklySummary'),
             meta: { title: 'sideMenu.weeklySummary.table', keepAlive: true, hidden: true, permission: ['table'] },
             hideChildrenInMenu: true,
             children: [
               {
                 path: '/weeklySummary/info',
                 name: 'WeeklySummaryInfo',
-                component: () => import('@/views/intervenemanager/WeeklySummary/WSInfo'),
+                component: () => import('@/views/monitoring/weeklySummary/WSInfo'),
                 meta: { title: 'sideMenu.weeklySummary.info', keepAlive: true, hidden: true, permission: ['table'] }
               },
               {
                 path: '/weeklySummary/edit',
                 name: 'WeeklySummaryEdit',
-                component: () => import('@/views/intervenemanager/WeeklySummary/WSEdit'),
+                component: () => import('@/views/monitoring/weeklySummary/WSEdit'),
                 meta: { title: 'sideMenu.weeklySummary.edit', keepAlive: true, hidden: true, permission: ['table'] }
               }
             ]

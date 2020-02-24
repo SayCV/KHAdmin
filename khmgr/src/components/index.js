@@ -31,7 +31,6 @@ import DripItem from '@/components/Items/DripItem'
 import Empty from '@/components/Empty/Empty'
 import ButtonRefresh from '@/components/Button/ButtonRefresh'
 import ButtonBack from '@/components/Button/ButtonBack'
-import PageTitle from '@/components/PageHeader/PageTitle'
 import PageName from '@/components/PageHeader/PageName'
 import AimItem from '@/components/Items/AimItem'
 import AdItem from '@/components/Items/AdItem'
@@ -68,7 +67,6 @@ export {
   TopItem,
   Empty,
   ButtonRefresh,
-  PageTitle,
   PageName,
   ButtonBack,
   AimItem,

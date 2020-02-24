@@ -139,7 +139,7 @@
 
 <script>
 import { axios } from '@/utils/request'
-import { createAPPDrip } from '@/api/interventionManager/appDripNews'
+import { createHealthBit } from '@/api/interventionManager/healthBit'
 import moment from 'moment'
 import Mdjs from 'md-js'
 import FooterToolBar from '@/components/FooterToolbar'
@@ -260,7 +260,7 @@ export default {
       })
     },
     toCreateAPPDrip (formData) {
-      createAPPDrip(formData).then(res => {
+      createHealthBit(formData).then(res => {
         // 跳转到新闻详情页面
         this.$router.push({
           path: '/intervenemanager/AppPush/list'
