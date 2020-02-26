@@ -35,6 +35,7 @@ import PageName from '@/components/PageHeader/PageName'
 import AimItem from '@/components/Items/AimItem'
 import AdItem from '@/components/Items/AdItem'
 import VideoItem from '@/components/Items/VideoItem'
+import AvatarUpload from '@/components/Upload/AvatarFormUpload'
 
 export {
   AvatarList,
@@ -71,5 +72,6 @@ export {
   ButtonBack,
   AimItem,
   AdItem,
-  VideoItem
+  VideoItem,
+  AvatarUpload
 }

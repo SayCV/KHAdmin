@@ -33,7 +33,7 @@ export function findCustomer (userNo) {
 
 export function createCustomer (data) {
   return axios({
-    url: `/api/admin/customers/create`,
+    url: '/api/admin/customers',
     methods: 'post',
     data: { ...data }
   })

@@ -68,7 +68,7 @@ export default {
     myCustomer: {
       name: '我的客户',
       table: '客户列表',
-      add: '添加客户',
+      add: '转入客户',
       create: '新增客户',
       info: '客户详情页',
       edit: '客户编辑页'

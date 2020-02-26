@@ -1,6 +1,6 @@
 <template>
   <!-- 客户管理 -->
-  <div>
+  <a-card :bordered="false">
     <div
       v-if="$route.name === 'CustomerTable'"
       class="table-page"
@@ -9,13 +9,12 @@
         <div class="operator-btns">
           <a-button
             type="primary"
-            icon="user-add"
-            @click="handleAddCustomer"
-          >邀请用户</a-button>
+            @click="handleToCreateCustomer"
+          >新增客户</a-button>
           <a-button
             type="primary"
-            @click="handleToCreateCustomer"
-          >新增用户</a-button>
+            @click="handleAddCustomer"
+          >转入客户</a-button>
         </div>
         <div
           class="table-page-search-submitButtons"
@@ -158,7 +157,7 @@
       </a-table>
     </div>
     <router-view v-else />
-  </div>
+  </a-card>
 </template>
 
 <script>

@@ -43,16 +43,16 @@ export const asyncRouterMap = [
             ]
           },
           {
-            path: '/customerManager/add',
-            name: 'AddCustomer',
-            component: () => import('@/views/basicdata/customer/AddCustomer'),
-            meta: { title: 'sideMenu.myCustomer.add', keepAlive: true, hidden: true, permission: ['table'] }
-          },
-          {
             path: '/customerManager/create',
             name: 'CreateCustomer',
             component: () => import('@/views/basicdata/customer/CreateCustomer'),
             meta: { title: 'sideMenu.myCustomer.create', keepAlive: true, hidden: true, permission: ['table'] }
+          },
+          {
+            path: '/customerManager/add',
+            name: 'AddCustomer',
+            component: () => import('@/views/basicdata/customer/AddCustomer'),
+            meta: { title: 'sideMenu.myCustomer.add', keepAlive: true, hidden: true, permission: ['table'] }
           }
         ]
       },
