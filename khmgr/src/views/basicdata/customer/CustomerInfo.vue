@@ -5,7 +5,7 @@
       <description-list size="large">
         <div class="user-avatar">
           <div class="text">头像：</div>
-          <a-avatar icon="user" />
+          <a-avatar size="large" icon="user" />
         </div>
         <description-list-item term="账号ID">{{ data.accountId ||'--' }}</description-list-item>
         <description-list-item term="用户名">{{ data.userName ||'--' }}</description-list-item>
@@ -191,7 +191,7 @@ export default {
     display: flex;
     padding-bottom: 12px;
     .text {
-      line-height: 32px;
+      line-height: 40px;
       color: rgba(0, 0, 0, 0.85);
     }
   }
