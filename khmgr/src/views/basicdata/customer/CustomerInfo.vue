@@ -1,39 +1,31 @@
 <template>
   <div class="user-info-page">
-    <a-card
-      title="基本信息"
-      :bordered="false"
-      :loading="loading"
-    >
+    <a-card title="基本信息" :bordered="false" :loading="loading">
       <ButtonBack slot="extra"></ButtonBack>
       <description-list size="large">
         <div class="user-avatar">
           <div class="text">头像：</div>
           <a-avatar icon="user" />
         </div>
+        <description-list-item term="账号ID">{{ data.accountId ||'--' }}</description-list-item>
         <description-list-item term="用户名">{{ data.userName ||'--' }}</description-list-item>
-        <description-list-item term="健康号">{{ data.userNo ||'--' }}</description-list-item>
+        <description-list-item term="用户组">{{ data.userGroup ||'--' }}</description-list-item>
+        <description-list-item term="姓名">{{ data.name ||'--' }}</description-list-item>
+        <description-list-item term="性别">{{ data.sex ||'--' }}</description-list-item>
+        <description-list-item term="出生日期">{{ data.brithday ||'--' }}</description-list-item>
         <description-list-item term="身份证">{{ data.identityId ||'--' }}</description-list-item>
-        <description-list-item term="电话">{{ data.phone ||'--' }}</description-list-item>
-        <description-list-item term="邮箱">{{ data.email ||'--' }}</description-list-item>
-        <description-list-item term="成员数量">{{ `${data.personCount ||'--' } 人` }}</description-list-item>
+        <description-list-item term="工作单位">{{ data.workPlace ||'--' }}</description-list-item>
       </description-list>
     </a-card>
-    <a-card
-      title="其他信息"
-      :bordered="false"
-      :loading="loading"
-    >
+    <a-card title="其他信息" :bordered="false" :loading="loading">
       <description-list size="large">
-        <description-list-item term="性别">{{ data.sex ||'--' }}</description-list-item>
-        <description-list-item term="民族">{{ data.minzu ||'--' }}</description-list-item>
+        <description-list-item term="民族">{{ data.nation ||'--' }}</description-list-item>
+        <description-list-item term="婚姻状况">{{ data.maritalStatus ||'--' }}</description-list-item>
+        <description-list-item term="电话">{{ `${data.phone ||'--' } 人` }}</description-list-item>
+        <description-list-item term="邮箱">{{ data.email ||'--' }}</description-list-item>
+        <description-list-item term="最高学历">{{ data.education ||'--' }}</description-list-item>
         <description-list-item term="年龄">{{ data.age ||'--' }}</description-list-item>
-        <description-list-item term="出生日期">{{ data.date ||'--' }}</description-list-item>
-        <description-list-item term="婚姻状况">{{ data.hunyin ||'--' }}</description-list-item>
-        <description-list-item term="单位">{{ data.danwei ||'--' }}</description-list-item>
-        <description-list-item term="最高学历">{{ data.xueli ||'--' }}</description-list-item>
-        <description-list-item term="用户组">{{ data.userGroup ||'--' }}</description-list-item>
-        <description-list-item term="创建时间">{{ data.createOn ||'--' }}</description-list-item>
+        <description-list-item term="注册时间">{{ data.registerDate ||'--' }}</description-list-item>
         <description-list-item term="家庭地址">{{ data.address ||'--' }}</description-list-item>
       </description-list>
     </a-card>
@@ -130,15 +122,11 @@
             </tr>
           </tbody>
         </table>
-      </div> -->
+      </div>-->
       <!-- table -->
     </div>
     <div class="edit">
-      <a-button
-        type="primary"
-        icon="form"
-        @click="handleBtnToEdit"
-      >编辑</a-button>
+      <a-button type="primary" icon="form" @click="handleBtnToEdit">编辑</a-button>
     </div>
   </div>
 </template>

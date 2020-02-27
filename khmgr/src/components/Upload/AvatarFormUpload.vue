@@ -3,7 +3,7 @@
     <a-upload
       :action="upLoadAddress"
       listType="picture-card"
-      :fileList="fileList"
+      :fileList="fileListByCompute"
       @preview="handlePreview"
       @change="handleChange"
       :beforeUpload="beforeUpload"
@@ -24,12 +24,27 @@
 import { upLoadAddress } from '@/api/common'
 export default {
   name: 'AvatarFormUpload',
+  props: {
+    avatarFileList: {
+      type: Array,
+      default: () => { return [] },
+      required: false
+    }
+  },
   data () {
     return {
       upLoadAddress,
       previewVisible: false,
       previewImage: '',
-      fileList: []
+      fileList: this.avatarFileList,
+      noFIleList: []
+    }
+  },
+  computed: {
+    fileListByCompute () {
+      if (!Array.isArray(this.fileList)) return []
+      if (this.fileList === [] || this.fileList === null) return this.noFIleList
+      return this.fileList
     }
   },
   methods: {
