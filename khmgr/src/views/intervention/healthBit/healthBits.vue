@@ -1,11 +1,20 @@
 <template>
-  <div class="newsPage">
-    <PageTitle
-      @toRefresh="fetch"
-      name="添加点滴"
-      :linkTo="addDripLink"
-      :isLoading="refresh"
-    ></PageTitle>
+  <a-card
+    title="健康点滴"
+    :bordered="false"
+  >
+    <template v-slot:extra>
+      <a-button-group>
+        <a-button @click="() => fetch()">刷新</a-button>
+        <a-button
+          type="primary"
+          @click="() => $router.push({name:'CreateBit'})"
+        >
+          <a-icon type="plus" />
+          发布点滴
+        </a-button>
+      </a-button-group>
+    </template>
     <div
       class="news-pagination"
       v-if="showPagination"
@@ -22,20 +31,15 @@
     <div class="news-container">
       <div
         class="spin"
-        v-if="refresh"
+        v-if="loading"
       >
         <a-spin></a-spin>
       </div>
       <div
-        class="data-loading"
+        class="data"
         v-else
       >
-        <div
-          class="no-newsLists"
-          v-if="NodripLists"
-        >
-          <Empty></Empty>
-        </div>
+        <Empty v-if="totalCount === 0"></Empty>
         <div
           class="news-main"
           v-else
@@ -66,26 +70,24 @@
         />
       </div>
     </div>
-  </div>
+  </a-card>
 </template>
 
 <script>
-import { DripItem, Empty, PageTitle } from '@/components'
-import { getAPPDripList } from '@/api/interventionManager/appDripNews'
+import { DripItem, Empty } from '@/components'
+import { getHealthBitList } from '@/api/interventionManager/healthBit'
 import { axios } from '@/utils/request'
 
 export default {
   name: 'HealthBits',
-  components: { DripItem, Empty, PageTitle },
+  components: { DripItem, Empty },
   data () {
     return {
-      addDripLink: '/intervenemanager/AppPush/add',
-      refresh: false,
-      NodripLists: false,
+      loading: false,
       dripLists: [],
       totalCount: 0,
       current: 1,
-      pageSize: 4
+      pageSize: 1
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -94,9 +96,9 @@ export default {
     })
   },
   mounted () {
-    if (this.$route.query.page) {
-      this.current = this.$route.query.page
-    }
+    // if (this.$route.query.page) {
+    //   this.current = this.$route.query.page
+    // }
     this.fetch()
   },
   computed: {
@@ -105,64 +107,22 @@ export default {
     }
   },
   methods: {
-    // 获取数据
-    fetch (params = {}) {
-      console.log('yahaha')
-      this.refresh = true
-      axios({
-        url: `/api/admin/news/?pageSize=${this.pageSize}&pageNum=${this.current}`,
-        // url: '/api/admin/news/', // 后台数据
-        method: 'get',
-        params: {
-          current: this.current,
-          pageSize: this.pageSize
-        }
-      }).then(res => {
-        if (res.total === 0) {
-          this.NodripLists = true
-          this.dripLists = []
-          this.totalCount = 0
-        }
-        this.NodripLists = false
-        this.dripLists = res.list || []
-        this.totalCount = res.total || 0
-
-        this.refresh = false
-      }).catch(err => {
-        if (err) {
-          this.NodripLists = true
-          this.$notification['error']({
-            message: '注意！注意！',
-            description: '网络链接中断...'
-          })
-        }
-        this.refresh = false
-      })
-    },
-    // api整理后的fetch函数
-    fetchs () {
-      getAPPDripList({
-        current: this.current,
+    fetch () {
+      this.loading = true
+      getHealthBitList({
+        pageNum: this.current,
         pageSize: this.pageSize
       }).then(res => {
+        this.loading = false
         if (res.total === 0) {
-          this.NodripLists = true
           this.dripLists = []
           this.totalCount = 0
         }
-        this.NodripLists = false
         this.dripLists = res.list || []
         this.totalCount = res.total || 0
-        this.refresh = false
-      }).catch(err => {
-        if (err) {
-          this.NodripLists = true
-          this.$notification['error']({
-            message: '注意！注意！',
-            description: '网络链接中断...'
-          })
-        }
-        this.refresh = false
+      }).catch(() => {
+        this.loading = false
+        this.totalCount = 0
       })
     },
     handlePageChange (pagination) {
@@ -183,7 +143,7 @@ export default {
     handleEdit (newsId) {
       // 点击行进入edit页
       this.$router.push({
-        path: '/intervenemanager/AppPush/edit',
+        name: 'EditBit',
         query: {
           newsId: newsId,
           page: this.current

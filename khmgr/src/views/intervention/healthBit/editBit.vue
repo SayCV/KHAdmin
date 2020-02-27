@@ -125,7 +125,7 @@
 
 <script>
 import { axios } from '@/utils/request'
-import { getAPPDripInfo, updateAPPDrip } from '@/api/interventionManager/appDripNews'
+import { getHealthBitInfo, updateHealthBit } from '@/api/interventionManager/healthBit'
 import { uploadResources } from '@/api/common'
 import moment from 'moment'
 import Mdjs from 'md-js'
@@ -207,7 +207,7 @@ export default {
     },
     getFormData (newsId) {
       // 进入新闻详情页面时表单填入数据
-      getAPPDripInfo(newsId).then(res => {
+      getHealthBitInfo(newsId).then(res => {
         this.data = res || {}
         this.initFileList(this.data)
         this.editorContent = res.content || ''
@@ -257,7 +257,7 @@ export default {
       })
     },
     toUpdateAPPDrip (formData, newsId) {
-      updateAPPDrip(formData, newsId).then(res => {
+      updateHealthBit(formData, newsId).then(res => {
         if (res) {
           // 跳转到新闻详情页面
           this.$router.push({

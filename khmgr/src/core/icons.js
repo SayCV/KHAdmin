@@ -11,7 +11,7 @@ import notFound from '@/assets/errorPage/earth.png'
 import notFoundFly from '@/assets/errorPage/fly.png'
 import imgFalse from '@/assets/icons/imgFalse.svg'
 
-const upLoadAddress = 'http://172.31.214.104/khmsrv/api/resources/'
+const upLoadAddress = 'http://keephealth.hznu.edu.cn/khsrv/api/resources/'
 // upLoad 资源上传地址
 
 export { bxAnaalyse, notFound, notFoundFly, imgFalse, upLoadAddress }
