@@ -128,7 +128,9 @@
         :loading="loading"
       >重置</a-button>
       <span style="margin-left: 8px;margin-right: 8px;">
-        <template v-if="hasSelected">{{ `已选择 ${selectedRowKeys.length} 项` }}</template>
+        <template v-if="hasSelected">
+          {{ `已选择 ${selectedRowKeys.length} 项` }}
+        </template>
       </span>
     </div>
 
