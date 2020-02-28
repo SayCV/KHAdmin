@@ -21,3 +21,10 @@ export function getPersonLivingData (personId) {
     method: 'get'
   })
 }
+
+export function deleteUser (personId) {
+  return axios({
+    url: `/api/persons/${personId}/indicators`,
+    method: 'delete'
+  })
+}

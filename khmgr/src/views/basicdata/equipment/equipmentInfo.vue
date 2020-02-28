@@ -1,21 +1,9 @@
 <template>
   <div class="info-container">
-    <a-card
-      title="基本信息"
-      :bordered="false"
-      :loading="loading"
-    >
-      <div
-        class="back"
-        slot="extra"
-      >
-        <a-button
-          type="primary"
-          @click="handleToTable"
-        >返回设备列表
-          <a-icon type="rollback" />
-        </a-button>
-      </div>
+    <a-card title="基本信息" :bordered="false" :loading="loading">
+      <template v-slot:extra>
+        <ButtonBack name="返回设备列表" routerName="EquipmentTable"></ButtonBack>
+      </template>
       <description-list>
         <description-list-item term="设备类型">{{ data.type || '--' }}</description-list-item>
         <description-list-item term="设备ID">{{ data.equipmentId || '--' }}</description-list-item>
@@ -25,11 +13,7 @@
         <description-list-item term="启动时间">{{ data.startTime || '--' }}</description-list-item>
       </description-list>
     </a-card>
-    <a-card
-      title="其他信息"
-      :bordered="false"
-      :loading="loading"
-    >
+    <a-card title="其他信息" :bordered="false" :loading="loading" class="other-info-card">
       <description-list>
         <description-list-item term="IP地址">{{ data.IP || '--' }}</description-list-item>
         <description-list-item term="在线时间">{{ data.onLineTime || '--' }}</description-list-item>
@@ -42,7 +26,7 @@
 </template>
 
 <script>
-
+import ButtonBack from '@/components/Button/ButtonBack'
 import { getEquipmentItemByYapi } from '@/api/basicData/equipmentManager'
 import { DescriptionList } from '@/components'
 const DescriptionListItem = DescriptionList.Item
@@ -50,16 +34,18 @@ const DescriptionListItem = DescriptionList.Item
 export default {
   name: 'EquipmentInfo',
   components: {
+    ButtonBack,
     DescriptionList,
     DescriptionListItem
   },
   data () {
     return {
       equipmentId: this.$route.query.equipmentId,
+      loading: false,
       data: {}
     }
   },
-  mounted () {
+  created () {
     this.fetch()
   },
   methods: {
@@ -68,20 +54,13 @@ export default {
         console.log('mock =>', res)
         this.data = res || {}
       })
-    },
-    handleToTable () {
-      this.$router.push({
-        path: '/equipmentManager/table'
-      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.info-top {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 16px;
+.other-info-card {
+  min-height: 300px;
 }
 </style>

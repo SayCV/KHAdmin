@@ -34,7 +34,7 @@
             </a-col>
             <a-col :md="8" :sm="24">
               <a-form-item label="用户组">
-                <a-select default-value="0" v-model="queryParam.group">
+                <a-select default-value="0" v-model="queryParam.group" placeholder="请选择">
                   <a-select-option value="0">VIP</a-select-option>
                   <a-select-option value="1">普通用户</a-select-option>
                 </a-select>
@@ -48,7 +48,7 @@
               </a-col>
               <a-col :md="8" :sm="24">
                 <a-form-item label="健康评级">
-                  <a-select default-value="0">
+                  <a-select default-value="0" v-model="queryParam.level" placeholder="请选择">
                     <a-select-option value="0">A</a-select-option>
                     <a-select-option value="1">B</a-select-option>
                     <a-select-option value="2">C</a-select-option>
@@ -189,7 +189,10 @@ export default {
     }
   },
   mounted () {
-    this.fetch()
+    this.fetch({
+      pageSize: this.pagination.pageSize,
+      pageNum: this.pagination.current
+    })
   },
   computed: {
     hasSelected () {
@@ -212,10 +215,7 @@ export default {
     // 获取数据
     fetch (params = {}) {
       this.loading = true
-      getCustomerList({
-        pageSize: this.pagination.pageSize,
-        pageNum: this.pagination.current
-      }).then(res => {
+      getCustomerList(params).then(res => {
         console.log('customerList res =>', res)
         this.loading = false
         const pagination = { ...this.pagination }
@@ -273,7 +273,6 @@ export default {
       this.$router.push({
         path: '/customerManager/create'
       })
-      // handleToTargetPage()
     },
     toggleAdvanced () {
       this.advanced = !this.advanced

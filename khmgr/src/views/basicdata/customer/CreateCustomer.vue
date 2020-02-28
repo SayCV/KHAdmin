@@ -119,15 +119,12 @@
             </a-form-item>
           </a-col>
         </a-row>
+      </a-card>
+      <footer-tool-bar>
         <div class="from-option" style="text-align: center">
           <a-button htmlType="submit" type="primary" :loading="posting">提交</a-button>
         </div>
-      </a-card>
-      <!-- <footer-tool-bar>
-        <div class="from-option" style="text-align: center">
-          <a-button htmlType="submit" type="primary" :loading="posting">保存</a-button>
-        </div>
-      </footer-tool-bar> -->
+      </footer-tool-bar>
     </a-form>
   </div>
 </template>
@@ -136,10 +133,11 @@
 import moment from 'moment'
 import { AvatarUpload } from '@/components'
 import { createCustomer } from '@/api/basicData/customers'
+import FooterToolBar from '@/components/FooterToolbar'
 
 export default {
   name: 'CreateCustomer',
-  components: { AvatarUpload },
+  components: { AvatarUpload, FooterToolBar },
   data () {
     return {
       formItemLayout: {

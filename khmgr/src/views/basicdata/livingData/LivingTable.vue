@@ -1,106 +1,92 @@
 <template>
   <div>
-    <div
-      v-if="$route.name === 'LivingUserTable'"
-      class="living-table-page"
-    >
-      <a-card
-        :bordered="false"
+    <a-card :bordered="false" v-if="$route.name === 'LivingUserTable'" class="living-table-page">
+      <div class="table-page-search-wrapper" style="marginBottom:24px">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="8" :sm="24">
+              <a-form-item label="健康号">
+                <a-input v-model="queryParam.userNo" placeholder style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="用户名">
+                <a-input v-model.trim="queryParam.userName" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="姓名">
+                <a-input v-model.trim="queryParam.name" style="width: 100%" />
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <a-form-item label="指标">
+                <a-select
+                  default-value="0"
+                  v-model="queryParam.type"
+                  placeholder="请选择"
+                  style="width: 100%"
+                >
+                  <a-select-option value="0">体重</a-select-option>
+                  <a-select-option value="1">体脂</a-select-option>
+                  <a-select-option value="2">v-for</a-select-option>
+                </a-select>
+              </a-form-item>
+            </a-col>
+            <a-col :md="8" :sm="24">
+              <div
+                class="table-page-search-submitButtons"
+                :style="advanced && { float: 'right', overflow: 'hidden' } || {} "
+              >
+                <a-button type="primary">查询</a-button>
+                <a-button style="margin-left: 8px" @click="() => queryParam = {}">重置</a-button>
+              </div>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+      <a-table
+        ref="table"
+        size="default"
+        :rowKey="(record) => record.userId"
+        :loading="loading"
+        :columns="columns"
+        :dataSource="data"
+        :pagination="pagination"
+        @change="handleTableChange"
+        :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        bordered
       >
-        <div class="search-wrapper">
-          <a-form layout="inline">
-            <a-row :gutter="48">
-              <a-col
-                :md="8"
-                :sm="24"
-              >
-                <a-form-item label="健康号">
-                  <a-input-number
-                    v-model="queryParam.userNo"
-                    placeholder
-                    style="width: 100%"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col
-                :md="8"
-                :sm="24"
-              >
-                <a-form-item label="电话">
-                  <a-input-number
-                    v-model="queryParam.phone"
-                    style="width: 100%"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col
-                :md="8"
-                :sm="24"
-              >
-                <a-form-item>
-                  <a-button type="primary">查询</a-button>
-                  <a-button style="margin-left: 8px">重置</a-button>
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </div>
-        <a-table
-          ref="table"
-          size="default"
-          :rowKey="(record) => record.userId"
-          :loading="loading"
-          :columns="columns"
-          :dataSource="data"
-          :pagination="pagination"
-          @change="handleTableChange"
-          :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
-          bordered
-        >
-          <a
-            slot="userNo"
-            slot-scope="text, record"
-            @click="() => handleView(record.userId)"
-          >{{ text }}</a>
-          <template
-            slot="operation"
-            slot-scope="text, record"
-          >
-            <div class="editable-row-operations">
-              <span slot="operation">
-                <a @click="() => showModalForm(record)">编辑</a>
-                <a-divider type="vertical" />
-                <a @click="() => handleView(record.userId)">查看</a>
-              </span>
-            </div>
-          </template>
-        </a-table>
-      </a-card>
-
-    </div>
+        <a
+          slot="userNo"
+          slot-scope="text, record"
+          @click="() => handleView(record.userId)"
+        >{{ text }}</a>
+        <template slot="operation" slot-scope="text, record">
+          <div class="editable-row-operations">
+            <span slot="operation">
+              <a @click="() => handleView(record.userId)">查看</a>
+              <a-divider type="vertical" />
+              <a @click="() => showModalForm(record)">编辑</a>
+              <a-divider type="vertical" />
+              <a @click="() => handleDelete(record.userId)">删除</a>
+            </span>
+          </div>
+        </template>
+      </a-table>
+    </a-card>
     <router-view v-else />
-    <a-modal
-      centered
-      :visible="visible"
-      title="编辑用户"
-      @cancel="handleCancel"
-      @ok="handleEditSubmit"
-    >
-      <a-form
-        layout="vertical"
-        :form="form"
-      >
-        <a-form-item
-          label="用户名"
-          key="username"
-        >
-          <a-input v-decorator="['username',{rules: [{ required: true, message: 'Please input the username of collection!' }], initialValue:formValues.userName||'--' }]" />
+    <a-modal centered :visible="visible" title="编辑用户" @cancel="handleCancel" @ok="handleEditSubmit">
+      <a-form layout="vertical" :form="form">
+        <a-form-item label="用户名" key="username">
+          <a-input
+            v-decorator="['username',{rules: [{ required: true, message: 'Please input the username of collection!' }], initialValue:formValues.userName||'--' }]"
+          />
         </a-form-item>
-        <a-form-item
-          label="电话"
-          key="phone"
-        >
-          <a-input v-decorator="['phone',{rules: [{ required: true, message: 'Please input the phone of collection!' }], initialValue:formValues.phone ||'--' }]" />
+        <a-form-item label="电话" key="phone">
+          <a-input
+            v-decorator="['phone',{rules: [{ required: true, message: 'Please input the phone of collection!' }], initialValue:formValues.phone ||'--' }]"
+          />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -119,15 +105,30 @@ const columns = [
     scopedSlots: { customRender: 'userNo' },
     sorter: false
   },
-
   {
-    title: '用户名',
-    dataIndex: 'userName',
-    key: 'emaiuserNamel',
-    scopedSlots: { customRender: 'userName' },
-    sorter: false
+    title: '健管机构',
+    dataIndex: 'organization',
+    key: 'organization',
+    customRender: (text) => text || '--'
   },
-
+  {
+    title: '姓名',
+    dataIndex: 'name',
+    key: 'name',
+    customRender: (text) => text || '--'
+  },
+  {
+    title: '性别',
+    dataIndex: 'sex',
+    key: 'sex',
+    customRender: (text) => text || '--'
+  },
+  {
+    title: '出生日期',
+    dataIndex: 'birthday',
+    key: 'birthday',
+    customRender: (text) => text || '--'
+  },
   {
     title: '电话',
     dataIndex: 'phone',
@@ -135,10 +136,10 @@ const columns = [
     sorter: false
   },
   {
-    title: '创建时间',
-    dataIndex: 'createOn',
-    key: 'phcreateOnone',
-    sorter: true
+    title: '记录数',
+    dataIndex: 'record',
+    key: 'record',
+    customRender: (text) => text || '--'
   },
   {
     title: '操作',
@@ -155,11 +156,8 @@ export default {
   },
   data () {
     return {
-      // 高级搜索 展开/关闭
-      advanced: false,
-      // 表头
       columns,
-      // 查询参数
+      advanced: false,
       queryParam: {},
       data: [],
       pagination: {
@@ -217,10 +215,19 @@ export default {
     handleView (userId) {
       // 点击行进入详情页
       this.$router.push({
-        path: '/livingData/userTable/person/list',
+        name: 'PersonList',
         query: {
           userId: userId
         }
+      })
+    },
+    handleDelete (accountId) {
+      this.$confirm({
+        centered: true,
+        okType: 'danger',
+        title: '你确定要删除该项?',
+        onOk () { },
+        onCancel () { }
       })
     },
     toggleAdvanced () {
@@ -248,8 +255,5 @@ export default {
 <style lang="less" scoped>
 .living-table-page {
   min-height: calc(100vh - 290px);
-  .search-wrapper {
-    margin-bottom: 48px;
-  }
 }
 </style>

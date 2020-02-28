@@ -1,11 +1,13 @@
 <template>
   <div class="user-info-page">
     <a-card title="基本信息" :bordered="false" :loading="loading">
-      <ButtonBack slot="extra"></ButtonBack>
+      <template v-slot:extra>
+        <ButtonBack name="返回客户列表" routerName="CustomerTable"></ButtonBack>
+      </template>
       <description-list size="large">
         <div class="user-avatar">
           <div class="text">头像：</div>
-          <a-avatar icon="user" />
+          <a-avatar size="large" icon="user" />
         </div>
         <description-list-item term="账号ID">{{ data.accountId ||'--' }}</description-list-item>
         <description-list-item term="用户名">{{ data.userName ||'--' }}</description-list-item>
@@ -28,6 +30,9 @@
         <description-list-item term="注册时间">{{ data.registerDate ||'--' }}</description-list-item>
         <description-list-item term="家庭地址">{{ data.address ||'--' }}</description-list-item>
       </description-list>
+      <div class="edit">
+        <a-button type="primary" icon="form" @click="handleBtnToEdit">编辑</a-button>
+      </div>
     </a-card>
     <!-- 基本信息 -->
     <div class="person-info">
@@ -125,9 +130,6 @@
       </div>-->
       <!-- table -->
     </div>
-    <div class="edit">
-      <a-button type="primary" icon="form" @click="handleBtnToEdit">编辑</a-button>
-    </div>
   </div>
 </template>
 
@@ -191,7 +193,7 @@ export default {
     display: flex;
     padding-bottom: 12px;
     .text {
-      line-height: 32px;
+      line-height: 40px;
       color: rgba(0, 0, 0, 0.85);
     }
   }
