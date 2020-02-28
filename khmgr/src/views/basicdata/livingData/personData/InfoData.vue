@@ -1,14 +1,7 @@
 <template>
   <div class="living-data-info">
-    <a-card
-      title="基本信息"
-      :bordered="false"
-      :loading="loading"
-    >
-      <ButtonBack
-        slot="extra"
-        name="返回成员列表页"
-      ></ButtonBack>
+    <a-card title="基本信息" :bordered="false" :loading="loading">
+      <ButtonBack slot="extra" name="返回成员列表页"></ButtonBack>
       <div class="basic-desription">
         <description-list>
           <description-list-item term="健康号">{{ level || '--' }}</description-list-item>
@@ -20,17 +13,9 @@
         </description-list>
       </div>
     </a-card>
-    <a-card
-      title="生活数据"
-      :bordered="false"
-      :loading="loading"
-    >
+    <a-card title="生活数据" :bordered="false" :loading="loading">
       <div class="select-date">
-        <a-form
-          layout="inline"
-          :form="form"
-          @submit="handleSubmit"
-        >
+        <a-form layout="inline" :form="form" @submit="handleSubmit">
           <a-form-item label="选择日期">
             <a-date-picker
               format="YYYY-MM-DD"
@@ -42,25 +27,14 @@
             />
           </a-form-item>
           <a-form-item>
-            <a-button
-              type="primary"
-              icon="search"
-              :disabled="loading"
-              html-type="submit"
-            >查询</a-button>
+            <a-button type="primary" icon="search" :disabled="loading" html-type="submit">查询</a-button>
           </a-form-item>
         </a-form>
       </div>
-      <div
-        class="no-datas"
-        v-if="noDatas"
-      >
+      <div class="no-datas" v-if="noDatas">
         <Empty></Empty>
       </div>
-      <div
-        v-else
-        class="data-table"
-      >
+      <div v-else class="data-table">
         <div class="detail-data">
           <div class="label">
             <div class="label-item">名称</div>
@@ -69,11 +43,7 @@
             <div class="label-item">单位</div>
           </div>
           <div class="datas">
-            <div
-              class="row"
-              v-for="data in detailData"
-              :key="data.label"
-            >
+            <div class="row" v-for="data in detailData" :key="data.label">
               <div class="value-item">{{ data.indicatorNameCN }}</div>
               <div class="value-item">{{ isToiletTime(data) }}</div>
               <div class="value-item">{{ referenceValue }}</div>
@@ -139,9 +109,10 @@ export default {
     // 获取数据
     fetch (params = {}) {
       console.log('params:', params)
-      console.log('personId:', this.personId)
+
       this.loading = true
       getPersonLivingData(this.personId).then(res => {
+        console.log('person data =>', res)
         this.loading = false
         this.detailData = res.datas.list || []
         this.level = res.level || '--'

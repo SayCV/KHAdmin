@@ -85,6 +85,12 @@ export const asyncRouterMap = [
                 hidden: true
               }
             ]
+          },
+          {
+            path: '/equipmentManager/register',
+            name: 'EquipmentRegister',
+            component: () => import('@/views/basicdata/equipment/EquipmentRegister'),
+            meta: { title: 'sideMenu.equipment.register', keepAlive: true, hidden: true, permission: ['table'] }
           }
         ]
       },
@@ -100,7 +106,7 @@ export const asyncRouterMap = [
             name: 'HealthGoalsTable',
             component: () => import('@/views/basicdata/healthgoal/healthGoalsTable'),
             meta: { title: 'sideMenu.healthGoal.table', keepAlive: true, hidden: true, permission: ['table'] },
-            // hideChildrenInMenu: true,
+            hideChildrenInMenu: true,
             children: [
               {
                 path: '/healthGoals/table/info',

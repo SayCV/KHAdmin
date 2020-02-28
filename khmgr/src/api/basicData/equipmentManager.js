@@ -32,3 +32,11 @@ export function editEquipmentItemById (data) {
     data: { ...data }
   })
 }
+
+export function deleteEquipmentItemById (data) {
+  return axios({
+    url: `/api/equipmentlistItem/item`,
+    method: 'delete',
+    data: { ...data }
+  })
+}

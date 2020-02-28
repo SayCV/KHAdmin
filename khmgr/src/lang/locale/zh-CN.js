@@ -77,7 +77,8 @@ export default {
       name: '设备管理',
       table: '设备信息',
       info: '设备详情',
-      edit: '编辑设备'
+      edit: '编辑设备',
+      register: '设备登记'
     },
     healthGoal: {
       name: '健康小目标',

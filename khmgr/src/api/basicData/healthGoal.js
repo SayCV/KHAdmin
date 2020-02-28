@@ -23,3 +23,11 @@ export function editHealthGoalItem (data) {
     data: data
   })
 }
+
+export function deleteHealthGoalItem (data) {
+  return axios({
+    url: `/api/admin/customers/`,
+    method: 'delete',
+    data: data
+  })
+}

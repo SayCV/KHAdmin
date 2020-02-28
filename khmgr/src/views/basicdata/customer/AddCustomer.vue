@@ -2,7 +2,7 @@
   <div class="create-customer-page">
     <a-card :bordered="false" :style="{ minHeight: '560px' }">
       <div class="title" slot="title">
-        <span style="marginRight: 8px">添加客户</span>
+        <span style="marginRight: 8px">客户转入</span>
         <a-icon type="user-add" />
       </div>
       <div class="query-form">
@@ -38,7 +38,7 @@
           <a-col :span="16" :lg="16" :md="24" :xs="24">
             <a-card v-if="notFound" :loading="loading" :bordered="true" title="用户基本信息">
               <template v-slot:extra>
-                <a-button type="primary" icon="user-add" @click="showAddModel">邀请用户</a-button>
+                <a-button type="primary" icon="user-add" @click="showAddModel">转入客户</a-button>
               </template>
               <description-list size="large">
                 <div class="user-avatar">
@@ -98,7 +98,7 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           console.log('Received values of form: ', values)
-          // this.getData(values.userNo)
+          this.getData(values.userNo)
         }
       })
     },
@@ -137,7 +137,7 @@ export default {
     showAddModel () {
       this.$confirm({
         centered: true,
-        title: '您确定要将该用户添加到当前机构?',
+        title: '您确定要将该用户转入到当前机构?',
         onOk () {
           console.log('OK')
         },

@@ -14,8 +14,6 @@
 
 export default {
   name: 'ButtonRefresh',
-
-  // props: ['name', 'linkTo', 'delay'],
   props: {
     name: {
       type: String,
